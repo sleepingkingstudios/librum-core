@@ -29,7 +29,12 @@ Gem::Specification.new do |gem|
 
   gem.required_ruby_version = '>= 3.0.0'
   gem.files = Dir.chdir(File.expand_path(__dir__)) do
-    Dir['{app,config,db,lib}/**/*', 'LICENSE.md', 'Rakefile', 'README.md']
+    Dir[
+      '{app,db,lib}/**/*',
+      'config/routes.rb',
+      'LICENSE.md',
+      'README.md'
+    ]
   end
 
   gem.add_dependency 'cuprum', '~> 1.1'
