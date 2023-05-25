@@ -22,6 +22,5 @@ SleepingKingStudios::Tasks.configure do |config|
   end
 end
 
-load 'loader/tasks.thor'
 load 'sleeping_king_studios/tasks/ci/tasks.thor'
 load 'sleeping_king_studios/tasks/file/tasks.thor'
