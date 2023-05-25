@@ -13,12 +13,14 @@ require 'action_view/railtie'
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
-module Core
-  # The test application for Librum Core.
-  class Application < Rails::Application
-    # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 7.0
+module Librum
+  module Core
+    # The test application for Librum::Core.
+    class Application < Rails::Application
+      # Initialize configuration defaults for originally generated Rails version.
+      config.load_defaults 7.0
 
-    config.eager_load = false
+      config.eager_load = false
+    end
   end
 end
