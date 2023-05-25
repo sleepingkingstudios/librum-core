@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require_relative 'lib/core/version'
+require_relative 'lib/librum/core/version'
 
 Gem::Specification.new do |gem|
-  gem.name        = 'core'
-  gem.version     = Core::VERSION
+  gem.name        = 'librum-core'
+  gem.version     = Librum::Core::VERSION
   gem.summary     =
     'Librum engine defining shared functionality and core models.'
 
