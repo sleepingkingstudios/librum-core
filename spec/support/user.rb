@@ -3,6 +3,9 @@
 module Spec::Support
   class User < Librum::Core::ApplicationRecord
     self.table_name = 'users'
+
+    ### Validations
+    validates :name, presence: true
   end
 end
 
@@ -11,9 +14,9 @@ end
 # Table name: users
 #
 #  id         :uuid             not null, primary key
+#  name       :string
 #  password   :string
 #  slug       :string
-#  username   :string
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #
