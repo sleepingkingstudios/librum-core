@@ -42,7 +42,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'cuprum', '~> 1.1'
   gem.add_dependency 'cuprum-collections'
   gem.add_dependency 'cuprum-rails'
-  gem.add_dependency 'stannum'
+  gem.add_dependency 'stannum', '~> 0.3'
 
   gem.add_dependency 'pg',     '~> 1.5'
   gem.add_dependency 'rails',  '~> 7.0.4'

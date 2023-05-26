@@ -2,6 +2,8 @@
 
 require 'rails_helper'
 
+require 'stannum'
+
 require 'librum/core/errors/authentication_error'
 require 'librum/core/responders/json_responder'
 require 'librum/core/rspec/contracts/responders/json_contracts'
