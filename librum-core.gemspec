@@ -30,8 +30,10 @@ Gem::Specification.new do |gem|
   gem.required_ruby_version = '>= 3.0.0'
   gem.files = Dir.chdir(File.expand_path(__dir__)) do
     Dir[
-      '{app,db,lib}/**/*',
+      '{app}/**/*',
       'config/routes.rb',
+      'db/migrate/**/*',
+      'lib/librum/**/*',
       'LICENSE.md',
       'README.md'
     ]

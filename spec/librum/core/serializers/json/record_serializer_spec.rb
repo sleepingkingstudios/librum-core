@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
+require 'rails_helper'
+
 require 'librum/core/rspec/contracts/serializer_contracts'
 require 'librum/core/serializers/json/record_serializer'
-
-require 'rails_helper'
 
 RSpec.describe Librum::Core::Serializers::Json::RecordSerializer do
   include Librum::Core::RSpec::Contracts::SerializerContracts
