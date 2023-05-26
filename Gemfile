@@ -11,9 +11,6 @@ gem 'cuprum-collections',
 gem 'cuprum-rails',
   branch: 'main',
   git:    'https://github.com/sleepingkingstudios/cuprum-rails'
-gem 'stannum',
-  branch: 'main',
-  git:    'https://github.com/sleepingkingstudios/stannum'
 
 group :development, :test do
   gem 'annotate'

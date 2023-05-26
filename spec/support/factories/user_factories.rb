@@ -10,7 +10,7 @@ FactoryBot.define do
       sequence(:user_index) { |index| index }
     end
 
-    username { "User #{user_index}" }
+    name     { "User #{user_index}" }
     slug     { "user-#{user_index}" }
     password { '12345' }
   end
