@@ -13,4 +13,6 @@ Rails.application.configure do
 
   # Raise exceptions instead of rendering exception templates.
   config.action_dispatch.show_exceptions = false
+
+  config.factory_bot.definition_file_paths = ['spec/support/factories']
 end

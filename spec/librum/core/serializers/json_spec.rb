@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
+require 'rails_helper'
+
 require 'librum/core/serializers/json'
 require 'librum/core/serializers/json/date_time_serializer'
-
-require 'rails_helper'
 
 RSpec.describe Librum::Core::Serializers::Json do
   describe '.default_serializers' do
