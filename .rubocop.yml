@@ -68,6 +68,7 @@ Metrics/MethodLength:
 
 Metrics/ModuleLength:
   Exclude:
+    - lib/librum/core/rspec/contracts/**/*.rb
     - spec/**/*_contract*.rb
 
 RSpec/BeNil:
