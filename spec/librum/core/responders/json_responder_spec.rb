@@ -4,30 +4,13 @@ require 'rails_helper'
 
 require 'librum/core/errors/authentication_error'
 require 'librum/core/responders/json_responder'
+require 'librum/core/rspec/contracts/responders/json_contracts'
 require 'librum/core/serializers/json'
 
 RSpec.describe Librum::Core::Responders::JsonResponder do
+  include Librum::Core::RSpec::Contracts::Responders::JsonContracts
+
   subject(:responder) { described_class.new(**constructor_options) }
-
-  const_set(
-    :ShouldRespondWithContract,
-    Module.new do
-      extend RSpec::SleepingKingStudios::Contract
-
-      contract do |http_status, &block|
-        let(:response) { responder.call(result) }
-        let(:configured_data) do
-          instance_exec(&block)
-        end
-
-        it { expect(response).to be_a Cuprum::Rails::Responses::JsonResponse }
-
-        it { expect(response.status).to be http_status }
-
-        it { expect(response.data).to deep_match(configured_data) }
-      end
-    end
-  )
 
   let(:resource) { Cuprum::Rails::Resource.new(resource_name: 'rockets') }
   let(:constructor_options) do
@@ -46,7 +29,7 @@ RSpec.describe Librum::Core::Responders::JsonResponder do
     describe 'with a passing result' do
       let(:result) { Cuprum::Result.new(value: { 'key' => 'value' }) }
 
-      include_contract 'should respond with', 200 do
+      include_contract 'should respond with json', 200 do
         { 'ok' => true, 'data' => result.value }
       end
     end
@@ -62,7 +45,7 @@ RSpec.describe Librum::Core::Responders::JsonResponder do
         }
       end
 
-      include_contract 'should respond with', 500 do
+      include_contract 'should respond with json', 500 do
         { 'ok' => false, 'error' => expected_error }
       end
     end
@@ -78,7 +61,7 @@ RSpec.describe Librum::Core::Responders::JsonResponder do
 
       example_class 'Spec::Rocket'
 
-      include_contract 'should respond with', 422 do
+      include_contract 'should respond with json', 422 do
         { 'ok' => false, 'error' => result.error.as_json }
       end
     end
@@ -92,7 +75,7 @@ RSpec.describe Librum::Core::Responders::JsonResponder do
       end
       let(:result) { Cuprum::Result.new(error: error) }
 
-      include_contract 'should respond with', 404 do
+      include_contract 'should respond with json', 404 do
         { 'ok' => false, 'error' => result.error.as_json }
       end
     end
@@ -106,7 +89,7 @@ RSpec.describe Librum::Core::Responders::JsonResponder do
       end
       let(:result) { Cuprum::Result.new(error: error) }
 
-      include_contract 'should respond with', 404 do
+      include_contract 'should respond with json', 404 do
         { 'ok' => false, 'error' => result.error.as_json }
       end
     end
@@ -122,7 +105,7 @@ RSpec.describe Librum::Core::Responders::JsonResponder do
         Librum::Core::Errors::AuthenticationFailed.new
       end
 
-      include_contract 'should respond with', 401 do
+      include_contract 'should respond with json', 401 do
         { 'ok' => false, 'error' => expected_error.as_json }
       end
 
@@ -131,7 +114,7 @@ RSpec.describe Librum::Core::Responders::JsonResponder do
           allow(Rails.env).to receive(:development?).and_return(true)
         end
 
-        include_contract 'should respond with', 401 do
+        include_contract 'should respond with json', 401 do
           { 'ok' => false, 'error' => result.error.as_json }
         end
       end
@@ -145,7 +128,7 @@ RSpec.describe Librum::Core::Responders::JsonResponder do
       end
       let(:result) { Cuprum::Result.new(error: error) }
 
-      include_contract 'should respond with', 400 do
+      include_contract 'should respond with json', 400 do
         { 'ok' => false, 'error' => error.as_json }
       end
     end
