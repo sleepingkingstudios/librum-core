@@ -9,7 +9,7 @@ require 'librum/core/actions/index'
 
 require 'support/user'
 
-RSpec.describe Librum::Core::Actions::Index do
+RSpec.describe Librum::Core::Actions::Index, type: :action do
   include Cuprum::Rails::RSpec::Actions::IndexContracts
 
   subject(:action) do
