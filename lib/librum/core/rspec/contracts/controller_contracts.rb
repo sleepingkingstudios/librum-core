@@ -12,6 +12,7 @@ module Librum::Core::RSpec::Contracts
       extend RSpec::SleepingKingStudios::Contract
 
       contract do |action_name, action_class, member: false|
+        # :nocov:
         describe "##{action_name}" do
           subject(:action) { described_class.actions[action_name.intern] }
 
@@ -21,6 +22,7 @@ module Librum::Core::RSpec::Contracts
 
           it { expect(action.member_action?).to be member }
         end
+        # :nocov:
       end
     end
 
@@ -29,6 +31,7 @@ module Librum::Core::RSpec::Contracts
       extend RSpec::SleepingKingStudios::Contract
 
       contract do |middleware_class, except: [], only: []|
+        # :nocov:
         describe '.middleware' do
           let(:middleware) do
             described_class.middleware.find do |config|
@@ -47,6 +50,7 @@ module Librum::Core::RSpec::Contracts
 
           it { expect(middleware.only.to_a).to be == only }
         end
+        # :nocov:
       end
     end
 
@@ -64,7 +68,9 @@ module Librum::Core::RSpec::Contracts
       extend RSpec::SleepingKingStudios::Contract
 
       contract do |format, using:|
+        # :nocov:
         it { expect(described_class.responders[format]).to be == using }
+        # :nocov:
       end
     end
 
@@ -73,7 +79,9 @@ module Librum::Core::RSpec::Contracts
       extend RSpec::SleepingKingStudios::Contract
 
       contract do |klass, using:|
+        # :nocov:
         it { expect(described_class.serializers[klass]).to be == using }
+        # :nocov:
       end
     end
 

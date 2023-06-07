@@ -26,7 +26,11 @@ RSpec.describe Librum::Core::Actions::Index, type: :action do
       resource_class: Spec::Support::User
     )
   end
-  let(:users) { Array.new(3) { FactoryBot.build(:user) } }
+  let(:users) do
+    Array
+      .new(3) { FactoryBot.build(:user) }
+      .sort_by(&:name)
+  end
 
   before(:example) { users.map(&:save!) }
 
