@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'rails_helper'
+
 require 'librum/core/resources/base_resource'
 
 RSpec.describe Librum::Core::Resources::BaseResource do
@@ -15,7 +17,6 @@ RSpec.describe Librum::Core::Resources::BaseResource do
         resource_name
         routes
         singular
-        skip_authentication
       ]
     end
 
