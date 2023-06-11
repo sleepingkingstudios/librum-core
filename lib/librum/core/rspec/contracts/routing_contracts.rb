@@ -30,7 +30,7 @@ module Librum::Core::RSpec::Contracts
       extend RSpec::SleepingKingStudios::Contract
 
       contract do |resource_name, controller: nil, only: nil|
-        root_route      = "api/#{resource_name}"
+        root_route      = resource_name
         controller_name =
           resource_name
           .to_s
@@ -39,7 +39,7 @@ module Librum::Core::RSpec::Contracts
           .map(&:pluralize)
           .join('::')
         controller_name =
-          "Api::#{controller_name}Controller"
+          "#{controller_name}Controller"
         expected_routes = %i[
           index
           create
@@ -49,7 +49,7 @@ module Librum::Core::RSpec::Contracts
         ]
         expected_routes &= Array(only).map(&:intern) unless Array(only).empty?
 
-        describe "GET /#{root_route}" do
+        describe "GET /#{root_route}.json" do
           let(:configured_controller) { controller || root_route }
 
           if expected_routes.include?(:index)
@@ -67,7 +67,7 @@ module Librum::Core::RSpec::Contracts
           end
         end
 
-        describe "POST /#{root_route}" do
+        describe "POST /#{root_route}.json" do
           let(:configured_controller) { controller || root_route }
 
           if expected_routes.include?(:create)
@@ -85,7 +85,7 @@ module Librum::Core::RSpec::Contracts
           end
         end
 
-        describe "GET /#{root_route}/:id" do
+        describe "GET /#{root_route}/:id.json" do
           let(:configured_controller) { controller || root_route }
           let(:configured_resource_id) do
             '00000000-0000-0000-0000-000000000000'
@@ -109,7 +109,7 @@ module Librum::Core::RSpec::Contracts
           end
         end
 
-        describe "PATCH /#{root_route}/:id" do
+        describe "PATCH /#{root_route}/:id.json" do
           let(:configured_controller) { controller || root_route }
           let(:configured_resource_id) do
             '00000000-0000-0000-0000-000000000000'
@@ -133,7 +133,7 @@ module Librum::Core::RSpec::Contracts
           end
         end
 
-        describe "DELETE /#{root_route}/:id" do
+        describe "DELETE /#{root_route}/:id.json" do
           let(:configured_controller) { controller || root_route }
           let(:configured_resource_id) do
             '00000000-0000-0000-0000-000000000000'
@@ -164,7 +164,7 @@ module Librum::Core::RSpec::Contracts
       extend RSpec::SleepingKingStudios::Contract
 
       contract do |resource_name, controller: nil, only: nil|
-        root_route      = "api/#{resource_name}"
+        root_route      = resource_name
         controller_name =
           resource_name
           .to_s
@@ -173,7 +173,7 @@ module Librum::Core::RSpec::Contracts
           .map(&:pluralize)
           .join('::')
         controller_name =
-          "Api::#{controller_name}Controller"
+          "#{controller_name}Controller"
         expected_routes = %i[
           create
           show
@@ -182,7 +182,7 @@ module Librum::Core::RSpec::Contracts
         ]
         expected_routes &= Array(only).map(&:intern) unless Array(only).empty?
 
-        describe "GET /#{root_route}" do
+        describe "GET /#{root_route}.json" do
           let(:configured_controller) { controller || root_route.pluralize }
 
           if expected_routes.include?(:show)
@@ -200,7 +200,7 @@ module Librum::Core::RSpec::Contracts
           end
         end
 
-        describe "POST /#{root_route}" do
+        describe "POST /#{root_route}.json" do
           let(:configured_controller) { controller || root_route.pluralize }
 
           if expected_routes.include?(:create)
@@ -218,7 +218,7 @@ module Librum::Core::RSpec::Contracts
           end
         end
 
-        describe "PATCH /#{root_route}" do
+        describe "PATCH /#{root_route}.json" do
           let(:configured_controller) { controller || root_route.pluralize }
 
           if expected_routes.include?(:update)
@@ -238,7 +238,7 @@ module Librum::Core::RSpec::Contracts
           end
         end
 
-        describe "DELETE /#{root_route}" do
+        describe "DELETE /#{root_route}.json" do
           let(:configured_controller) { controller || root_route.pluralize }
 
           if expected_routes.include?(:destroy)
