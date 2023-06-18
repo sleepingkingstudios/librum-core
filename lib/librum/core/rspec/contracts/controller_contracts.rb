@@ -30,20 +30,34 @@ module Librum::Core::RSpec::Contracts
     module ShouldDefineMiddleware
       extend RSpec::SleepingKingStudios::Contract
 
-      contract do |middleware_class, except: [], only: []|
+      contract do |expected, except: [], only: []|
         # :nocov:
         describe '.middleware' do
           let(:middleware) do
-            described_class.middleware.find do |config|
-              config.command == middleware_class
+            described_class
+              .middleware
+              .find { |config| match_middleware(expected, config) }
+          end
+
+          def match_middleware(expected, actual)
+            expected = instance_exec(&expected) if expected.is_a?(Proc)
+
+            if expected.is_a?(Class)
+              return true if actual.command == expected
+              return true if actual.command.is_a?(expected)
             end
+
+            if expected.respond_to?(:matches?)
+              return expected.matches?(actual.command)
+            end
+
+            actual.command == expected
           end
 
           it 'should define the middleware' do
-            expect(described_class.middleware)
-              .to include(
-                have_attributes(command: middleware_class)
-              )
+            expect(described_class.middleware).to include(
+              satisfy { |actual| match_middleware(expected, actual) }
+            )
           end
 
           it { expect(middleware.except.to_a).to be == except }
