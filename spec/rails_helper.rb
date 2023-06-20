@@ -14,6 +14,7 @@ if Rails.env.production?
 end
 
 require 'rspec/rails'
+require 'librum/core/rspec/component_helpers'
 # Add additional requires below this line. Rails is not loaded until this point!
 
 # Checks for pending migrations and applies them before tests are run.
@@ -28,6 +29,8 @@ rescue ActiveRecord::PendingMigrationError => e
 end
 
 RSpec.configure do |config|
+  config.include Librum::Core::RSpec::ComponentHelpers, type: :component
+
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
   # instead of true.
