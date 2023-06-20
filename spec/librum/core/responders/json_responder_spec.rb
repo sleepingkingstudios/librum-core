@@ -25,6 +25,26 @@ RSpec.describe Librum::Core::Responders::JsonResponder do
     }
   end
 
+  describe '.new' do
+    let(:expected_keywords) do
+      %i[
+        action_name
+        controller_name
+        member_action
+        resource
+        serializers
+      ]
+    end
+
+    it 'should define the constructor' do
+      expect(described_class)
+        .to be_constructible
+        .with(0).arguments
+        .and_keywords(*expected_keywords)
+        .and_any_keywords
+    end
+  end
+
   describe '#call' do
     it { expect(responder).to respond_to(:call).with(1).argument }
 
