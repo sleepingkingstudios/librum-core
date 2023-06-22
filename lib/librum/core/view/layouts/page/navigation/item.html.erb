@@ -1,0 +1,24 @@
+<% if dropdown? %>
+<div class="navbar-item has-dropdown is-hoverable">
+  <a class="navbar-link">
+    <%= label %>
+  </a>
+
+  <%=
+    render(
+      Librum::Core::View::Layouts::Page::Navigation::Dropdown.new(items: items)
+    )
+  %>
+</div>
+<% else %>
+<%=
+  render(
+    Librum::Core::View::Components::Link.new(
+      url,
+      class_names: %w[navbar-item],
+      color:       'black',
+      label:       label
+    )
+  )
+%>
+<% end %>

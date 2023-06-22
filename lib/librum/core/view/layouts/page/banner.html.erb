@@ -1,0 +1,23 @@
+<section class="banner hero is-small">
+  <div class="hero-body">
+    <div class="container">
+      <div>
+        <p class="title">Librum</p>
+
+        <p class="subtitle">Tabletop Campaign Companion</p>
+
+        <% if navigation %>
+        <%=
+          render(
+            Librum::Core::View::Layouts::Page::Navigation.new(
+              config: navigation
+            )
+          )
+        %>
+        <% end %>
+      </div>
+
+      <hr class="is-fancy-hr">
+    </div>
+  </div>
+</section>

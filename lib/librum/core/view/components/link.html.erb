@@ -1,0 +1,7 @@
+<a class="<%= class_names %>" href="<%= url_with_protocol %>" target="<%= target %>">
+  <%=
+    render(
+      Librum::Core::View::Components::IconText.new(icon: icon, label: label)
+    )
+  %>
+</a>

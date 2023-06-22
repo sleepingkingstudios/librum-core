@@ -84,6 +84,20 @@ RSpec.describe Librum::Core::RSpec::Utils::PrettyRender do
       end
     end
 
+    describe 'with a tag with children and attributes' do
+      let(:contents) do
+        <<~HTML
+          <span data-action="launch">
+            <i class="icon icon-rocket"></i>
+
+            Launch Rocket
+          </span>
+        HTML
+      end
+
+      it { expect(rendered).to be == expected }
+    end
+
     describe 'with a tag with children and text' do
       let(:contents) do
         <<~HTML
@@ -109,6 +123,114 @@ RSpec.describe Librum::Core::RSpec::Utils::PrettyRender do
       end
 
       it { expect(rendered).to be == expected }
+
+      describe 'with insufficient whitespace' do
+        let(:contents) do
+          <<~HTML
+            <ul>
+              <li>
+              List Item
+            </li>
+            </ul>
+          HTML
+        end
+        let(:expected) do
+          <<~HTML
+            <ul>
+              <li>
+                List Item
+              </li>
+            </ul>
+          HTML
+        end
+
+        it { expect(rendered).to be == expected }
+      end
+
+      describe 'with leading whitespace' do
+        let(:contents) do
+          <<~HTML
+            <p>
+
+
+              Expected: true
+                Actual: false
+            </p>
+          HTML
+        end
+        let(:expected) do
+          <<~HTML
+            <p>
+              Expected: true
+                Actual: false
+            </p>
+          HTML
+        end
+
+        it { expect(rendered).to be == expected }
+      end
+
+      describe 'with nested whitespace' do
+        let(:contents) do
+          <<~HTML
+            <p>
+              <span>
+                Expected: true
+                  Actual: false
+              </span>
+            </p>
+          HTML
+        end
+
+        it { expect(rendered).to be == expected }
+
+        describe 'with excessive whitespace' do
+          let(:contents) do
+            <<~HTML
+              <p>
+                <span>
+                    Expected: true
+                      Actual: false
+                  </span>
+              </p>
+            HTML
+          end
+          let(:expected) do
+            <<~HTML
+              <p>
+                <span>
+                  Expected: true
+                    Actual: false
+                </span>
+              </p>
+            HTML
+          end
+
+          it { expect(rendered).to be == expected }
+        end
+      end
+
+      describe 'with trailing whitespace' do
+        let(:contents) do
+          <<~HTML
+            <p>
+              Expected: true
+                Actual: false
+
+            </p>
+          HTML
+        end
+        let(:expected) do
+          <<~HTML
+            <p>
+              Expected: true
+                Actual: false
+            </p>
+          HTML
+        end
+
+        it { expect(rendered).to be == expected }
+      end
     end
 
     describe 'with a tag with short text' do
@@ -191,9 +313,9 @@ RSpec.describe Librum::Core::RSpec::Utils::PrettyRender do
       end
       let(:expected) do
         <<~HTML
-          <footer>
-            <div>
-              <nav>
+          <footer class="footer has-text-centered">
+            <div class="container">
+              <nav class="breadcrumb has-arrow-separator" aria-label="breadcrumbs">
                 <ul>
                   <li>
                     <a href="/">Home</a>
@@ -203,7 +325,7 @@ RSpec.describe Librum::Core::RSpec::Utils::PrettyRender do
                     <a href="/launch_sites">Launch Sites</a>
                   </li>
 
-                  <li>
+                  <li class="is-active">
                     <a href="/launch_sites/zeppelins" aria-current="page">Zeppelins</a>
                   </li>
                 </ul>

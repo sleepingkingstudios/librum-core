@@ -36,7 +36,7 @@ RSpec.describe Librum::Core::View::Pages::MissingPage, type: :component do
     let(:rendered) { render_inline(page) }
     let(:snapshot) do
       <<~HTML
-        <div>
+        <div class="content">
           <h1>Missing View::Pages::Scoped::Custom::Execute</h1>
 
           <p>
@@ -93,7 +93,7 @@ RSpec.describe Librum::Core::View::Pages::MissingPage, type: :component do
       let(:result) { Cuprum::Result.new(error: error) }
       let(:snapshot) do
         <<~HTML
-          <div>
+          <div class="content">
             <h1>Missing View::Pages::Scoped::Custom::Execute</h1>
 
             <p>
@@ -151,7 +151,7 @@ RSpec.describe Librum::Core::View::Pages::MissingPage, type: :component do
       let(:result) { Cuprum::Result.new(value: value) }
       let(:snapshot) do
         <<~HTML
-          <div>
+          <div class="content">
             <h1>Missing View::Pages::Scoped::Custom::Execute</h1>
 
             <p>
@@ -209,7 +209,7 @@ RSpec.describe Librum::Core::View::Pages::MissingPage, type: :component do
       let(:result)   { Cuprum::Rails::Result.new(metadata: metadata) }
       let(:snapshot) do
         <<~HTML
-          <div>
+          <div class="content">
             <h1>Missing View::Pages::Scoped::Custom::Execute</h1>
 
             <p>

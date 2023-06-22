@@ -1,0 +1,14 @@
+<div class="navbar-dropdown">
+  <% items.each do |item| %>
+  <%=
+    render(
+      Librum::Core::View::Components::Link.new(
+        item.url,
+        class_names: %w[navbar-item],
+        color:       'black',
+        label:       item.label
+      )
+    )
+  %>
+  <% end %>
+</div>

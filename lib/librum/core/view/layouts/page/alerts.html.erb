@@ -1,0 +1,11 @@
+<% alerts.each do |alert| %>
+<%=
+  render(
+    Librum::Core::View::Layouts::Page::Alert.new(
+      alert['message'],
+      color: alert['color'],
+      icon:  alert['icon']
+    )
+  )
+%>
+<% end %>

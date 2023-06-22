@@ -1,0 +1,15 @@
+<nav class="navbar is-size-5" role="navigation" aria-label="main-navigation">
+  <%=
+    render(
+      Librum::Core::View::Layouts::Page::Navigation::Brand.new(config: config)
+    )
+  %>
+
+  <%=
+    render(
+      Librum::Core::View::Layouts::Page::Navigation::Menu.new(
+        items: config.items
+      )
+    )
+  %>
+</nav>
