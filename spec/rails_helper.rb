@@ -14,6 +14,7 @@ if Rails.env.production?
 end
 
 require 'rspec/rails'
+require 'cuprum/rails/rspec/matchers'
 require 'librum/core/rspec/component_helpers'
 # Add additional requires below this line. Rails is not loaded until this point!
 
@@ -29,6 +30,7 @@ rescue ActiveRecord::PendingMigrationError => e
 end
 
 RSpec.configure do |config|
+  config.include Cuprum::Rails::RSpec::Matchers
   config.include Librum::Core::RSpec::ComponentHelpers, type: :component
 
   # ViewComponents delegate #respond_to? to their controller. This makes testing
