@@ -27,6 +27,10 @@ module Librum::Core::Responders::Html
       resource_component_class.new(result, resource: resource)
     end
 
+    def lazy_require(page_name)
+      require page_name.split('::').map(&:underscore).join('/')
+    end
+
     def resource_component_class
       resource_component_name.constantize
     end
@@ -37,7 +41,11 @@ module Librum::Core::Responders::Html
 
       return page_name if Object.const_defined?(page_name)
 
-      "Librum::Core::#{page_name}"
+      page_name = "Librum::Core::#{page_name}"
+
+      lazy_require(page_name)
+
+      page_name
     end
   end
 end

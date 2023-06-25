@@ -19,11 +19,25 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
   end
 
   shared_examples 'should respond with the page when defined' \
-  do |component_name, **options|
+  do |component_name, lazy_require: false, **options|
     wrap_context 'when the page is defined', component_name do
+      let(:expected_path) do
+        component_name.split('::').map(&:underscore).join('/')
+      end
+
       include_contract 'should render page',
         component_name,
         **options
+
+      if lazy_require
+        it 'should lazily require the resource page' do
+          responder.call(result)
+
+          expect(responder)
+            .to have_received(:require)
+            .with(expected_path)
+        end
+      end
     end
   end
 
@@ -68,6 +82,8 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
       'View::Pages::Custom::ImplementPage'
     end
 
+    before(:example) { allow(responder).to receive(:require) } # rubocop:disable RSpec/SubjectStub
+
     it { expect(responder).to respond_to(:call).with(1).argument }
 
     describe 'with a failing result' do
@@ -86,7 +102,8 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
 
       include_examples 'should respond with the page when defined',
         'Librum::Core::View::Pages::Resources::ImplementPage',
-        http_status: :internal_server_error
+        http_status:  :internal_server_error,
+        lazy_require: true
     end
 
     describe 'with a failing result with a NotFound error' do
@@ -132,7 +149,8 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
         'View::Pages::Resources::ImplementPage'
 
       include_examples 'should respond with the page when defined',
-        'Librum::Core::View::Pages::Resources::ImplementPage'
+        'Librum::Core::View::Pages::Resources::ImplementPage',
+        lazy_require: true
     end
   end
 
@@ -145,6 +163,8 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
     let(:options)       { {} }
     let(:response)      { responder.render_component(result, **options) }
     let(:expected_page) { 'View::Pages::Custom::ImplementPage' }
+
+    before(:example) { allow(responder).to receive(:require) } # rubocop:disable RSpec/SubjectStub
 
     it 'should define the method' do
       expect(responder)
