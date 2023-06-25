@@ -1,0 +1,9 @@
+<div class="content">
+  <% fields.each do |field| %>
+  <div class="block">
+    <p class="has-text-weight-semibold mb-1"><%= field.label %></p>
+
+    <%= render_item(field: field) %>
+  </div>
+  <% end %>
+</div>
