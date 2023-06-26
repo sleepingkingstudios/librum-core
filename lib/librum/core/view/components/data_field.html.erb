@@ -1,0 +1,10 @@
+<% if render_icon? %>
+<span class="icon-text">
+  <span class="icon">
+    <i class="fas fa-<%= icon %>"></i>
+  </span>
+  <span><%= render_contents %></span>
+</span>
+<% else %>
+<%= render_contents %>
+<% end %>

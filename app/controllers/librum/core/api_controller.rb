@@ -13,9 +13,7 @@ module Librum::Core
     protect_from_forgery with: :null_session
 
     def self.repository
-      return @repository if @repository
-
-      @repository = Cuprum::Rails::Repository.new
+      @repository ||= Cuprum::Rails::Repository.new
     end
 
     def self.serializers

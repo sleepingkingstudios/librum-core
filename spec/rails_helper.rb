@@ -14,6 +14,8 @@ if Rails.env.production?
 end
 
 require 'rspec/rails'
+require 'cuprum/rails/rspec/matchers'
+require 'librum/core/rspec/component_helpers'
 # Add additional requires below this line. Rails is not loaded until this point!
 
 # Checks for pending migrations and applies them before tests are run.
@@ -28,6 +30,22 @@ rescue ActiveRecord::PendingMigrationError => e
 end
 
 RSpec.configure do |config|
+  config.include Cuprum::Rails::RSpec::Matchers
+  config.include Librum::Core::RSpec::ComponentHelpers, type: :component
+
+  # ViewComponents delegate #respond_to? to their controller. This makes testing
+  # their own instance methods difficult. The following stubs out this behavior
+  # in tests and replaces it with the core Ruby behavior.
+  config.before(:example, type: :component) do
+    allow(subject).to receive(:respond_to?) \
+    do |symbol, include_all = false|
+      Object
+        .instance_method(:respond_to?)
+        .bind(subject)
+        .call(symbol, include_all)
+    end
+  end
+
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
   # instead of true.

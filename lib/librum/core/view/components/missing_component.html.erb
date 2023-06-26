@@ -1,0 +1,13 @@
+<div class="box">
+  <p class="has-text-centered">
+    <span class="icon is-large has-text-danger">
+      <i class="fas fa-2x fa-<%= icon %>"></i>
+    </span>
+  </p>
+
+  <h2 class="title has-text-centered has-text-danger"><%= label %></h2>
+
+  <% if message.present? %>
+  <p class="has-text-centered"><%= message %></p>
+  <% end %>
+</div>

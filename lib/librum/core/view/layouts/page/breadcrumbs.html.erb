@@ -1,0 +1,17 @@
+<nav class="breadcrumb has-arrow-separator" aria-label="breadcrumbs">
+  <ul>
+    <% breadcrumbs.each do |breadcrumb| %>
+    <% if breadcrumb.active %>
+    <li class="is-active">
+      <a href="<%= breadcrumb.url %>" aria-current="page">
+        <%= breadcrumb.label %>
+      </a>
+    </li>
+    <% else %>
+    <li>
+      <a href="<%= breadcrumb.url %>"><%= breadcrumb.label %></a>
+    </li>
+    <% end %>
+    <% end %>
+  </ul>
+</nav>

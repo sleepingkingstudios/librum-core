@@ -1,0 +1,31 @@
+<div class="page is-flex is-flex-direction-column">
+  <%=
+    render(
+      Librum::Core::View::Layouts::Page::Banner.new(navigation: navigation)
+    )
+  %>
+
+  <section class="section primary-content is-flex-grow-1">
+    <div class="container">
+      <%= before_content %>
+
+      <% if alerts.present? %>
+      <%=
+        render(
+          Librum::Core::View::Layouts::Page::Alerts.new(alerts: alerts)
+        )
+      %>
+      <% end %>
+
+      <%= content %>
+
+      <%= after_content %>
+    </div>
+  </section>
+
+  <%=
+    render(
+      Librum::Core::View::Layouts::Page::Footer.new(breadcrumbs: breadcrumbs)
+    )
+  %>
+</div>

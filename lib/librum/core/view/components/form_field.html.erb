@@ -1,0 +1,23 @@
+<div class="field">
+  <label for="<%= id %>" class="label"><%= label %></label>
+
+  <div class="<%= control_class_names %>">
+    <%= render(input) %>
+
+    <% if icon %>
+    <span class="icon is-left is-small">
+      <i class="fas fa-<%= icon %>"></i>
+    </span>
+    <% end %>
+
+    <% if matching_errors.any? %>
+    <span class="icon is-right is-small">
+      <i class="fas fa-triangle-exclamation"></i>
+    </span>
+    <% end %>
+  </div>
+
+  <% if matching_errors.any? %>
+  <p class="help is-danger"><%= matching_errors.join(', ') %></p>
+  <% end %>
+</div>

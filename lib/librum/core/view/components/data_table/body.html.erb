@@ -1,0 +1,8 @@
+<tbody>
+  <% data.each do |item| %>
+  <%= render_row(item: item) %>
+  <% end %>
+  <% if data.empty? %>
+  <%= render_empty_message %>
+  <% end %>
+</tbody>
