@@ -6,7 +6,7 @@ require 'librum/core/railtie' if defined?(Rails::Railtie)
 
 # The Ruby tabletop campaign companion.
 module Librum
-  # Librum engine defining shared functionality and core models.
+  # Librum engine defining shared functionality.
   module Core
     class << self
       # @return [Class, nil] the base authentication error.

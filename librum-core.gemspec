@@ -6,12 +6,11 @@ Gem::Specification.new do |gem|
   gem.name        = 'librum-core'
   gem.version     = Librum::Core::VERSION
   gem.summary     =
-    'Librum engine defining shared functionality and core models.'
+    'Librum engine defining core functionality.'
 
   description = <<~DESCRIPTION
-    The core engine for the Librum tabletop campaign companion. Defines shared
-    functionality such as base controllers and serializers, as well as the core
-    models such as Publisher and GameSystem.
+    The core engine for the Librum application framework. Defines shared
+    functionality such as base controllers, actions, views, and serializers.
   DESCRIPTION
   gem.description = description.strip.gsub(/\n +/, ' ')
   gem.authors     = ['Rob "Merlin" Smith']
