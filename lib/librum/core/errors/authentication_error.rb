@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'cuprum'
+
 require 'librum/core/errors'
 
 module Librum::Core::Errors
