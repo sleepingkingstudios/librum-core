@@ -3,9 +3,9 @@
 require 'rails_helper'
 
 require 'librum/core/resources/view_resource'
-require 'librum/core/view/pages/resources/show_page'
+require 'librum/core/view/pages/resources/edit_page'
 
-RSpec.describe Librum::Core::View::Pages::Resources::ShowPage,
+RSpec.describe Librum::Core::View::Pages::Resources::EditPage,
   type: :component \
 do
   subject(:page) { described_class.new(result, resource: resource) }
@@ -33,7 +33,7 @@ do
     let(:rendered) { render_inline(page) }
     let(:snapshot) do
       <<~HTML
-        <h1 class="title">Rocket</h1>
+        <h1 class="title">Update Rocket</h1>
 
         <div class="box">
           <p class="has-text-centered">
@@ -42,53 +42,29 @@ do
             </span>
           </p>
 
-          <h2 class="title has-text-centered has-text-danger">Missing Component Block</h2>
+          <h2 class="title has-text-centered has-text-danger">Missing Component Form</h2>
 
-          <p class="has-text-centered">Rendered in Librum::Core::View::Pages::Resources::ShowPage</p>
+          <p class="has-text-centered">Rendered in Librum::Core::View::Pages::Resources::EditPage</p>
         </div>
-
-        <p>
-          <a class="has-text-link" href="/rockets" target="_self">
-            <span class="icon-text">
-              <span class="icon">
-                <i class="fas fa-left-long"></i>
-              </span>
-
-              <span>Back to Rockets</span>
-            </span>
-          </a>
-        </p>
       HTML
     end
 
     it { expect(rendered).to match_snapshot(snapshot) }
 
     describe 'with a resource with block_component: value' do
-      include_context 'with mock component', 'block'
+      include_context 'with mock component', 'form'
 
       let(:resource) do
         Librum::Core::Resources::ViewResource.new(
-          block_component: Spec::BlockComponent,
-          resource_name:   'rockets'
+          form_component: Spec::FormComponent,
+          resource_name:  'rockets'
         )
       end
       let(:snapshot) do
         <<~HTML
-          <h1 class="title">Rocket</h1>
+          <h1 class="title">Update Rocket</h1>
 
-          <mock name="block" data="{}" resource='#&lt;Resource name="rockets"&gt;'></mock>
-
-          <p>
-            <a class="has-text-link" href="/rockets" target="_self">
-              <span class="icon-text">
-                <span class="icon">
-                  <i class="fas fa-left-long"></i>
-                </span>
-
-                <span>Back to Rockets</span>
-              </span>
-            </a>
-          </p>
+          <mock name="form" data="{}" resource='#&lt;Resource name="rockets"&gt;'></mock>
         HTML
       end
 
@@ -103,21 +79,9 @@ do
       wrap_context 'with data' do
         let(:snapshot) do
           <<~HTML
-            <h1 class="title">Imp IV</h1>
+            <h1 class="title">Update Imp IV</h1>
 
-            <mock name="block" data='{"name"=&gt;"Imp IV"}' resource='#&lt;Resource name="rockets"&gt;'></mock>
-
-            <p>
-              <a class="has-text-link" href="/rockets" target="_self">
-                <span class="icon-text">
-                  <span class="icon">
-                    <i class="fas fa-left-long"></i>
-                  </span>
-
-                  <span>Back to Rockets</span>
-                </span>
-              </a>
-            </p>
+            <mock name="form" data='{"name"=&gt;"Imp IV"}' resource='#&lt;Resource name="rockets"&gt;'></mock>
           HTML
         end
 

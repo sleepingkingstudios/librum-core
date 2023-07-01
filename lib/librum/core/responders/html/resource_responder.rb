@@ -29,6 +29,8 @@ module Librum::Core::Responders::Html
 
     def lazy_require(page_name)
       require page_name.split('::').map(&:underscore).join('/')
+    rescue LoadError
+      # Do nothing.
     end
 
     def resource_component_class

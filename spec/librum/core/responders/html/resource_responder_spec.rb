@@ -37,6 +37,16 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
             .to have_received(:require)
             .with(expected_path)
         end
+
+        context 'when the resource page cannot be required' do
+          before(:example) do
+            allow(responder).to receive(:require).and_raise(LoadError)
+          end
+
+          include_contract 'should render page',
+            component_name,
+            **options
+        end
       end
     end
   end
