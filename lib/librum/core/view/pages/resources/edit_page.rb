@@ -1,13 +1,12 @@
 # frozen_string_literal: true
 
-require 'librum/core/view/components/link'
 require 'librum/core/view/components/missing_component'
 require 'librum/core/view/components/page'
 require 'librum/core/view/pages/resources'
 
 module Librum::Core::View::Pages::Resources
-  # Generic page for displaying a resource result.
-  class ShowPage < Librum::Core::View::Components::Page
+  # Generic page for editing a resource.
+  class EditPage < Librum::Core::View::Components::Page
     extend Forwardable
 
     def_delegators :@resource,
@@ -23,29 +22,29 @@ module Librum::Core::View::Pages::Resources
 
     private
 
-    def block_component
-      return nil unless resource.respond_to?(:block_component)
+    def form_component
+      return nil unless resource.respond_to?(:form_component)
 
-      resource.block_component
+      resource.form_component
     end
 
-    def build_data_block
-      if block_component.blank?
+    def build_data_form
+      if form_component.blank?
         return Librum::Core::View::Components::MissingComponent.new(
-          name:    'Block',
-          message: 'Rendered in Librum::Core::View::Pages::Resources::ShowPage'
+          name:    'Form',
+          message: 'Rendered in Librum::Core::View::Pages::Resources::EditPage'
         )
       end
 
-      block_component.new(data: resource_data, resource: resource)
+      form_component.new(data: resource_data, resource: resource)
     end
 
     def record_name
       resource_data['name'] || singular_resource_name.titleize
     end
 
-    def render_data_block
-      render(build_data_block)
+    def render_data_form
+      render(build_data_form)
     end
   end
 end
