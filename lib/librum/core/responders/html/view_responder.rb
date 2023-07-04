@@ -36,13 +36,21 @@ module Librum::Core::Responders::Html
     # Creates a Response based on the given result and options.
     #
     # @param result [Cuprum::Result] the result to render.
+    # @param action [String] the name of the action to render. Defaults to the
+    #   current action name.
     # @param flash [Hash] the flash messages to set.
     # @param layout [String, nil] the layout to render.
     # @param status [Integer, Symbol] the HTTP status of the response.
     #
     # @return [Responses::Html::RenderComponentResponse] the response.
-    def render_component(result, flash: {}, layout: nil, status: :ok) # rubocop:disable Metrics/MethodLength
-      component = view_component_for(result)
+    def render_component( # rubocop:disable Metrics/MethodLength
+      result,
+      action: nil,
+      flash:  {},
+      layout: nil,
+      status: :ok
+    )
+      component = view_component_for(action: action, result: result)
 
       Librum::Core::Responses::Html::RenderComponentResponse.new(
         component,
@@ -53,7 +61,7 @@ module Librum::Core::Responders::Html
       )
     rescue NameError
       Librum::Core::Responses::Html::RenderComponentResponse.new(
-        missing_page_component(result),
+        missing_page_component(action: action, result: result),
         assigns: extract_assigns(result),
         flash:   flash,
         layout:  layout,
@@ -79,8 +87,8 @@ module Librum::Core::Responders::Html
         .to_h { |(key, assign)| [key.to_s.sub(/\A_/, ''), assign] }
     end
 
-    def build_view_component(result)
-      view_component_class.new(result, resource: resource)
+    def build_view_component(result:, action: nil)
+      view_component_class(action: action).new(result, resource: resource)
     end
 
     def extract_assigns(result)
@@ -109,31 +117,31 @@ module Librum::Core::Responders::Html
         .sub(/Controller\z/, '')
     end
 
-    def missing_page_component(result)
+    def missing_page_component(result:, action: nil)
       Librum::Core::View::Pages::MissingPage.new(
         result,
-        action_name:     action_name,
+        action_name:     action || action_name,
         controller_name: controller_name,
         expected_page:   view_component_name
       )
     end
 
-    def view_component_class
-      view_component_name.constantize
+    def view_component_class(action: nil)
+      view_component_name(action: action).constantize
     end
 
-    def view_component_for(result)
+    def view_component_for(result:, action: nil)
       return result if result.is_a?(ViewComponent::Base)
 
       return result.value if result.value.is_a?(ViewComponent::Base)
 
-      build_view_component(result)
+      build_view_component(action: action, result: result)
     end
 
-    def view_component_name
+    def view_component_name(action: nil)
       engine = extract_engine_name
       scope  = extract_scope(engine)
-      action = action_name.to_s.camelize
+      action = (action || action_name).to_s.camelize
 
       "#{engine}View::Pages::#{scope}::#{action}Page"
     end
