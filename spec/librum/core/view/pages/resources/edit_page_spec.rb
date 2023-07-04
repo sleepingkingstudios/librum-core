@@ -2,6 +2,8 @@
 
 require 'rails_helper'
 
+require 'stannum/errors'
+
 require 'librum/core/resources/view_resource'
 require 'librum/core/view/pages/resources/edit_page'
 
@@ -14,6 +16,19 @@ do
     let(:data)   { { 'name' => 'Imp IV' } }
     let(:value)  { { resource.singular_resource_name => data } }
     let(:result) { Cuprum::Result.new(value: value) }
+  end
+
+  shared_context 'with errors' do
+    let(:errors) do
+      Stannum::Errors.new.add('spec.error', message: 'Something went wrong')
+    end
+    let(:error) do
+      Cuprum::Collections::Errors::InvalidParameters.new(
+        command: Cuprum::Command.new,
+        errors:  errors
+      )
+    end
+    let(:result) { Cuprum::Result.new(error: error) }
   end
 
   let(:result)   { Cuprum::Result.new }
@@ -51,7 +66,7 @@ do
 
     it { expect(rendered).to match_snapshot(snapshot) }
 
-    describe 'with a resource with block_component: value' do
+    describe 'with a resource with form_component: value' do
       include_context 'with mock component', 'form'
 
       let(:resource) do
@@ -64,7 +79,7 @@ do
         <<~HTML
           <h1 class="title">Update Rocket</h1>
 
-          <mock name="form" data="{}" resource='#&lt;Resource name="rockets"&gt;'></mock>
+          <mock name="form" data="{}" errors="nil" resource='#&lt;Resource name="rockets"&gt;'></mock>
         HTML
       end
 
@@ -81,12 +96,38 @@ do
           <<~HTML
             <h1 class="title">Update Imp IV</h1>
 
-            <mock name="form" data='{"name"=&gt;"Imp IV"}' resource='#&lt;Resource name="rockets"&gt;'></mock>
+            <mock name="form" data='{"name"=&gt;"Imp IV"}' errors="nil" resource='#&lt;Resource name="rockets"&gt;'></mock>
           HTML
         end
 
         it { expect(rendered).to match_snapshot(snapshot) }
       end
+
+      wrap_context 'with errors' do
+        let(:snapshot) do
+          <<~HTML
+            <h1 class="title">Update Rocket</h1>
+
+            <mock name="form" data="{}" errors="#&lt;Errors&gt;" resource='#&lt;Resource name="rockets"&gt;'></mock>
+          HTML
+        end
+
+        before(:example) do
+          allow(errors).to receive(:inspect).and_return('#<Errors>')
+
+          allow(errors).to receive(:with_messages).and_return(errors)
+        end
+
+        it { expect(rendered).to match_snapshot(snapshot) }
+      end
+    end
+  end
+
+  describe '#form_errors' do
+    include_examples 'should define reader', :form_errors, nil
+
+    wrap_context 'with errors' do
+      it { expect(page.form_errors).to be == errors }
     end
   end
 

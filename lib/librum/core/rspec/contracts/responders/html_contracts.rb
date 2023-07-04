@@ -63,12 +63,22 @@ module Librum::Core::RSpec::Contracts::Responders
       extend RSpec::SleepingKingStudios::Contract
 
       contract do |**options|
+        let(:expected_action_name) do
+          if defined?(self.options)
+            return self.options.fetch(:action, action_name)
+          end
+
+          action_name
+        end
+
         include_contract 'should render component',
           Librum::Core::View::Pages::MissingPage,
           http_status: :internal_server_error,
           **options
 
-        it { expect(response.component.action_name).to be == action_name }
+        it 'should set the action name' do
+          expect(response.component.action_name).to be == expected_action_name
+        end
 
         it 'should set the controller name' do
           expect(response.component.controller_name).to be == controller_name

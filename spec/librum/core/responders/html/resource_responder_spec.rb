@@ -3,11 +3,13 @@
 require 'rails_helper'
 
 require 'cuprum/collections'
+require 'cuprum/rails/rspec/contracts/responder_contracts'
 
 require 'librum/core/responders/html/resource_responder'
 require 'librum/core/rspec/contracts/responders/html_contracts'
 
 RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
+  include Cuprum::Rails::RSpec::Contracts::ResponderContracts
   include Librum::Core::RSpec::Contracts::Responders::HtmlContracts
 
   subject(:responder) { described_class.new(**constructor_options) }
@@ -51,50 +53,33 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
     end
   end
 
-  let(:action_name)     { :implement }
-  let(:controller_name) { 'CustomController' }
-  let(:member_action)   { false }
-  let(:resource) do
-    Cuprum::Rails::Resource.new(resource_name: 'rockets')
-  end
+  let(:action_name)   { 'implement' }
+  let(:controller)    { CustomController.new }
+  let(:member_action) { false }
+  let(:request)       { Cuprum::Rails::Request.new }
+  let(:resource)      { Cuprum::Rails::Resource.new(resource_name: 'rockets') }
   let(:constructor_options) do
     {
-      action_name:     action_name,
-      controller_name: controller_name,
-      member_action:   member_action,
-      resource:        resource
+      action_name:   action_name,
+      controller:    controller,
+      member_action: member_action,
+      request:       request
     }
   end
 
-  describe '.new' do
-    let(:expected_keywords) do
-      %i[
-        action_name
-        controller_name
-        member_action
-        resource
-      ]
-    end
+  include_contract 'should implement the responder methods',
+    controller_name: 'CustomController'
 
-    it 'should define the constructor' do
-      expect(described_class)
-        .to be_constructible
-        .with(0).arguments
-        .and_keywords(*expected_keywords)
-        .and_any_keywords
-    end
-  end
-
+  # rubocop:disable RSpec/MultipleMemoizedHelpers
   describe '#call' do
-    let(:result)   { Cuprum::Result.new }
-    let(:response) { responder.call(result) }
+    let(:controller_name) { 'CustomController' }
+    let(:result)          { Cuprum::Result.new }
+    let(:response)        { responder.call(result) }
     let(:expected_page) do
       'View::Pages::Custom::ImplementPage'
     end
 
     before(:example) { allow(responder).to receive(:require) } # rubocop:disable RSpec/SubjectStub
-
-    it { expect(responder).to respond_to(:call).with(1).argument }
 
     describe 'with a failing result' do
       let(:error)  { Cuprum::Error.new(message: 'Something went wrong') }
@@ -163,16 +148,19 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
         lazy_require: true
     end
   end
+  # rubocop:enable RSpec/MultipleMemoizedHelpers
 
   describe '#format' do
     include_examples 'should define reader', :format, :html
   end
 
+  # rubocop:disable RSpec/MultipleMemoizedHelpers
   describe '#render_component' do
-    let(:result)        { Cuprum::Result.new }
-    let(:options)       { {} }
-    let(:response)      { responder.render_component(result, **options) }
-    let(:expected_page) { 'View::Pages::Custom::ImplementPage' }
+    let(:controller_name) { 'CustomController' }
+    let(:result)          { Cuprum::Result.new }
+    let(:options)         { {} }
+    let(:response)        { responder.render_component(result, **options) }
+    let(:expected_page)   { 'View::Pages::Custom::ImplementPage' }
 
     before(:example) { allow(responder).to receive(:require) } # rubocop:disable RSpec/SubjectStub
 
@@ -193,5 +181,22 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
 
     include_examples 'should respond with the page when defined',
       'Librum::Core::View::Pages::Resources::ImplementPage'
+
+    describe 'with action: value' do
+      let(:action)  { 'execute' }
+      let(:options) { super().merge(action: action) }
+
+      include_contract 'should render the missing page'
+
+      include_examples 'should respond with the page when defined',
+        'View::Pages::Custom::ExecutePage'
+
+      include_examples 'should respond with the page when defined',
+        'View::Pages::Resources::ExecutePage'
+
+      include_examples 'should respond with the page when defined',
+        'Librum::Core::View::Pages::Resources::ExecutePage'
+    end
+    # rubocop:enable RSpec/MultipleMemoizedHelpers
   end
 end

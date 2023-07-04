@@ -2,6 +2,7 @@
 
 require 'rails_helper'
 
+require 'cuprum/rails/rspec/contracts/responder_contracts'
 require 'stannum'
 
 require 'librum/core/errors/authentication_error'
@@ -10,44 +11,30 @@ require 'librum/core/rspec/contracts/responders/json_contracts'
 require 'librum/core/serializers/json'
 
 RSpec.describe Librum::Core::Responders::JsonResponder do
+  include Cuprum::Rails::RSpec::Contracts::ResponderContracts
   include Librum::Core::RSpec::Contracts::Responders::JsonContracts
 
   subject(:responder) { described_class.new(**constructor_options) }
 
-  let(:resource) { Cuprum::Rails::Resource.new(resource_name: 'rockets') }
+  let(:action_name)   { 'launch' }
+  let(:controller)    { Spec::CustomController.new }
+  let(:member_action) { true }
+  let(:request)       { Cuprum::Rails::Request.new }
+  let(:resource)      { Cuprum::Rails::Resource.new(resource_name: 'rockets') }
   let(:constructor_options) do
     {
-      action_name:     'launch',
-      controller_name: 'RocketsController',
-      member_action:   true,
-      resource:        resource,
-      serializers:     Librum::Core::Serializers::Json.default_serializers
+      action_name:   action_name,
+      controller:    controller,
+      member_action: member_action,
+      request:       request,
+      serializers:   Librum::Core::Serializers::Json.default_serializers
     }
   end
 
-  describe '.new' do
-    let(:expected_keywords) do
-      %i[
-        action_name
-        controller_name
-        member_action
-        resource
-        serializers
-      ]
-    end
-
-    it 'should define the constructor' do
-      expect(described_class)
-        .to be_constructible
-        .with(0).arguments
-        .and_keywords(*expected_keywords)
-        .and_any_keywords
-    end
-  end
+  include_contract 'should implement the responder methods',
+    constructor_keywords: %i[serializers]
 
   describe '#call' do
-    it { expect(responder).to respond_to(:call).with(1).argument }
-
     describe 'with a passing result' do
       let(:result) { Cuprum::Result.new(value: { 'key' => 'value' }) }
 

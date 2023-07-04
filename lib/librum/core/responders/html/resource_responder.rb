@@ -21,10 +21,10 @@ module Librum::Core::Responders::Html
 
     private
 
-    def build_view_component(result)
-      return super if Object.const_defined?(view_component_name)
+    def build_view_component(result:, action: nil)
+      return super if Object.const_defined?(view_component_name(action: action))
 
-      resource_component_class.new(result, resource: resource)
+      resource_component_class(action: action).new(result, resource: resource)
     end
 
     def lazy_require(page_name)
@@ -33,12 +33,12 @@ module Librum::Core::Responders::Html
       # Do nothing.
     end
 
-    def resource_component_class
-      resource_component_name.constantize
+    def resource_component_class(action: nil)
+      resource_component_name(action: action).constantize
     end
 
-    def resource_component_name
-      action    = action_name.to_s.camelize
+    def resource_component_name(action: nil)
+      action    = (action || action_name).to_s.camelize
       page_name = "View::Pages::Resources::#{action}Page"
 
       return page_name if Object.const_defined?(page_name)
