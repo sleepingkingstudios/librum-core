@@ -10,7 +10,7 @@ module Librum::Core::View::Components
     # @param fields [FieldDefinition>] the configuration objects for rendering
     #   each list item.
     # @param item_component [ViewComponent::Base] the component used to render
-    #   each list item. Defaults to View::Components::DataList::Item.
+    #   each list item. Defaults to Librum::Core::View::Components::DataField.
     # @param options [Hash{Symbol=>Object}] additional objects for rendering the
     #   data list.
     def initialize(data:, fields:, item_component: nil, **options)
@@ -23,7 +23,7 @@ module Librum::Core::View::Components
         Librum::Core::View::Components::DataField::FieldDefinition.new(**field)
       end
       @item_component =
-        item_component || Librum::Core::View::Components::DataList::Item
+        item_component || Librum::Core::View::Components::DataField
       @options        = options
     end
 
@@ -56,5 +56,3 @@ module Librum::Core::View::Components
     end
   end
 end
-
-require 'librum/core/view/components/data_list/item'

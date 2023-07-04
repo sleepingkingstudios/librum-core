@@ -42,29 +42,35 @@ RSpec.describe Librum::Core::View::Components::DataList, type: :component do
     let(:rendered) { render_inline(data_list) }
     let(:snapshot) do
       <<~HTML
-        <div class="content">
-          <div class="block">
-            <p class="has-text-weight-semibold mb-1">First Name</p>
+        <div class="block content">
+          <div class="columns mb-0">
+            <div class="column is-2 has-text-weight-semibold mb-1">
+              First Name
+            </div>
 
-            <p>
+            <div class="column">
               Alan
-            </p>
+            </div>
           </div>
 
-          <div class="block">
-            <p class="has-text-weight-semibold mb-1">Surname</p>
+          <div class="columns mb-0">
+            <div class="column is-2 has-text-weight-semibold mb-1">
+              Surname
+            </div>
 
-            <p>
+            <div class="column">
               Bradley
-            </p>
+            </div>
           </div>
 
-          <div class="block">
-            <p class="has-text-weight-semibold mb-1">Role</p>
+          <div class="columns mb-0">
+            <div class="column is-2 has-text-weight-semibold mb-1">
+              Role
+            </div>
 
-            <p>
+            <div class="column">
               user
-            </p>
+            </div>
           </div>
         </div>
       HTML
@@ -80,23 +86,35 @@ RSpec.describe Librum::Core::View::Components::DataList, type: :component do
       end
       let(:snapshot) do
         <<~HTML
-          <div class="content">
-            <div class="block">
-              <p class="has-text-weight-semibold mb-1">First Name</p>
+          <div class="block content">
+            <div class="columns mb-0">
+              <div class="column is-2 has-text-weight-semibold mb-1">
+                First Name
+              </div>
 
-              <mock name="item" data='{"first_name"=&gt;"Alan", "last_name"=&gt;"Bradley", "role"=&gt;"user"}' field='#&lt;Field key="first_name"&gt;'></mock>
+              <div class="column">
+                <mock name="item" data='{"first_name"=&gt;"Alan", "last_name"=&gt;"Bradley", "role"=&gt;"user"}' field='#&lt;Field key="first_name"&gt;'></mock>
+              </div>
             </div>
 
-            <div class="block">
-              <p class="has-text-weight-semibold mb-1">Surname</p>
+            <div class="columns mb-0">
+              <div class="column is-2 has-text-weight-semibold mb-1">
+                Surname
+              </div>
 
-              <mock name="item" data='{"first_name"=&gt;"Alan", "last_name"=&gt;"Bradley", "role"=&gt;"user"}' field='#&lt;Field key="last_name"&gt;'></mock>
+              <div class="column">
+                <mock name="item" data='{"first_name"=&gt;"Alan", "last_name"=&gt;"Bradley", "role"=&gt;"user"}' field='#&lt;Field key="last_name"&gt;'></mock>
+              </div>
             </div>
 
-            <div class="block">
-              <p class="has-text-weight-semibold mb-1">Role</p>
+            <div class="columns mb-0">
+              <div class="column is-2 has-text-weight-semibold mb-1">
+                Role
+              </div>
 
-              <mock name="item" data='{"first_name"=&gt;"Alan", "last_name"=&gt;"Bradley", "role"=&gt;"user"}' field='#&lt;Field key="role"&gt;'></mock>
+              <div class="column">
+                <mock name="item" data='{"first_name"=&gt;"Alan", "last_name"=&gt;"Bradley", "role"=&gt;"user"}' field='#&lt;Field key="role"&gt;'></mock>
+              </div>
             </div>
           </div>
         HTML
@@ -117,23 +135,35 @@ RSpec.describe Librum::Core::View::Components::DataList, type: :component do
         let(:constructor_options) { super().merge(options) }
         let(:snapshot) do
           <<~HTML
-            <div class="content">
-              <div class="block">
-                <p class="has-text-weight-semibold mb-1">First Name</p>
+            <div class="block content">
+              <div class="columns mb-0">
+                <div class="column is-2 has-text-weight-semibold mb-1">
+                  First Name
+                </div>
 
-                <mock name="item" data='{"first_name"=&gt;"Alan", "last_name"=&gt;"Bradley", "role"=&gt;"user"}' field='#&lt;Field key="first_name"&gt;' key="value"></mock>
+                <div class="column">
+                  <mock name="item" data='{"first_name"=&gt;"Alan", "last_name"=&gt;"Bradley", "role"=&gt;"user"}' field='#&lt;Field key="first_name"&gt;' key="value"></mock>
+                </div>
               </div>
 
-              <div class="block">
-                <p class="has-text-weight-semibold mb-1">Surname</p>
+              <div class="columns mb-0">
+                <div class="column is-2 has-text-weight-semibold mb-1">
+                  Surname
+                </div>
 
-                <mock name="item" data='{"first_name"=&gt;"Alan", "last_name"=&gt;"Bradley", "role"=&gt;"user"}' field='#&lt;Field key="last_name"&gt;' key="value"></mock>
+                <div class="column">
+                  <mock name="item" data='{"first_name"=&gt;"Alan", "last_name"=&gt;"Bradley", "role"=&gt;"user"}' field='#&lt;Field key="last_name"&gt;' key="value"></mock>
+                </div>
               </div>
 
-              <div class="block">
-                <p class="has-text-weight-semibold mb-1">Role</p>
+              <div class="columns mb-0">
+                <div class="column is-2 has-text-weight-semibold mb-1">
+                  Role
+                </div>
 
-                <mock name="item" data='{"first_name"=&gt;"Alan", "last_name"=&gt;"Bradley", "role"=&gt;"user"}' field='#&lt;Field key="role"&gt;' key="value"></mock>
+                <div class="column">
+                  <mock name="item" data='{"first_name"=&gt;"Alan", "last_name"=&gt;"Bradley", "role"=&gt;"user"}' field='#&lt;Field key="role"&gt;' key="value"></mock>
+                </div>
               </div>
             </div>
           HTML
@@ -181,7 +211,7 @@ RSpec.describe Librum::Core::View::Components::DataList, type: :component do
   describe '#item_component' do
     include_examples 'should define reader',
       :item_component,
-      described_class::Item
+      Librum::Core::View::Components::DataField
 
     context 'when initialized with item_component: value' do
       include_context 'with mock component', 'item'
