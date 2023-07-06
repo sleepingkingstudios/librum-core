@@ -5,16 +5,23 @@ require 'librum/core/view/components'
 module Librum::Core::View::Components
   # Renders a button component.
   class Button < ViewComponent::Base
+    # @param class_names [Array<String>] additional class names to render.
     # @param color [String] the color of the button.
     # @param label [String] the button label.
-    # @param type [String] the type of button, either "button", "reset" or
-    #   "submit".
-    def initialize(color: nil, label: nil, type: 'button')
+    # @param type [String] the type of button, either "button", "link", "reset",
+    #   or "submit".
+    def initialize(
+      class_names: nil,
+      color:       nil,
+      label:       nil,
+      type:        'button'
+    )
       super()
 
-      @color = color
-      @label = label
-      @type  = type
+      @class_names = class_names
+      @color       = color
+      @label       = label
+      @type        = type
     end
 
     # @return [String] the color of the button.
@@ -32,6 +39,8 @@ module Librum::Core::View::Components
       names = %w[button]
 
       names << "is-#{color}" if color
+
+      names += Array(@class_names)
 
       names.join(' ')
     end
