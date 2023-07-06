@@ -1,0 +1,15 @@
+<div class="field mt-5">
+  <div class="control">
+    <div class="columns">
+      <div class="column is-half-tablet is-one-quarter-desktop">
+        <%= render_submit_button %>
+      </div>
+
+      <% if cancel_button? %>
+      <div class="column is-half-tablet is-one-quarter-desktop">
+        <%= render_cancel_button %>
+      </div>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -28,6 +28,30 @@ RSpec.describe Librum::Core::View::Components::Button, type: :component do
 
     it { expect(rendered).to match_snapshot(snapshot) }
 
+    describe 'with class_names: an Array of Strings' do
+      let(:class_names) { %w[is-classification has-property] }
+      let(:options)     { super().merge(class_names: class_names) }
+      let(:snapshot) do
+        <<~HTML
+          <button type="button" class="button is-classification has-property"></button>
+        HTML
+      end
+
+      it { expect(rendered).to match_snapshot(snapshot) }
+    end
+
+    describe 'with class_names: a String' do
+      let(:class_names) { 'is-classification has-property' }
+      let(:options)     { super().merge(class_names: class_names) }
+      let(:snapshot) do
+        <<~HTML
+          <button type="button" class="button is-classification has-property"></button>
+        HTML
+      end
+
+      it { expect(rendered).to match_snapshot(snapshot) }
+    end
+
     describe 'with color: value' do
       let(:color)   { 'danger' }
       let(:options) { super().merge(color: color) }
