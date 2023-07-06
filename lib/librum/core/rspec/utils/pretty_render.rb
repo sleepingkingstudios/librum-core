@@ -16,6 +16,12 @@ module Librum::Core::RSpec::Utils
 
     private
 
+    def authenticity_token?(tag)
+      return false unless tag.name == 'input'
+
+      tag.attributes['name'].value == 'authenticity_token'
+    end
+
     def child_tags(tag)
       tag
         .children
@@ -73,6 +79,11 @@ module Librum::Core::RSpec::Utils
       text.each_line.map { |line| line.sub(/\A#{' ' * offset}/, '') }.join
     end
 
+    def render_authenticity_token
+      %(<input type="hidden" name="authenticity_token" value="[token]" ) \
+        'autocomplete="off">'
+    end
+
     def render_children(tag)
       buffer = +''
 
@@ -88,6 +99,7 @@ module Librum::Core::RSpec::Utils
     def render_tag(tag)
       return render_tag_with_children(tag) if has_children?(tag)
       return render_tag_with_text(tag)     if has_text?(tag)
+      return render_authenticity_token     if authenticity_token?(tag)
 
       tag.to_s.strip
     end

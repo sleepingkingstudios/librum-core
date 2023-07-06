@@ -245,6 +245,33 @@ RSpec.describe Librum::Core::RSpec::Utils::PrettyRender do
       end
     end
 
+    describe 'with a form with authenticity token' do
+      let(:contents) do
+        <<~HTML
+          <form>
+            <input type="hidden" name="authenticity_token" value="12345" autocomplete="off">
+
+            <input type="text" name="username">
+
+            <button type="submit">Submit</button>
+          </form>
+        HTML
+      end
+      let(:expected) do
+        <<~HTML
+          <form>
+            <input type="hidden" name="authenticity_token" value="[token]" autocomplete="off">
+
+            <input type="text" name="username">
+
+            <button type="submit">Submit</button>
+          </form>
+        HTML
+      end
+
+      it { expect(rendered).to be == expected }
+    end
+
     describe 'with a list of tags' do
       let(:contents) do
         <<~HTML
