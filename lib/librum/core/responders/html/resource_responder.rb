@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'cuprum/collections/errors/not_found'
+
 require 'librum/core/responders/html'
 require 'librum/core/responders/html/view_responder'
 
