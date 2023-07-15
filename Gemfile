@@ -2,7 +2,7 @@
 
 source 'https://rubygems.org'
 
-# Specify your gem's dependencies in core.gemspec.
+# Specify your gem's dependencies in librum-core.gemspec.
 gemspec
 
 gem 'cuprum',
