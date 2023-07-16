@@ -2,8 +2,6 @@
 
 require 'rails_helper'
 
-require 'librum/core/actions/view/middleware/page_breadcrumbs'
-
 RSpec.describe Librum::Core::Actions::View::Middleware::PageBreadcrumbs do
   subject(:middleware) { described_class.new(breadcrumbs: breadcrumbs) }
 

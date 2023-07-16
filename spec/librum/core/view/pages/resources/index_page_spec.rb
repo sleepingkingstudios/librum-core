@@ -2,9 +2,6 @@
 
 require 'rails_helper'
 
-require 'librum/core/resources/view_resource'
-require 'librum/core/view/pages/resources/index_page'
-
 RSpec.describe Librum::Core::View::Pages::Resources::IndexPage,
   type: :component \
 do

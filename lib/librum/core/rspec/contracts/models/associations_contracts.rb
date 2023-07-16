@@ -2,9 +2,6 @@
 
 require 'rspec/sleeping_king_studios/contract'
 
-require 'librum/core/rspec/contracts/models'
-require 'librum/core/rspec/contracts/models/attributes_contracts'
-
 module Librum::Core::RSpec::Contracts::Models
   module AssociationsContracts
     # Contract asserting the model class has a :belongs_to association.

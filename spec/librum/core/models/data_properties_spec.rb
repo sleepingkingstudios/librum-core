@@ -2,9 +2,6 @@
 
 require 'rails_helper'
 
-require 'librum/core/models/data_properties'
-require 'librum/core/rspec/contracts/models/data_properties_contracts'
-
 RSpec.describe Librum::Core::Models::DataProperties do
   include Librum::Core::RSpec::Contracts::Models::DataPropertiesContracts
 

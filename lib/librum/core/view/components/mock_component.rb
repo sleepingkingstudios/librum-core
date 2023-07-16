@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'librum/core/view/components'
-
 module Librum::Core::View::Components
   # Basic mock for stubbing out view components.
   class MockComponent < ViewComponent::Base

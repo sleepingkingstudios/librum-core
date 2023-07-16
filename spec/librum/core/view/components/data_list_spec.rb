@@ -2,8 +2,6 @@
 
 require 'rails_helper'
 
-require 'librum/core/view/components/data_list'
-
 RSpec.describe Librum::Core::View::Components::DataList, type: :component do
   subject(:data_list) { described_class.new(**constructor_options) }
 

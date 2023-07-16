@@ -5,8 +5,6 @@ require 'rails_helper'
 require 'cuprum/rails/repository'
 require 'cuprum/rails/rspec/actions/index_contracts'
 
-require 'librum/core/actions/index'
-
 require 'support/user'
 
 RSpec.describe Librum::Core::Actions::Index, type: :action do

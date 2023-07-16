@@ -2,8 +2,6 @@
 
 require 'rails_helper'
 
-require 'librum/core/view/layouts/page'
-
 RSpec.describe Librum::Core::View::Layouts::Page, type: :component do
   subject(:page) { described_class.new(**options).with_content(content) }
 

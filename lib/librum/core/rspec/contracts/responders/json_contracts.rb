@@ -2,8 +2,6 @@
 
 require 'rspec/sleeping_king_studios/contract'
 
-require 'librum/core/rspec/contracts/responders'
-
 module Librum::Core::RSpec::Contracts::Responders
   module JsonContracts
     # Contract asserting the action responds with JSON.

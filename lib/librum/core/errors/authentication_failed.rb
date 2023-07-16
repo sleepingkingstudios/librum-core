@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require 'librum/core/errors'
-require 'librum/core/errors/authentication_error'
-
 module Librum::Core::Errors
   # Generic error returned for a request that fails authentication.
   class AuthenticationFailed < Librum::Core::Errors::AuthenticationError

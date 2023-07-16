@@ -2,8 +2,6 @@
 
 require 'rails_helper'
 
-require 'librum/core/view/components/form_buttons'
-
 RSpec.describe Librum::Core::View::Components::FormButtons, type: :component do
   subject(:buttons) { described_class.new(**options) }
 

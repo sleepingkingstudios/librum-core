@@ -2,8 +2,6 @@
 
 require 'rails_helper'
 
-require 'librum/core/view/layouts/page/alert'
-
 RSpec.describe Librum::Core::View::Layouts::Page::Alert, type: :component do
   subject(:alert) { described_class.new(message, **options) }
 

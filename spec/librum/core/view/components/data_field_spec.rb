@@ -2,8 +2,6 @@
 
 require 'rails_helper'
 
-require 'librum/core/view/components/data_field'
-
 RSpec.describe Librum::Core::View::Components::DataField, type: :component do
   subject(:data_field) { described_class.new(**constructor_options) }
 

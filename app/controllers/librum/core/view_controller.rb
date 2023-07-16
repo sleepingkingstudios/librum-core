@@ -2,9 +2,6 @@
 
 require 'cuprum/rails/controller'
 
-require 'librum/core/responders/html/view_responder'
-require 'librum/core/view/layouts/page'
-
 module Librum::Core
   # Abstract base class for View controllers.
   class ViewController < Librum::Core::ApplicationController

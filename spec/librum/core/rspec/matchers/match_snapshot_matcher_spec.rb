@@ -2,10 +2,6 @@
 
 require 'rails_helper'
 
-require 'librum/core/rspec/matchers/match_snapshot_matcher'
-require 'librum/core/rspec/utils/pretty_render'
-require 'librum/core/view/components/identity_component'
-
 RSpec.describe Librum::Core::RSpec::Matchers::MatchSnapshotMatcher do
   subject(:matcher) { described_class.new(expected) }
 

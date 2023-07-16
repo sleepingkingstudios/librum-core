@@ -2,8 +2,6 @@
 
 require 'rails_helper'
 
-require 'librum/core/actions/view/middleware/page_configuration'
-
 RSpec.describe Librum::Core::Actions::View::Middleware::PageConfiguration do
   subject(:middleware) { described_class.new(**options) }
 

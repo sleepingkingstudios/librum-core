@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require 'librum/core/view/components/link'
-require 'librum/core/view/layouts/page/navigation'
-
 module Librum::Core::View::Layouts
   # Renders the navigation brand icon or image.
   class Page::Navigation::Brand < ViewComponent::Base

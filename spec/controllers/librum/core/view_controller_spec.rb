@@ -2,8 +2,6 @@
 
 require 'rails_helper'
 
-require 'librum/core/rspec/contracts/controller_contracts'
-
 RSpec.describe Librum::Core::ViewController do
   include Librum::Core::RSpec::Contracts::ControllerContracts
 

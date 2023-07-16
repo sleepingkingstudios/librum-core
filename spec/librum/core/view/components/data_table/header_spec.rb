@@ -2,8 +2,6 @@
 
 require 'rails_helper'
 
-require 'librum/core/view/components/data_table/header'
-
 RSpec.describe Librum::Core::View::Components::DataTable::Header,
   type: :component \
 do

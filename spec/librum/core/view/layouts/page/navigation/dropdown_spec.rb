@@ -2,8 +2,6 @@
 
 require 'rails_helper'
 
-require 'librum/core/view/layouts/page/navigation/dropdown'
-
 RSpec.describe Librum::Core::View::Layouts::Page::Navigation::Dropdown,
   type: :component \
 do

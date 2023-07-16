@@ -15,4 +15,7 @@ Rails.application.configure do
   config.action_dispatch.show_exceptions = false
 
   config.factory_bot.definition_file_paths = ['spec/support/factories']
+
+  # Configure authentication error.
+  config.authentication_error = 'Librum::Core::Errors::AuthenticationError'
 end

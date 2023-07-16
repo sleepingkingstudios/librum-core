@@ -2,8 +2,6 @@
 
 require 'cuprum/rails/serializers/json/attributes_serializer'
 
-require 'librum/core/serializers/json'
-
 module Librum::Core::Serializers::Json
   # Abstract base class for serializing records as JSON.
   class RecordSerializer < \

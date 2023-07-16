@@ -4,9 +4,6 @@ require 'rails_helper'
 
 require 'stannum/errors'
 
-require 'librum/core/resources/view_resource'
-require 'librum/core/view/pages/resources/edit_page'
-
 RSpec.describe Librum::Core::View::Pages::Resources::EditPage,
   type: :component \
 do

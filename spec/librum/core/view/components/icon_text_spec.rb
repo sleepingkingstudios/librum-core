@@ -2,8 +2,6 @@
 
 require 'rails_helper'
 
-require 'librum/core/view/components/icon_text'
-
 RSpec.describe Librum::Core::View::Components::IconText, type: :component do
   subject(:component) { described_class.new(icon: icon, label: label) }
 

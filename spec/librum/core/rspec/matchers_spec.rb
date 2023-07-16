@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'librum/core/rspec/matchers'
-
 RSpec.describe Librum::Core::RSpec::Matchers do
   include Librum::Core::RSpec::Matchers # rubocop:disable RSpec/DescribedClass
 

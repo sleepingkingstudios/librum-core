@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require 'librum/core/view/components'
-require 'librum/core/view/components/data_field'
-
 module Librum::Core::View::Components
   # Renders the fields of a data object.
   class DataList < ViewComponent::Base

@@ -2,8 +2,6 @@
 
 require 'rails_helper'
 
-require 'librum/core/view/components/missing_component'
-
 RSpec.describe Librum::Core::View::Components::MissingComponent,
   type: :component \
 do

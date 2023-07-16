@@ -4,9 +4,6 @@ require 'rails_helper'
 
 require 'view_component'
 
-require 'librum/core/rspec/utils/pretty_render'
-require 'librum/core/view/components/identity_component'
-
 RSpec.describe Librum::Core::RSpec::Utils::PrettyRender do
   subject(:renderer) { described_class.new }
 

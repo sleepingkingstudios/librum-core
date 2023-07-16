@@ -2,8 +2,6 @@
 
 require 'rspec/sleeping_king_studios/contract'
 
-require 'librum/core/rspec/contracts/models'
-
 module Librum::Core::RSpec::Contracts::Models
   module DataPropertiesContracts
     # Contract asserting that the model class defines data proprties.

@@ -2,8 +2,6 @@
 
 require 'rails_helper'
 
-require 'librum/core/view/components/page'
-
 RSpec.describe Librum::Core::View::Components::Page do
   subject(:page) { described_class.new(result, **constructor_options) }
 

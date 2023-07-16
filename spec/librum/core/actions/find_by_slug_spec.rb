@@ -4,8 +4,6 @@ require 'rails_helper'
 
 require 'cuprum/rails/resource'
 
-require 'librum/core/actions/find_by_slug'
-
 RSpec.describe Librum::Core::Actions::FindBySlug do
   subject(:action) { described_class.new(collection, action_name) }
 

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'librum/core/models'
-
 module Librum::Core::Models
   # Reusable component for defining properties based on a Hash column.
   module DataProperties

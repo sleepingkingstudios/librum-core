@@ -1,9 +1,5 @@
 # frozen_string_literal: true
 
-require 'librum/core/view/components/data_field'
-require 'librum/core/view/components/data_table'
-require 'librum/core/view/components/data_table/row'
-
 module Librum::Core::View::Components
   # Renders a table body.
   class DataTable::Body < ViewComponent::Base

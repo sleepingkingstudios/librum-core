@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'librum/core/view/components'
-
 module Librum::Core::View::Components
   # Renders when an expected component is not configured.
   class MissingComponent < ViewComponent::Base

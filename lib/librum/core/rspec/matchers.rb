@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'librum/core/rspec'
-
 module Librum::Core::RSpec
   # Namespace for shared RSpec matchers.
   module Matchers
@@ -14,5 +12,3 @@ module Librum::Core::RSpec
     end
   end
 end
-
-require 'librum/core/rspec/matchers/match_snapshot_matcher'

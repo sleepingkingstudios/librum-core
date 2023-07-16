@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require 'librum/core/view/components'
-require 'librum/core/view/components/icon_text'
-
 module Librum::Core::View::Components
   # Renders an internal or external link.
   class Link < ViewComponent::Base

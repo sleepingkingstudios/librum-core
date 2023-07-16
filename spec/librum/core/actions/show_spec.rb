@@ -5,8 +5,6 @@ require 'rails_helper'
 require 'cuprum/rails/repository'
 require 'cuprum/rails/rspec/actions/show_contracts'
 
-require 'librum/core/actions/show'
-
 require 'support/user'
 
 RSpec.describe Librum::Core::Actions::Show, type: :action do

@@ -2,8 +2,6 @@
 
 require 'rails_helper'
 
-require 'librum/core/view/components/link'
-
 RSpec.describe Librum::Core::View::Components::Link, type: :component do
   subject(:link) { described_class.new(url, **options) }
 

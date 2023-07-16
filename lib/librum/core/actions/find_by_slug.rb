@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require 'librum/core/actions'
-require 'librum/core/models/queries/find_by_slug'
-
 module Librum::Core::Actions
   # Action helper for finding an entity by (unique) slug.
   module FindBySlug

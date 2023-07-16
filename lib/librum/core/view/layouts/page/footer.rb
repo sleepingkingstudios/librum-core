@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require 'librum/core/view/layouts/page'
-require 'librum/core/view/layouts/page/breadcrumbs'
-
 module Librum::Core::View::Layouts
   # Renders the page footer.
   #

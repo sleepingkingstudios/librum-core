@@ -2,8 +2,6 @@
 
 require 'rails_helper'
 
-require 'librum/core/rspec/component_helpers'
-
 RSpec.describe Librum::Core::RSpec::ComponentHelpers do
   subject(:example_group) { described_class.new }
 

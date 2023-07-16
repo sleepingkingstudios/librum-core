@@ -5,10 +5,6 @@ require 'cuprum/collections/errors/not_found'
 require 'cuprum/collections/errors/not_unique'
 require 'cuprum/rails/responders/json_responder'
 
-require 'librum/core/errors/authentication_error'
-require 'librum/core/errors/authentication_failed'
-require 'librum/core/responders'
-
 module Librum::Core::Responders
   # Base class for generating JSON responses.
   class JsonResponder < Cuprum::Rails::Responders::JsonResponder
@@ -29,7 +25,9 @@ module Librum::Core::Responders
       render_failure(result.error, status: 400)
     end
 
-    match :failure, error: Librum::Core.authentication_error do |result|
+    match :failure,
+      error: Librum::Core::Engine.config.authentication_error.constantize \
+    do |result|
       render_failure(
         Rails.env.development? ? result.error : authentication_error,
         status: 401

@@ -2,8 +2,6 @@
 
 require 'rails_helper'
 
-require 'librum/core/responses/html/render_component_response'
-
 RSpec.describe Librum::Core::Responses::Html::RenderComponentResponse do
   subject(:response) { described_class.new(component, **options) }
 

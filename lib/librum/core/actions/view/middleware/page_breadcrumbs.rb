@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require 'librum/core/actions/view/middleware'
-require 'librum/core/actions/view/middleware/page_configuration'
-
 module Librum::Core::Actions::View::Middleware
   # Middleware for configuring a view page's breadcrumbs.
   class PageBreadcrumbs <

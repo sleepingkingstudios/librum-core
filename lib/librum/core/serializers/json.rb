@@ -2,8 +2,6 @@
 
 require 'cuprum/rails'
 
-require 'librum/core/serializers'
-
 module Librum::Core::Serializers
   # Namespace for JSON serializers and configuration.
   module Json
@@ -27,5 +25,3 @@ module Librum::Core::Serializers
     end
   end
 end
-
-require 'librum/core/serializers/json/date_time_serializer'

@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require 'librum/core/resources'
-require 'librum/core/resources/base_resource'
-
 module Librum::Core::Resources
   # Resource class for configuring Librum::Core view controllers.
   class ViewResource < Librum::Core::Resources::BaseResource

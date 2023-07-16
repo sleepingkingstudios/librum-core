@@ -2,11 +2,6 @@
 
 require 'rspec/sleeping_king_studios/contract'
 
-require 'librum/core/rspec/contracts'
-require 'librum/core/rspec/contracts/models/associations_contracts'
-require 'librum/core/rspec/contracts/models/attributes_contracts'
-require 'librum/core/rspec/contracts/models/validation_contracts'
-
 module Librum::Core::RSpec::Contracts
   # Contracts for asserting on model objects.
   module ModelContracts

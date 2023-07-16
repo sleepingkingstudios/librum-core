@@ -2,8 +2,6 @@
 
 require 'cuprum'
 
-require 'librum/core/actions/view/middleware'
-
 module Librum::Core::Actions::View::Middleware
   # Abstract middleware for configuring a view page.
   class PageConfiguration < Cuprum::Command

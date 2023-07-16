@@ -2,9 +2,6 @@
 
 require 'cuprum/collections/errors/not_found'
 
-require 'librum/core/responders/html'
-require 'librum/core/responders/html/view_responder'
-
 module Librum::Core::Responders::Html
   # Delegates missing pages to View::Pages::Resources.
   class ResourceResponder < Librum::Core::Responders::Html::ViewResponder

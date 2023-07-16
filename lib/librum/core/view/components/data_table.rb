@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require 'librum/core/view/components'
-require 'librum/core/view/components/data_field'
-
 module Librum::Core::View::Components
   # Renders tabular data.
   class DataTable < ViewComponent::Base
@@ -134,7 +131,3 @@ module Librum::Core::View::Components
     end
   end
 end
-
-require 'librum/core/view/components/data_table/body'
-require 'librum/core/view/components/data_table/header'
-require 'librum/core/view/components/data_table/row'

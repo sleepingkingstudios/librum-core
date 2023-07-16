@@ -5,9 +5,6 @@ require 'rails_helper'
 require 'cuprum/collections'
 require 'cuprum/rails/rspec/contracts/responder_contracts'
 
-require 'librum/core/responders/html/resource_responder'
-require 'librum/core/rspec/contracts/responders/html_contracts'
-
 RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
   include Cuprum::Rails::RSpec::Contracts::ResponderContracts
   include Librum::Core::RSpec::Contracts::Responders::HtmlContracts

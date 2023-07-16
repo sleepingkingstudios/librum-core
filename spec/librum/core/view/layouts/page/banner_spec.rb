@@ -2,8 +2,6 @@
 
 require 'rails_helper'
 
-require 'librum/core/view/layouts/page/banner'
-
 RSpec.describe Librum::Core::View::Layouts::Page::Banner, type: :component do
   subject(:banner) { described_class.new(**options) }
 

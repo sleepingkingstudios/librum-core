@@ -2,8 +2,6 @@
 
 require 'rails_helper'
 
-require 'librum/core/serializers/json/date_time_serializer'
-
 RSpec.describe Librum::Core::Serializers::Json::DateTimeSerializer do
   subject(:serializer) { described_class.new }
 

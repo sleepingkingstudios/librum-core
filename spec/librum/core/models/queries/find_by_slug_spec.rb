@@ -2,8 +2,6 @@
 
 require 'rails_helper'
 
-require 'librum/core/models/queries/find_by_slug'
-
 RSpec.describe Librum::Core::Models::Queries::FindBySlug do
   subject(:query) { described_class.new(collection: collection) }
 

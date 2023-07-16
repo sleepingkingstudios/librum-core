@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'librum/core/rspec/factories'
-
 module Librum::Core::RSpec::Factories
   # Module for defining shared factory definitions.
   module SharedFactories

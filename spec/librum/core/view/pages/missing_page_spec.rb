@@ -2,8 +2,6 @@
 
 require 'rails_helper'
 
-require 'librum/core/view/pages/missing_page'
-
 RSpec.describe Librum::Core::View::Pages::MissingPage, type: :component do
   subject(:page) do
     described_class.new(
