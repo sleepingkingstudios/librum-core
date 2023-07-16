@@ -4,11 +4,6 @@ require 'view_component/test_helpers'
 
 require 'rspec/sleeping_king_studios/concerns/shared_example_group'
 
-require 'librum/core/rspec'
-require 'librum/core/rspec/matchers'
-require 'librum/core/rspec/utils/pretty_render'
-require 'librum/core/view/components/mock_component'
-
 module Librum::Core::RSpec
   # Helper methods for testing view components.
   module ComponentHelpers

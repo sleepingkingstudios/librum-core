@@ -4,8 +4,6 @@ require 'rails_helper'
 
 require 'cuprum/error'
 
-require 'librum/core'
-
 RSpec.describe Librum::Core do
   let(:expected_configuration) { {} }
 

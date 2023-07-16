@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require 'librum/core/view/components/data_table'
-require 'librum/core/view/components/resources'
-
 module Librum::Core::View::Components::Resources
   # Renders data from a resourceful index action.
   class Table < Librum::Core::View::Components::DataTable

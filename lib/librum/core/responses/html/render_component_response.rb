@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'librum/core/responses/html'
-
 module Librum::Core::Responses::Html
   # Encapsulates an HTML response that renders a ViewComponent.
   class RenderComponentResponse

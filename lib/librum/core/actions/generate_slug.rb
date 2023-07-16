@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require 'librum/core/actions'
-require 'librum/core/models/attributes/generate_slug'
-
 module Librum::Core::Actions
   # Action helper for generating a slug for an entity.
   module GenerateSlug

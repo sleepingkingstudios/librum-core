@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'librum/core/view/layouts/page'
-
 module Librum::Core::View::Layouts
   # Renders the page breadcrumb navigation.
   class Page::Breadcrumbs < ViewComponent::Base

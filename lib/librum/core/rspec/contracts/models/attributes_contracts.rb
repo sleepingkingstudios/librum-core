@@ -2,8 +2,6 @@
 
 require 'rspec/sleeping_king_studios/contract'
 
-require 'librum/core/rspec/contracts/models'
-
 module Librum::Core::RSpec::Contracts::Models
   module AttributesContracts
     DEFAULT_VALUE = Object.new.freeze

@@ -1,9 +1,5 @@
 # frozen_string_literal: true
 
-require 'librum/core/view/components/link'
-require 'librum/core/view/layouts/page/navigation'
-require 'librum/core/view/layouts/page/navigation/dropdown'
-
 module Librum::Core::View::Layouts
   # Renders a page navigation item.
   class Page::Navigation::Item < ViewComponent::Base

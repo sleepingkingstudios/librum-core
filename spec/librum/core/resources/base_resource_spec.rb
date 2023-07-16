@@ -2,8 +2,6 @@
 
 require 'rails_helper'
 
-require 'librum/core/resources/base_resource'
-
 RSpec.describe Librum::Core::Resources::BaseResource do
   subject(:resource) { described_class.new(**constructor_options) }
 

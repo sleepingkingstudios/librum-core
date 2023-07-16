@@ -2,8 +2,6 @@
 
 require 'cuprum/rails/serializers/base_serializer'
 
-require 'librum/core/serializers/json'
-
 module Librum::Core::Serializers::Json
   # Serializer that returns a date or time object's ISO8601 representation.
   class DateTimeSerializer < Cuprum::Rails::Serializers::BaseSerializer

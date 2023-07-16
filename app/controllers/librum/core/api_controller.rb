@@ -2,9 +2,6 @@
 
 require 'cuprum/rails/controller'
 
-require 'librum/core/responders/json_responder'
-require 'librum/core/serializers/json'
-
 module Librum::Core
   # Abstract base class for API controllers.
   class ApiController < Librum::Core::ApplicationController

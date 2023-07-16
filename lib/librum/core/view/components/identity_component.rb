@@ -2,8 +2,6 @@
 
 require 'view_component'
 
-require 'librum/core/view/components'
-
 module Librum::Core::View::Components
   # Component that returns its configuration string when rendered.
   class IdentityComponent < ViewComponent::Base

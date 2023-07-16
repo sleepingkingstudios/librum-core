@@ -2,8 +2,6 @@
 
 require 'rails_helper'
 
-require 'librum/core/view/components/resources/table'
-
 RSpec.describe Librum::Core::View::Components::Resources::Table,
   type: :component \
 do

@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require 'librum/core/view/components/data_field'
-require 'librum/core/view/components/data_table'
-
 module Librum::Core::View::Components
   # Renders a data table header.
   class DataTable::Header < ViewComponent::Base

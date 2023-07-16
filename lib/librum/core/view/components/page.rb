@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'librum/core/view/components'
-
 module Librum::Core::View::Components
   # Abstract base class for view page components.
   class Page < ViewComponent::Base

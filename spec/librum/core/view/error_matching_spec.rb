@@ -2,8 +2,6 @@
 
 require 'rails_helper'
 
-require 'librum/core/view/error_matching'
-
 RSpec.describe Librum::Core::View::ErrorMatching do
   subject(:component) { described_class.new(name: name, errors: errors) }
 

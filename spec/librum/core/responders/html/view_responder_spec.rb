@@ -4,9 +4,6 @@ require 'rails_helper'
 
 require 'cuprum/rails/rspec/contracts/responder_contracts'
 
-require 'librum/core/responders/html/view_responder'
-require 'librum/core/rspec/contracts/responders/html_contracts'
-
 RSpec.describe Librum::Core::Responders::Html::ViewResponder do
   include Cuprum::Rails::RSpec::Contracts::ResponderContracts
   include Librum::Core::RSpec::Contracts::Responders::HtmlContracts

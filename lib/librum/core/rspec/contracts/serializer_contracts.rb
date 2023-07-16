@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'librum/core/rspec/contracts'
-
 require 'rspec/sleeping_king_studios/contract'
 
 module Librum::Core::RSpec::Contracts

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'librum/core/rspec/utils'
-
 module Librum::Core::RSpec::Utils
   # Utility class for rendering HTML documents with a consistent format.
   class PrettyRender

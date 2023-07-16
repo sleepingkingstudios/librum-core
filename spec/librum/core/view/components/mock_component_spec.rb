@@ -2,8 +2,6 @@
 
 require 'rails_helper'
 
-require 'librum/core/view/components/mock_component'
-
 RSpec.describe Librum::Core::View::Components::MockComponent, type: :component \
 do
   subject(:mock) { described_class.new(name, **options) }

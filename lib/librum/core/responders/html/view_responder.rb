@@ -5,11 +5,6 @@ require 'cuprum/rails/responders/actions'
 require 'cuprum/rails/responders/base_responder'
 require 'cuprum/rails/responders/matching'
 
-require 'librum/core/errors/authentication_error'
-require 'librum/core/responders/html'
-require 'librum/core/responses/html/render_component_response'
-require 'librum/core/view/pages/missing_page'
-
 module Librum::Core::Responders::Html
   # Provides a DSL for defining responses to HTML requests.
   class ViewResponder < Cuprum::Rails::Responders::BaseResponder

@@ -2,8 +2,6 @@
 
 require 'rails_helper'
 
-require 'librum/core/view/components/form_field'
-
 RSpec.describe Librum::Core::View::Components::FormField, type: :component do
   subject(:field) { described_class.new(name, **options) }
 

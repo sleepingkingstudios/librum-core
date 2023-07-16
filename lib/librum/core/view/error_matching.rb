@@ -2,8 +2,6 @@
 
 require 'stannum/errors'
 
-require 'librum/core/view'
-
 module Librum::Core::View
   # Mixin for extracting matching error messages from an errors object.
   module ErrorMatching

@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require 'librum/core/view/components'
-require 'librum/core/view/error_matching'
-
 module Librum::Core::View::Components
   # Renders a basic form input.
   class FormInput < ViewComponent::Base

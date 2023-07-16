@@ -3,8 +3,6 @@
 require 'cuprum/rails/rspec/contract_helpers'
 require 'rspec/sleeping_king_studios/contract'
 
-require 'librum/core/rspec/contracts/models'
-
 module Librum::Core::RSpec::Contracts::Models
   module ValidationContracts
     # Contract asserting that the attribute format is validated.

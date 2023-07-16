@@ -2,8 +2,6 @@
 
 require 'rails_helper'
 
-require 'librum/core/view/components/data_table'
-
 RSpec.describe Librum::Core::View::Components::DataTable, type: :component do
   subject(:table) { described_class.new(**constructor_options) }
 

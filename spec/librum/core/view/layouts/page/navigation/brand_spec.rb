@@ -2,8 +2,6 @@
 
 require 'rails_helper'
 
-require 'librum/core/view/layouts/page/navigation/brand'
-
 RSpec.describe Librum::Core::View::Layouts::Page::Navigation::Brand,
   type: :component \
 do

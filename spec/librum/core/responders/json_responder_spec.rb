@@ -5,11 +5,6 @@ require 'rails_helper'
 require 'cuprum/rails/rspec/contracts/responder_contracts'
 require 'stannum'
 
-require 'librum/core/errors/authentication_error'
-require 'librum/core/responders/json_responder'
-require 'librum/core/rspec/contracts/responders/json_contracts'
-require 'librum/core/serializers/json'
-
 RSpec.describe Librum::Core::Responders::JsonResponder do
   include Cuprum::Rails::RSpec::Contracts::ResponderContracts
   include Librum::Core::RSpec::Contracts::Responders::JsonContracts

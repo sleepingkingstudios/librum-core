@@ -2,8 +2,6 @@
 
 require 'rails_helper'
 
-require 'librum/core/rspec/factories/shared_factories'
-
 RSpec.describe Librum::Core::RSpec::Factories::SharedFactories do
   let(:described_class) { Spec::CustomFactory }
 

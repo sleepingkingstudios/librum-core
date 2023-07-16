@@ -5,8 +5,6 @@ require 'rails_helper'
 require 'cuprum/rails/repository'
 require 'cuprum/rails/rspec/actions/create_contracts'
 
-require 'librum/core/actions/create'
-
 require 'support/user'
 
 RSpec.describe Librum::Core::Actions::Create, type: :action do

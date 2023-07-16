@@ -2,8 +2,6 @@
 
 require 'cuprum'
 
-require 'librum/core/errors'
-
 module Librum::Core::Errors
   # Abstract error class used for testing responders.
   class AuthenticationError < Cuprum::Error

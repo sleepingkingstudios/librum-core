@@ -4,8 +4,6 @@ require 'cuprum/collections/errors/not_found'
 require 'cuprum/collections/errors/not_unique'
 require 'cuprum/command'
 
-require 'librum/core/models/queries'
-
 module Librum::Core::Models::Queries
   # Query command to find an entity by its slug value.
   class FindBySlug < Cuprum::Command

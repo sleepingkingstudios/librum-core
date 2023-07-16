@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'librum/core/view/layouts'
-
 module Librum::Core::View::Layouts
   # Default layout for server-side rendered pages.
   class Page < ViewComponent::Base
@@ -41,7 +39,3 @@ module Librum::Core::View::Layouts
     attr_reader :navigation
   end
 end
-
-require 'librum/core/view/layouts/page/alerts'
-require 'librum/core/view/layouts/page/banner'
-require 'librum/core/view/layouts/page/footer'

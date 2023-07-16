@@ -5,8 +5,6 @@ require 'rails_helper'
 require 'cuprum/rails/repository'
 require 'cuprum/rails/rspec/actions/destroy_contracts'
 
-require 'librum/core/actions/destroy'
-
 require 'support/user'
 
 RSpec.describe Librum::Core::Actions::Destroy, type: :action do

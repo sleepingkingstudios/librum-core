@@ -2,8 +2,6 @@
 
 require 'rails_helper'
 
-require 'librum/core/errors/authentication_failed'
-
 RSpec.describe Librum::Core::Errors::AuthenticationFailed do
   subject(:error) { described_class.new(**constructor_options) }
 

@@ -1,9 +1,5 @@
 # frozen_string_literal: true
 
-require 'librum/core/view/components/missing_component'
-require 'librum/core/view/components/page'
-require 'librum/core/view/pages/resources'
-
 module Librum::Core::View::Pages::Resources
   # Generic page for displaying a table of resource results.
   class IndexPage < Librum::Core::View::Components::Page

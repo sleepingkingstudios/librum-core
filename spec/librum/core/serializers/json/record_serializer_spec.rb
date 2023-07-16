@@ -2,9 +2,6 @@
 
 require 'rails_helper'
 
-require 'librum/core/rspec/contracts/serializer_contracts'
-require 'librum/core/serializers/json/record_serializer'
-
 RSpec.describe Librum::Core::Serializers::Json::RecordSerializer do
   include Librum::Core::RSpec::Contracts::SerializerContracts
 

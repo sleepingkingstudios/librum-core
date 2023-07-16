@@ -2,8 +2,6 @@
 
 require 'rails_helper'
 
-require 'librum/core/view/layouts/page/breadcrumbs'
-
 RSpec.describe Librum::Core::View::Layouts::Page::Breadcrumbs,
   type: :component \
 do

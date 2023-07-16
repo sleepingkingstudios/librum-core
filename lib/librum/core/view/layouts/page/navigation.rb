@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'librum/core/view/layouts/page'
-
 module Librum::Core::View::Layouts
   # Renders the page navigation.
   class Page::Navigation < ViewComponent::Base
@@ -98,6 +96,3 @@ module Librum::Core::View::Layouts
     attr_reader :config
   end
 end
-
-require 'librum/core/view/layouts/page/navigation/brand'
-require 'librum/core/view/layouts/page/navigation/menu'

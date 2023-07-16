@@ -2,8 +2,6 @@
 
 require 'rails_helper'
 
-require 'librum/core/actions/view/render_page'
-
 RSpec.describe Librum::Core::Actions::View::RenderPage do
   subject(:action) { described_class.new(resource: resource) }
 

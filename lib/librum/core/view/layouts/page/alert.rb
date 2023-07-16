@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require 'librum/core/view/components/icon_text'
-require 'librum/core/view/layouts/page'
-
 module Librum::Core::View::Layouts
   # Renders a page notification.
   class Page::Alert < ViewComponent::Base

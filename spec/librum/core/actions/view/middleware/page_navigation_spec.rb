@@ -2,8 +2,6 @@
 
 require 'rails_helper'
 
-require 'librum/core/actions/view/middleware/page_navigation'
-
 RSpec.describe Librum::Core::Actions::View::Middleware::PageNavigation do
   subject(:middleware) { described_class.new(navigation: navigation) }
 

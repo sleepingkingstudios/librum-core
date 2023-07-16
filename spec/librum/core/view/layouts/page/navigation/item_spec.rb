@@ -2,8 +2,6 @@
 
 require 'rails_helper'
 
-require 'librum/core/view/layouts/page/navigation/item'
-
 RSpec.describe Librum::Core::View::Layouts::Page::Navigation::Item,
   type: :component \
 do

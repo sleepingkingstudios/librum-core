@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'librum/core/view/components'
-
 module Librum::Core::View::Components
   # Renders a button component.
   class Button < ViewComponent::Base

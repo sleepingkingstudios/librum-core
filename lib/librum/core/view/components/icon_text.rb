@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'librum/core/view/components'
-
 module Librum::Core::View::Components
   # Renders a visual component with text, an icon, or both.
   class IconText < ViewComponent::Base

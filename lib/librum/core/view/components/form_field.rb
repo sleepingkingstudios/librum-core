@@ -1,9 +1,5 @@
 # frozen_string_literal: true
 
-require 'librum/core/view/components'
-require 'librum/core/view/components/form_input'
-require 'librum/core/view/error_matching'
-
 module Librum::Core::View::Components
   # Renders a form field wrapping a basic input or given contents.
   class FormField < ViewComponent::Base

@@ -5,10 +5,6 @@ require 'cuprum/collections/errors/not_found'
 require 'cuprum/collections/errors/not_unique'
 require 'cuprum/rails/responders/json_responder'
 
-require 'librum/core/errors/authentication_error'
-require 'librum/core/errors/authentication_failed'
-require 'librum/core/responders'
-
 module Librum::Core::Responders
   # Base class for generating JSON responses.
   class JsonResponder < Cuprum::Rails::Responders::JsonResponder

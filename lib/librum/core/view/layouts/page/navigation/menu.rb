@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require 'librum/core/view/layouts/page/navigation'
-require 'librum/core/view/layouts/page/navigation/item'
-
 module Librum::Core::View::Layouts
   # Renders a page navigation menu.
   class Page::Navigation::Menu < ViewComponent::Base

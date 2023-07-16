@@ -1,9 +1,5 @@
 # frozen_string_literal: true
 
-require 'librum/core/view/components'
-require 'librum/core/view/components/button'
-require 'librum/core/view/components/link'
-
 module Librum::Core::View::Components
   # Renders the submit and cancel buttons for a form.
   class FormButtons < ViewComponent::Base

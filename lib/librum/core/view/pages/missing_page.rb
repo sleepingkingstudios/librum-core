@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require 'librum/core/view/components/page'
-require 'librum/core/view/pages'
-
 module Librum::Core::View::Pages
   # Page to display when the expected page component is not found.
   class MissingPage < Librum::Core::View::Components::Page

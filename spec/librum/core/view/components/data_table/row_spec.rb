@@ -2,8 +2,6 @@
 
 require 'rails_helper'
 
-require 'librum/core/view/components/data_table/row'
-
 RSpec.describe Librum::Core::View::Components::DataTable::Row,
   type: :component \
 do

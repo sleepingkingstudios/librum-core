@@ -2,8 +2,6 @@
 
 require 'rails_helper'
 
-require 'librum/core/actions/generate_slug'
-
 RSpec.describe Librum::Core::Actions::GenerateSlug do
   subject(:action) { described_class.new(action_name) }
 

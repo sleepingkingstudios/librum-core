@@ -2,9 +2,6 @@
 
 require 'diffy'
 
-require 'librum/core/rspec/matchers'
-require 'librum/core/rspec/utils/pretty_render'
-
 module Librum::Core::RSpec::Matchers
   # Matcher asserting the string or document matches the expected value.
   class MatchSnapshotMatcher

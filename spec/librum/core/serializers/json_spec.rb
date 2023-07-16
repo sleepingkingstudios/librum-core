@@ -2,9 +2,6 @@
 
 require 'rails_helper'
 
-require 'librum/core/serializers/json'
-require 'librum/core/serializers/json/date_time_serializer'
-
 RSpec.describe Librum::Core::Serializers::Json do
   describe '.default_serializers' do
     let(:default_serializers) { described_class.default_serializers }

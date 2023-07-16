@@ -4,8 +4,6 @@ require 'rails_helper'
 
 require 'stannum/errors'
 
-require 'librum/core/view/components/form_input'
-
 RSpec.describe Librum::Core::View::Components::FormInput, type: :component do
   subject(:input) { described_class.new(name, **options) }
 

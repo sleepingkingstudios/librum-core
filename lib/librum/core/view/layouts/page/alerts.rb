@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require 'librum/core/view/layouts/page'
-require 'librum/core/view/layouts/page/alert'
-
 module Librum::Core::View::Layouts
   # Renders the page alerts.
   class Page::Alerts < ViewComponent::Base

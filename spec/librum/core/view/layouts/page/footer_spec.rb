@@ -2,8 +2,6 @@
 
 require 'rails_helper'
 
-require 'librum/core/view/layouts/page/footer'
-
 RSpec.describe Librum::Core::View::Layouts::Page::Footer, type: :component do
   subject(:footer) { described_class.new(**options) }
 

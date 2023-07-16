@@ -5,8 +5,6 @@ require 'rails_helper'
 require 'cuprum/rails/repository'
 require 'cuprum/rails/rspec/actions/update_contracts'
 
-require 'librum/core/actions/update'
-
 require 'support/user'
 
 RSpec.describe Librum::Core::Actions::Update do

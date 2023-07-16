@@ -2,8 +2,6 @@
 
 require 'rails_helper'
 
-require 'librum/core/view/components/identity_component'
-
 RSpec.describe Librum::Core::View::Components::IdentityComponent,
   type: :component \
 do

@@ -2,9 +2,6 @@
 
 require 'rspec/sleeping_king_studios/contract'
 
-require 'librum/core/rspec/contracts'
-require 'librum/core/serializers/json'
-
 module Librum::Core::RSpec::Contracts
   module ControllerContracts
     # Contract asserting the controller defines the specified action.
