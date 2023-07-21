@@ -3,20 +3,43 @@
 module Librum::Core::View::Components
   # Renders a form field wrapping a basic input or given contents.
   class FormField < ViewComponent::Base
+    include Librum::Core::View::DataMatching
     include Librum::Core::View::ErrorMatching
 
+    # @param data [#[]] the data for the form.
     # @param errors [Stannum::Errors, Array<String>] the form errors to apply.
     # @param icon [String] the icon to display as part of the field.
+    # @param label [String] the label to display. Defaults to the last component
+    #   of the name.
     # @param name [String] the scoped name of the form input.
+    # @param placeholder [String] the placeholder value to display in an empty
+    #   input.
     # @param type [String] the input type.
-    def initialize(name, errors: nil, icon: nil, type: 'text')
+    # @param value [String] the value to place in the input, if any.
+    def initialize( # rubocop:disable Metrics/ParameterLists
+      name,
+      data:        nil,
+      errors:      nil,
+      icon:        nil,
+      label:       nil,
+      placeholder: nil,
+      type:        'text',
+      value:       nil
+    )
       super()
 
-      @errors = errors
-      @icon   = icon
-      @name   = name
-      @type   = type
+      @data        = data
+      @errors      = errors
+      @icon        = icon
+      @label       = label
+      @name        = name
+      @placeholder = placeholder
+      @type        = type
+      @value       = value
     end
+
+    # @return [#[]] the data for the form.
+    attr_reader :data
 
     # @return [Stannum::Errors, Array<String>] the form errors to apply.
     attr_reader :errors
@@ -26,6 +49,9 @@ module Librum::Core::View::Components
 
     # @return [String] the scoped name of the form input.
     attr_reader :name
+
+    # @return [String] the placeholder value to display in an empty input.
+    attr_reader :placeholder
 
     # @return [String] the input type.
     attr_reader :type
@@ -43,19 +69,29 @@ module Librum::Core::View::Components
     def input
       Librum::Core::View::Components::FormInput.new(
         name,
-        errors: matching_errors,
-        id:     id,
-        type:   type
+        errors:      matching_errors,
+        id:          id,
+        placeholder: placeholder,
+        type:        type,
+        value:       value
       )
     end
 
     # @return [String] the label text.
     def label
-      name
+      @label ||=
+        name
         .gsub(']', '')
         .split(/[.\[]/)
-        .join(' ')
+        .last
         .titleize
+    end
+
+    # @return [String] the value to place in the input.
+    def value
+      return @value if @value
+
+      matching_data
     end
 
     private
