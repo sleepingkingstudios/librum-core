@@ -73,7 +73,7 @@ do
         <<~HTML
           <h1 class="title">Rocket</h1>
 
-          <mock name="block" data="{}" resource='#&lt;Resource name="rockets"&gt;'></mock>
+          <mock name="block" data="nil" resource='#&lt;Resource name="rockets"&gt;'></mock>
 
           <p>
             <a class="has-text-link" href="/rockets" target="_self">

@@ -4,7 +4,7 @@ require 'rails_helper'
 
 require 'stannum/errors'
 
-RSpec.describe Librum::Core::View::Pages::Resources::EditPage,
+RSpec.describe Librum::Core::View::Pages::Resources::NewPage,
   type: :component \
 do
   subject(:page) { described_class.new(result, resource: resource) }
@@ -45,7 +45,7 @@ do
     let(:rendered) { render_inline(page) }
     let(:snapshot) do
       <<~HTML
-        <h1 class="title">Update Rocket</h1>
+        <h1 class="title">Create Rocket</h1>
 
         <div class="box">
           <p class="has-text-centered">
@@ -56,7 +56,7 @@ do
 
           <h2 class="title has-text-centered has-text-danger">Missing Component Form</h2>
 
-          <p class="has-text-centered">Rendered in Librum::Core::View::Pages::Resources::EditPage</p>
+          <p class="has-text-centered">Rendered in Librum::Core::View::Pages::Resources::NewPage</p>
         </div>
       HTML
     end
@@ -74,9 +74,9 @@ do
       end
       let(:snapshot) do
         <<~HTML
-          <h1 class="title">Update Rocket</h1>
+          <h1 class="title">Create Rocket</h1>
 
-          <mock name="form" action="edit" data="nil" errors="nil" resource='#&lt;Resource name="rockets"&gt;'></mock>
+          <mock name="form" action="new" data="nil" errors="nil" resource='#&lt;Resource name="rockets"&gt;'></mock>
         HTML
       end
 
@@ -91,9 +91,9 @@ do
       wrap_context 'with data' do
         let(:snapshot) do
           <<~HTML
-            <h1 class="title">Update Imp IV</h1>
+            <h1 class="title">Create Rocket</h1>
 
-            <mock name="form" action="edit" data='{"rocket"=&gt;{"name"=&gt;"Imp IV"}}' errors="nil" resource='#&lt;Resource name="rockets"&gt;'></mock>
+            <mock name="form" action="new" data='{"rocket"=&gt;{"name"=&gt;"Imp IV"}}' errors="nil" resource='#&lt;Resource name="rockets"&gt;'></mock>
           HTML
         end
 
@@ -103,9 +103,9 @@ do
       wrap_context 'with errors' do
         let(:snapshot) do
           <<~HTML
-            <h1 class="title">Update Rocket</h1>
+            <h1 class="title">Create Rocket</h1>
 
-            <mock name="form" action="edit" data="nil" errors="#&lt;Errors&gt;" resource='#&lt;Resource name="rockets"&gt;'></mock>
+            <mock name="form" action="new" data="nil" errors="#&lt;Errors&gt;" resource='#&lt;Resource name="rockets"&gt;'></mock>
           HTML
         end
 
