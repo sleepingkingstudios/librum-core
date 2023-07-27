@@ -5,6 +5,59 @@ require 'cuprum/collections/errors/not_found'
 module Librum::Core::Responders::Html
   # Delegates missing pages to View::Pages::Resources.
   class ResourceResponder < Librum::Core::Responders::Html::ViewResponder
+    action :create do
+      match :success do |result|
+        record = result.value[resource.singular_resource_name]
+
+        redirect_to(
+          resource.routes.show_path(record.slug),
+          flash: success_flash('created')
+        )
+      end
+
+      match :failure, error: Cuprum::Collections::Errors::FailedValidation \
+      do |result|
+        render_component(
+          result,
+          action: 'new',
+          flash:  failure_flash('create')
+        )
+      end
+    end
+
+    action :destroy do
+      match :success do
+        redirect_to(
+          resource.routes.index_path,
+          flash: destroy_flash
+        )
+      end
+
+      match :failure do
+        redirect_back(flash: failure_flash('destroy'))
+      end
+    end
+
+    action :update do
+      match :success do |result|
+        record = result.value[resource.singular_resource_name]
+
+        redirect_to(
+          resource.routes.show_path(record.slug),
+          flash: success_flash('updated')
+        )
+      end
+
+      match :failure, error: Cuprum::Collections::Errors::FailedValidation \
+      do |result|
+        render_component(
+          result,
+          action: 'edit',
+          flash:  failure_flash('update')
+        )
+      end
+    end
+
     match :failure, error: Cuprum::Collections::Errors::NotFound do |result|
       message = Kernel.format(
         '%<resource>s not found with key "%<value>s"',
@@ -24,6 +77,25 @@ module Librum::Core::Responders::Html
       return super if Object.const_defined?(view_component_name(action: action))
 
       resource_component_class(action: action).new(result, resource: resource)
+    end
+
+    def destroy_flash
+      message = Kernel.format(
+        'Successfully destroyed %<resource>s',
+        resource: resource.singular_resource_name.titleize
+      )
+
+      { danger: { icon: 'bomb', message: message } }
+    end
+
+    def failure_flash(action)
+      message = Kernel.format(
+        'Unable to %<action>s %<resource>s',
+        action:   action,
+        resource: resource.singular_resource_name.titleize
+      )
+
+      { warning: { icon: 'exclamation-triangle', message: message } }
     end
 
     def lazy_require(page_name)
@@ -47,6 +119,16 @@ module Librum::Core::Responders::Html
       lazy_require(page_name)
 
       page_name
+    end
+
+    def success_flash(action)
+      message = Kernel.format(
+        'Successfully %<action>s %<resource>s',
+        action:   action,
+        resource: resource.singular_resource_name.titleize
+      )
+
+      { success: { icon: 'circle-check', message: message } }
     end
   end
 end

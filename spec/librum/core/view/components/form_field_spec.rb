@@ -2,13 +2,13 @@
 
 require 'rails_helper'
 
+require 'support/rocket'
+
 RSpec.describe Librum::Core::View::Components::FormField, type: :component do
   subject(:field) { described_class.new(name, **options) }
 
   let(:name)    { 'color' }
   let(:options) { {} }
-
-  example_class 'Spec::Rocket', Struct.new(:name, :color, keyword_init: true)
 
   describe '.new' do
     it 'should define the constructor' do
@@ -300,7 +300,7 @@ RSpec.describe Librum::Core::View::Components::FormField, type: :component do
     include_examples 'should define reader', :data, nil
 
     context 'when initialized with data: value' do
-      let(:rocket)  { Spec::Rocket.new(name: 'Imp IV', color: 'red') }
+      let(:rocket)  { Spec::Support::Rocket.new(name: 'Imp IV', color: 'red') }
       let(:data)    { { 'rocket' => rocket } }
       let(:options) { super().merge(data: data) }
 
@@ -401,7 +401,7 @@ RSpec.describe Librum::Core::View::Components::FormField, type: :component do
     end
 
     context 'when initialized with data: a non-matching Object' do
-      let(:rocket)  { Spec::Rocket.new(name: 'Imp IV') }
+      let(:rocket)  { Spec::Support::Rocket.new(name: 'Imp IV') }
       let(:data)    { { 'name' => 'Imp IV' } }
       let(:options) { super().merge(data: data) }
 
@@ -430,7 +430,7 @@ RSpec.describe Librum::Core::View::Components::FormField, type: :component do
     end
 
     context 'when initialized with data: a matching Object' do
-      let(:rocket)  { Spec::Rocket.new(name: 'Imp IV', color: 'red') }
+      let(:rocket)  { Spec::Support::Rocket.new(name: 'Imp IV', color: 'red') }
       let(:data)    { rocket }
       let(:options) { super().merge(data: data) }
 
@@ -448,7 +448,7 @@ RSpec.describe Librum::Core::View::Components::FormField, type: :component do
       let(:name) { 'rocket[color]' }
 
       context 'when initialized with non-matching data' do
-        let(:rocket)  { Spec::Rocket.new(name: 'Imp IV') }
+        let(:rocket)  { Spec::Support::Rocket.new(name: 'Imp IV') }
         let(:data)    { { 'rocket' => rocket } }
         let(:options) { super().merge(data: data) }
 
@@ -463,7 +463,9 @@ RSpec.describe Librum::Core::View::Components::FormField, type: :component do
       end
 
       context 'when initialized with matching data' do
-        let(:rocket)  { Spec::Rocket.new(name: 'Imp IV', color: 'red') }
+        let(:rocket) do
+          Spec::Support::Rocket.new(name: 'Imp IV', color: 'red')
+        end
         let(:data)    { { 'rocket' => rocket } }
         let(:options) { super().merge(data: data) }
 
@@ -482,7 +484,7 @@ RSpec.describe Librum::Core::View::Components::FormField, type: :component do
       let(:name) { 'rocket.color' }
 
       context 'when initialized with non-matching data' do
-        let(:rocket)  { Spec::Rocket.new(name: 'Imp IV') }
+        let(:rocket)  { Spec::Support::Rocket.new(name: 'Imp IV') }
         let(:data)    { { 'rocket' => rocket } }
         let(:options) { super().merge(data: data) }
 
@@ -497,7 +499,9 @@ RSpec.describe Librum::Core::View::Components::FormField, type: :component do
       end
 
       context 'when initialized with matching data' do
-        let(:rocket)  { Spec::Rocket.new(name: 'Imp IV', color: 'red') }
+        let(:rocket) do
+          Spec::Support::Rocket.new(name: 'Imp IV', color: 'red')
+        end
         let(:data)    { { 'rocket' => rocket } }
         let(:options) { super().merge(data: data) }
 

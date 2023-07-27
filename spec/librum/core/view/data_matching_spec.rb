@@ -2,6 +2,8 @@
 
 require 'rails_helper'
 
+require 'support/rocket'
+
 RSpec.describe Librum::Core::View::DataMatching do
   subject(:component) { described_class.new(name: name, data: data) }
 
@@ -13,8 +15,6 @@ RSpec.describe Librum::Core::View::DataMatching do
     Struct.new(:name, :data, keyword_init: true) do |klass|
       klass.include Librum::Core::View::DataMatching # rubocop:disable RSpec/DescribedClass
     end
-
-  example_class 'Spec::Rocket', Struct.new(:name, :color, keyword_init: true)
 
   describe '#matching_data' do
     it { expect(component).to respond_to(:matching_data).with(0).arguments }
@@ -34,13 +34,13 @@ RSpec.describe Librum::Core::View::DataMatching do
     end
 
     context 'with data: an non-matching Object' do
-      let(:data) { Spec::Rocket.new(name: 'Imp IV') }
+      let(:data) { Spec::Support::Rocket.new(name: 'Imp IV') }
 
       it { expect(component.matching_data).to be nil }
     end
 
     context 'with data: a matching Object' do
-      let(:data) { Spec::Rocket.new(name: 'Imp IV', color: 'red') }
+      let(:data) { Spec::Support::Rocket.new(name: 'Imp IV', color: 'red') }
 
       it { expect(component.matching_data).to be == 'red' }
     end
@@ -57,14 +57,16 @@ RSpec.describe Librum::Core::View::DataMatching do
       end
 
       context 'with partially-matching data' do
-        let(:data) { { 'rocket' => Spec::Rocket.new(name: 'Imp IV') } }
+        let(:data) { { 'rocket' => Spec::Support::Rocket.new(name: 'Imp IV') } }
 
         it { expect(component.matching_data).to be nil }
       end
 
       context 'with matching data' do
         let(:data) do
-          { 'rocket' => Spec::Rocket.new(name: 'Imp IV', color: 'red') }
+          {
+            'rocket' => Spec::Support::Rocket.new(name: 'Imp IV', color: 'red')
+          }
         end
 
         it { expect(component.matching_data).to be == 'red' }
@@ -83,14 +85,16 @@ RSpec.describe Librum::Core::View::DataMatching do
       end
 
       context 'with partially-matching data' do
-        let(:data) { { 'rocket' => Spec::Rocket.new(name: 'Imp IV') } }
+        let(:data) { { 'rocket' => Spec::Support::Rocket.new(name: 'Imp IV') } }
 
         it { expect(component.matching_data).to be nil }
       end
 
       context 'with matching data' do
         let(:data) do
-          { 'rocket' => Spec::Rocket.new(name: 'Imp IV', color: 'red') }
+          {
+            'rocket' => Spec::Support::Rocket.new(name: 'Imp IV', color: 'red')
+          }
         end
 
         it { expect(component.matching_data).to be == 'red' }

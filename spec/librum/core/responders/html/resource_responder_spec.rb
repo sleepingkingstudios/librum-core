@@ -2,8 +2,12 @@
 
 require 'rails_helper'
 
+require 'stannum/errors'
+
 require 'cuprum/collections'
 require 'cuprum/rails/rspec/contracts/responder_contracts'
+
+require 'support/rocket'
 
 RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
   include Cuprum::Rails::RSpec::Contracts::ResponderContracts
@@ -69,6 +73,60 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
 
   # rubocop:disable RSpec/MultipleMemoizedHelpers
   describe '#call' do
+    shared_examples 'should handle a failing result' do |action|
+      describe 'with a failing result' do
+        let(:error)  { Cuprum::Error.new(message: 'Something went wrong') }
+        let(:result) { Cuprum::Result.new(error: error) }
+
+        include_contract 'should render the missing page'
+
+        include_examples 'should respond with the page when defined',
+          "View::Pages::Custom::#{action}Page",
+          http_status: :internal_server_error
+
+        include_examples 'should respond with the page when defined',
+          "View::Pages::Resources::#{action}Page",
+          http_status: :internal_server_error
+
+        include_examples 'should respond with the page when defined',
+          "Librum::Core::View::Pages::Resources::#{action}Page",
+          http_status:  :internal_server_error,
+          lazy_require: true
+      end
+    end
+
+    shared_examples 'should handle a result with a NotFound error' do
+      describe 'with a failing result with a NotFound error' do
+        let(:error) do
+          Cuprum::Collections::Errors::NotFound.new(
+            attribute_name:  'slug',
+            attribute_value: 'imp-iv',
+            collection_name: 'rockets'
+          )
+        end
+        let(:result) { Cuprum::Result.new(error: error) }
+        let(:expected_flash) do
+          {
+            warning: {
+              icon:    'exclamation-triangle',
+              message: 'Rocket not found with key "imp-iv"'
+            }
+          }
+        end
+
+        it 'should return a redirect response' do
+          expect(response)
+            .to be_a Cuprum::Rails::Responses::Html::RedirectResponse
+        end
+
+        it { expect(response.flash).to be == expected_flash }
+
+        it { expect(response.path).to be == resource.routes.index_path }
+
+        it { expect(response.status).to be 302 } # rubocop:disable RSpec/Rails/HaveHttpStatus
+      end
+    end
+
     let(:controller_name) { 'CustomController' }
     let(:result)          { Cuprum::Result.new }
     let(:response)        { responder.call(result) }
@@ -78,55 +136,9 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
 
     before(:example) { allow(responder).to receive(:require) } # rubocop:disable RSpec/SubjectStub
 
-    describe 'with a failing result' do
-      let(:error)  { Cuprum::Error.new(message: 'Something went wrong') }
-      let(:result) { Cuprum::Result.new(error: error) }
+    include_examples 'should handle a failing result', 'Implement'
 
-      include_contract 'should render the missing page'
-
-      include_examples 'should respond with the page when defined',
-        'View::Pages::Custom::ImplementPage',
-        http_status: :internal_server_error
-
-      include_examples 'should respond with the page when defined',
-        'View::Pages::Resources::ImplementPage',
-        http_status: :internal_server_error
-
-      include_examples 'should respond with the page when defined',
-        'Librum::Core::View::Pages::Resources::ImplementPage',
-        http_status:  :internal_server_error,
-        lazy_require: true
-    end
-
-    describe 'with a failing result with a NotFound error' do
-      let(:error) do
-        Cuprum::Collections::Errors::NotFound.new(
-          attribute_name:  'slug',
-          attribute_value: 'imp-iv',
-          collection_name: 'rockets'
-        )
-      end
-      let(:result) { Cuprum::Result.new(error: error) }
-      let(:expected_flash) do
-        {
-          warning: {
-            icon:    'exclamation-triangle',
-            message: 'Rocket not found with key "imp-iv"'
-          }
-        }
-      end
-
-      it 'should return a redirect response' do
-        expect(response)
-          .to be_a Cuprum::Rails::Responses::Html::RedirectResponse
-      end
-
-      it { expect(response.flash).to be == expected_flash }
-
-      it { expect(response.path).to be == resource.routes.index_path }
-
-      it { expect(response.status).to be 302 } # rubocop:disable RSpec/Rails/HaveHttpStatus
-    end
+    include_examples 'should handle a result with a NotFound error'
 
     describe 'with a passing result' do
       let(:value)  { { ok: true } }
@@ -143,6 +155,144 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
       include_examples 'should respond with the page when defined',
         'Librum::Core::View::Pages::Resources::ImplementPage',
         lazy_require: true
+    end
+
+    context 'when initialized with action_name: "create"' do
+      let(:action_name)   { 'create' }
+      let(:expected_page) { 'View::Pages::Custom::CreatePage' }
+
+      include_examples 'should handle a failing result', 'Create'
+
+      include_examples 'should handle a result with a NotFound error'
+
+      describe 'with a failing result with a FailedValidation error' do
+        let(:error) do
+          Cuprum::Collections::Errors::FailedValidation.new(
+            entity_class: Spec::Support::Rocket,
+            errors:       Stannum::Errors.new
+          )
+        end
+        let(:result) { Cuprum::Result.new(error: error) }
+
+        include_contract 'should render page',
+          'Librum::Core::View::Pages::Resources::NewPage',
+          flash: lambda {
+            {
+              warning: {
+                icon:    'exclamation-triangle',
+                message: 'Unable to create Rocket'
+              }
+            }
+          }
+      end
+
+      describe 'with a passing result' do
+        let(:rocket) do
+          Spec::Support::Rocket.new(
+            name: 'Imp IV',
+            slug: 'imp-iv'
+          )
+        end
+        let(:value)  { { 'rocket' => rocket } }
+        let(:result) { Cuprum::Result.new(value: value) }
+
+        include_contract 'should redirect to',
+          '/rockets/imp-iv',
+          flash: lambda {
+            {
+              success: {
+                icon:    'circle-check',
+                message: 'Successfully created Rocket'
+              }
+            }
+          }
+      end
+    end
+
+    context 'when initialized with action_name: "destroy"' do
+      let(:action_name) { 'destroy' }
+
+      describe 'with a failing result' do
+        let(:error)  { Cuprum::Error.new(message: 'Something went wrong') }
+        let(:result) { Cuprum::Result.new(error: error) }
+
+        include_contract 'should redirect back',
+          flash: lambda {
+            {
+              warning: {
+                icon:    'exclamation-triangle',
+                message: 'Unable to destroy Rocket'
+              }
+            }
+          }
+      end
+
+      describe 'with a passing result' do
+        let(:result) { Cuprum::Result.new }
+
+        include_contract 'should redirect to',
+          '/rockets',
+          flash: lambda {
+            {
+              danger: {
+                icon:    'bomb',
+                message: 'Successfully destroyed Rocket'
+              }
+            }
+          }
+      end
+    end
+
+    context 'when initialized with action_name: "update"' do
+      let(:action_name)   { 'update' }
+      let(:expected_page) { 'View::Pages::Custom::UpdatePage' }
+
+      include_examples 'should handle a failing result', 'Update'
+
+      include_examples 'should handle a result with a NotFound error'
+
+      describe 'with a failing result with a FailedValidation error' do
+        let(:error) do
+          Cuprum::Collections::Errors::FailedValidation.new(
+            entity_class: Spec::Support::Rocket,
+            errors:       Stannum::Errors.new
+          )
+        end
+        let(:result) { Cuprum::Result.new(error: error) }
+
+        include_contract 'should render page',
+          'Librum::Core::View::Pages::Resources::EditPage',
+          flash: lambda {
+            {
+              warning: {
+                icon:    'exclamation-triangle',
+                message: 'Unable to update Rocket'
+              }
+            }
+          }
+      end
+
+      describe 'with a passing result' do
+        let(:rocket) do
+          Spec::Support::Rocket.new(
+            name: 'Imp IV',
+            slug: 'imp-iv'
+          )
+        end
+        let(:value)  { { 'rocket' => rocket } }
+        let(:result) { Cuprum::Result.new(value: value) }
+
+        include_contract 'should redirect to',
+          '/rockets/imp-iv',
+          flash: lambda {
+            {
+              success: {
+                icon:    'circle-check',
+                message: 'Successfully updated Rocket'
+              }
+            }
+          }
+      end
     end
   end
   # rubocop:enable RSpec/MultipleMemoizedHelpers

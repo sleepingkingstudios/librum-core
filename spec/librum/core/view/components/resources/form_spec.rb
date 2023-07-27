@@ -4,6 +4,8 @@ require 'rails_helper'
 
 require 'stannum/errors'
 
+require 'support/rocket'
+
 RSpec.describe Librum::Core::View::Components::Resources::Form,
   type: :component \
 do
@@ -17,7 +19,7 @@ do
   end
 
   let(:data) do
-    { 'rocket' => Spec::Rocket.new(name: 'Imp IV', slug: 'imp-iv') }
+    { 'rocket' => Spec::Support::Rocket.new(name: 'Imp IV', slug: 'imp-iv') }
   end
   let(:action)   { 'new' }
   let(:resource) { Cuprum::Rails::Resource.new(resource_name: 'rockets') }
@@ -27,17 +29,6 @@ do
       data:     data,
       resource: resource
     }
-  end
-
-  example_class 'Spec::Rocket' do |klass|
-    klass.include ActiveModel::API
-
-    klass.attr_accessor \
-      :name,
-      :slug,
-      :color
-
-    klass.define_method(:[]) { |key| send(key) }
   end
 
   describe '.new' do
@@ -396,7 +387,7 @@ do
 
     context 'when initialized with data: an object with matching key' do
       let(:data) do
-        Spec::Rocket.new(
+        Spec::Support::Rocket.new(
           name:  'Imp IV',
           slug:  'imp-iv',
           color: 'red'
