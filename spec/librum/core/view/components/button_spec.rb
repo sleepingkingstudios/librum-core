@@ -12,7 +12,7 @@ RSpec.describe Librum::Core::View::Components::Button, type: :component do
       expect(described_class)
         .to be_constructible
         .with(0).arguments
-        .and_keywords(:color, :label, :type)
+        .and_keywords(:color, :label, :light, :outline, :type)
     end
   end
 
@@ -60,6 +60,28 @@ RSpec.describe Librum::Core::View::Components::Button, type: :component do
       end
 
       it { expect(rendered).to match_snapshot(snapshot) }
+
+      describe 'with light: true' do
+        let(:options) { super().merge(light: true) }
+        let(:snapshot) do
+          <<~HTML
+            <button type="button" class="button is-danger is-light"></button>
+          HTML
+        end
+
+        it { expect(rendered).to match_snapshot(snapshot) }
+      end
+
+      describe 'with outline: true' do
+        let(:options) { super().merge(outline: true) }
+        let(:snapshot) do
+          <<~HTML
+            <button type="button" class="button is-danger is-outlined"></button>
+          HTML
+        end
+
+        it { expect(rendered).to match_snapshot(snapshot) }
+      end
     end
 
     describe 'with label: value' do
@@ -68,6 +90,17 @@ RSpec.describe Librum::Core::View::Components::Button, type: :component do
       let(:snapshot) do
         <<~HTML
           <button type="button" class="button">Click Me</button>
+        HTML
+      end
+
+      it { expect(rendered).to match_snapshot(snapshot) }
+    end
+
+    describe 'with outline: true' do
+      let(:options) { super().merge(outline: true) }
+      let(:snapshot) do
+        <<~HTML
+          <button type="button" class="button is-outlined"></button>
         HTML
       end
 
@@ -106,6 +139,26 @@ RSpec.describe Librum::Core::View::Components::Button, type: :component do
       let(:options) { super().merge(label: label) }
 
       it { expect(button.label).to be == label }
+    end
+  end
+
+  describe '#light?' do
+    include_examples 'should define predicate', :light?, false
+
+    context 'when initialized with light: true' do
+      let(:options) { super().merge(light: true) }
+
+      it { expect(button.light?).to be true }
+    end
+  end
+
+  describe '#outline?' do
+    include_examples 'should define predicate', :outline?, false
+
+    context 'when initialized with outline: true' do
+      let(:options) { super().merge(outline: true) }
+
+      it { expect(button.outline?).to be true }
     end
   end
 

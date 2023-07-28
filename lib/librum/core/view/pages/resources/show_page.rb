@@ -17,6 +17,28 @@ module Librum::Core::View::Pages::Resources
       block_component.new(data: resource_data, resource: resource)
     end
 
+    def build_destroy_form
+      Librum::Core::View::Components::Resources::DestroyForm.new(
+        data:     resource_data,
+        light:    true,
+        resource: resource
+      )
+    end
+
+    def buttons
+      return [] unless resource_data
+
+      [
+        {
+          color: 'warning',
+          label: "Update #{singular_resource_name.titleize}",
+          light: true,
+          url:   resource.routes.edit_path(resource_data['slug'])
+        },
+        build_destroy_form
+      ]
+    end
+
     def render_data_block
       render(build_data_block)
     end

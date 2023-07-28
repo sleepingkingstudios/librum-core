@@ -47,7 +47,21 @@ do
     let(:rendered) { render_inline(page) }
     let(:snapshot) do
       <<~HTML
-        <h1 class="title">Rockets</h1>
+        <div class="level">
+          <div class="level-left">
+            <div class="level-item">
+              <h1 class="title">Rockets</h1>
+            </div>
+          </div>
+
+          <div class="level-right">
+            <div class="level-item">
+              <a class="button is-primary is-light" href="/rockets/new" target="_self">
+                Create Rocket
+              </a>
+            </div>
+          </div>
+        </div>
 
         <div class="box">
           <p class="has-text-centered">
@@ -76,7 +90,21 @@ do
       end
       let(:snapshot) do
         <<~HTML
-          <h1 class="title">Rockets</h1>
+          <div class="level">
+            <div class="level-left">
+              <div class="level-item">
+                <h1 class="title">Rockets</h1>
+              </div>
+            </div>
+
+            <div class="level-right">
+              <div class="level-item">
+                <a class="button is-primary is-light" href="/rockets/new" target="_self">
+                  Create Rocket
+                </a>
+              </div>
+            </div>
+          </div>
 
           <mock name="table" data="[]" resource='#&lt;Resource name="rockets"&gt;'></mock>
         HTML
@@ -93,7 +121,21 @@ do
       wrap_context 'with data' do
         let(:snapshot) do
           <<~HTML
-            <h1 class="title">Rockets</h1>
+            <div class="level">
+              <div class="level-left">
+                <div class="level-item">
+                  <h1 class="title">Rockets</h1>
+                </div>
+              </div>
+
+              <div class="level-right">
+                <div class="level-item">
+                  <a class="button is-primary is-light" href="/rockets/new" target="_self">
+                    Create Rocket
+                  </a>
+                </div>
+              </div>
+            </div>
 
             <mock name="table" data='[{"name"=&gt;"Imp IV", "payload"=&gt;"10 tonnes"}, {"name"=&gt;"Imp VI", "payload"=&gt;"10 tonnes"}, {"name"=&gt;"Hellhound II", "payload"=&gt;"100 tonnes"}]' resource='#&lt;Resource name="rockets"&gt;'></mock>
           HTML
@@ -109,7 +151,21 @@ do
       end
       let(:snapshot) do
         <<~HTML
-          <h1 class="title">Rocket Parts</h1>
+          <div class="level">
+            <div class="level-left">
+              <div class="level-item">
+                <h1 class="title">Rocket Parts</h1>
+              </div>
+            </div>
+
+            <div class="level-right">
+              <div class="level-item">
+                <a class="button is-primary is-light" href="/rocket_parts/new" target="_self">
+                  Create Rocket Part
+                </a>
+              </div>
+            </div>
+          </div>
 
           <div class="box">
             <p class="has-text-centered">
@@ -141,5 +197,11 @@ do
     include_examples 'should define reader',
       :resource_name,
       -> { resource.resource_name }
+  end
+
+  describe '#singular_resource_name' do
+    include_examples 'should define reader',
+      :singular_resource_name,
+      -> { resource.singular_resource_name }
   end
 end

@@ -12,5 +12,9 @@ module Spec::Support
     def [](key)
       send(key)
     end
+
+    def inspect
+      %(#<Rocket name="#{name}">)
+    end
   end
 end

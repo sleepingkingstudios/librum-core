@@ -6,7 +6,8 @@ module Librum::Core::View::Pages::Resources
     extend Forwardable
 
     def_delegators :@resource,
-      :resource_name
+      :resource_name,
+      :singular_resource_name
 
     # @return [Array<#[]>] the resource data to render in the table.
     def resource_data
@@ -26,6 +27,17 @@ module Librum::Core::View::Pages::Resources
       end
 
       table_component.new(data: resource_data, resource: resource)
+    end
+
+    def buttons
+      [
+        {
+          color: 'primary',
+          label: "Create #{singular_resource_name.titleize}",
+          light: true,
+          url:   resource.routes.new_path
+        }
+      ]
     end
 
     def render_data_table

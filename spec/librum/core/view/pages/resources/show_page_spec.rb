@@ -2,13 +2,15 @@
 
 require 'rails_helper'
 
+require 'support/rocket'
+
 RSpec.describe Librum::Core::View::Pages::Resources::ShowPage,
   type: :component \
 do
   subject(:page) { described_class.new(result, resource: resource) }
 
   shared_context 'with data' do
-    let(:data)   { { 'name' => 'Imp IV' } }
+    let(:data)   { Spec::Support::Rocket.new(name: 'Imp IV', slug: 'imp-iv') }
     let(:value)  { { resource.singular_resource_name => data } }
     let(:result) { Cuprum::Result.new(value: value) }
   end
@@ -100,9 +102,33 @@ do
       wrap_context 'with data' do
         let(:snapshot) do
           <<~HTML
-            <h1 class="title">Imp IV</h1>
+            <div class="level">
+              <div class="level-left">
+                <div class="level-item">
+                  <h1 class="title">Imp IV</h1>
+                </div>
+              </div>
 
-            <mock name="block" data='{"name"=&gt;"Imp IV"}' resource='#&lt;Resource name="rockets"&gt;'></mock>
+              <div class="level-right">
+                <div class="level-item">
+                  <a class="button is-warning is-light" href="/rockets/imp-iv/edit" target="_self">
+                    Update Rocket
+                  </a>
+                </div>
+
+                <div class="level-item">
+                  <form action="/rockets/imp-iv" accept-charset="UTF-8" method="post">
+                    <input type="hidden" name="_method" value="delete" autocomplete="off">
+
+                    <input type="hidden" name="authenticity_token" value="[token]" autocomplete="off">
+
+                    <button type="submit" class="button is-danger is-light">Destroy Rocket</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+            <mock name="block" data='#&lt;Rocket name="Imp IV"&gt;' resource='#&lt;Resource name="rockets"&gt;'></mock>
 
             <p>
               <a class="has-text-link" href="/rockets" target="_self">

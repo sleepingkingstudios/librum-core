@@ -9,11 +9,23 @@ RSpec.describe Librum::Core::View::Components::Link, type: :component do
   let(:options) { {} }
 
   describe '.new' do
+    let(:expected_keywords) do
+      %i[
+        button
+        class_names
+        color
+        label
+        light
+        icon
+        outline
+      ]
+    end
+
     it 'should define the constructor' do
       expect(described_class)
         .to be_constructible
         .with(1).argument
-        .and_keywords(:label)
+        .and_keywords(*expected_keywords)
     end
   end
 
@@ -66,6 +78,58 @@ RSpec.describe Librum::Core::View::Components::Link, type: :component do
       end
 
       it { expect(rendered).to match_snapshot(snapshot) }
+    end
+
+    describe 'with button: true' do
+      let(:options) { super().merge(button: true) }
+      let(:snapshot) do
+        <<~HTML
+          <a class="button" href="path/to/resource" target="_self">
+            path/to/resource
+          </a>
+        HTML
+      end
+
+      it { expect(rendered).to match_snapshot(snapshot) }
+
+      describe 'with color: value' do
+        let(:options) { super().merge(color: 'danger') }
+        let(:snapshot) do
+          <<~HTML
+            <a class="button is-danger" href="path/to/resource" target="_self">
+              path/to/resource
+            </a>
+          HTML
+        end
+
+        it { expect(rendered).to match_snapshot(snapshot) }
+      end
+
+      describe 'with light: true' do
+        let(:options) { super().merge(light: true) }
+        let(:snapshot) do
+          <<~HTML
+            <a class="button is-light" href="path/to/resource" target="_self">
+              path/to/resource
+            </a>
+          HTML
+        end
+
+        it { expect(rendered).to match_snapshot(snapshot) }
+      end
+
+      describe 'with outline: true' do
+        let(:options) { super().merge(outline: true) }
+        let(:snapshot) do
+          <<~HTML
+            <a class="button is-outlined" href="path/to/resource" target="_self">
+              path/to/resource
+            </a>
+          HTML
+        end
+
+        it { expect(rendered).to match_snapshot(snapshot) }
+      end
     end
 
     describe 'with class_names: value' do
@@ -129,6 +193,16 @@ RSpec.describe Librum::Core::View::Components::Link, type: :component do
     end
   end
 
+  describe '#button?' do
+    include_examples 'should define predicate', :button?, false
+
+    context 'when initialized with button: true' do
+      let(:options) { super().merge(button: true) }
+
+      it { expect(link.button?).to be true }
+    end
+  end
+
   describe '#class_names' do
     include_examples 'should define reader', :class_names, 'has-text-link'
 
@@ -150,7 +224,7 @@ RSpec.describe Librum::Core::View::Components::Link, type: :component do
   end
 
   describe '#color' do
-    include_examples 'should define reader', :color, 'link'
+    include_examples 'should define reader', :color, nil
 
     context 'when initialized with color: value' do
       let(:color)   { 'danger' }
@@ -201,6 +275,26 @@ RSpec.describe Librum::Core::View::Components::Link, type: :component do
       let(:options) { super().merge(label: label) }
 
       it { expect(link.label).to be == label }
+    end
+  end
+
+  describe '#light?' do
+    include_examples 'should define predicate', :light?, false
+
+    context 'when initialized with light: true' do
+      let(:options) { super().merge(light: true) }
+
+      it { expect(link.light?).to be true }
+    end
+  end
+
+  describe '#outline?' do
+    include_examples 'should define predicate', :outline?, false
+
+    context 'when initialized with outline: true' do
+      let(:options) { super().merge(outline: true) }
+
+      it { expect(link.outline?).to be true }
     end
   end
 

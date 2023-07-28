@@ -1,0 +1,19 @@
+<% if buttons? %>
+<div class="level">
+  <div class="level-left">
+    <div class="level-item">
+      <%= render_heading %>
+    </div>
+  </div>
+
+  <div class="level-right">
+  <% buttons.each do |button| %>
+    <div class="level-item">
+      <%= render_button(button) %>
+    </div>
+  <% end %>
+  </div>
+</div>
+<% else %>
+<%= render_heading %>
+<% end %>
