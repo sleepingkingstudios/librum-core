@@ -31,6 +31,10 @@ do
     end
   end
 
+  describe '#actions' do
+    include_examples 'should define reader', :actions, -> { resource.actions }
+  end
+
   describe '#data' do
     include_examples 'should define reader', :resource_data, nil
 

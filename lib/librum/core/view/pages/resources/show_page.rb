@@ -17,7 +17,18 @@ module Librum::Core::View::Pages::Resources
       block_component.new(data: resource_data, resource: resource)
     end
 
-    def build_destroy_form
+    def buttons
+      return [] unless resource_data
+
+      buttons = []
+
+      buttons << update_button if actions.include?('update')
+      buttons << destroy_form  if actions.include?('destroy')
+
+      buttons
+    end
+
+    def destroy_form
       Librum::Core::View::Components::Resources::DestroyForm.new(
         data:     resource_data,
         light:    true,
@@ -25,22 +36,23 @@ module Librum::Core::View::Pages::Resources
       )
     end
 
-    def buttons
-      return [] unless resource_data
+    def edit_resource_path
+      return resource.routes.edit_path if resource.singular?
 
-      [
-        {
-          color: 'warning',
-          label: "Update #{singular_resource_name.titleize}",
-          light: true,
-          url:   resource.routes.edit_path(resource_data['slug'])
-        },
-        build_destroy_form
-      ]
+      resource.routes.edit_path(resource_data['slug'])
     end
 
     def render_data_block
       render(build_data_block)
+    end
+
+    def update_button
+      {
+        color: 'warning',
+        label: "Update #{singular_resource_name.titleize}",
+        light: true,
+        url:   edit_resource_path
+      }
     end
   end
 end

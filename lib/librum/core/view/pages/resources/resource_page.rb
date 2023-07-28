@@ -6,6 +6,7 @@ module Librum::Core::View::Pages::Resources
     extend Forwardable
 
     def_delegators :@resource,
+      :actions,
       :resource_name,
       :singular_resource_name
 

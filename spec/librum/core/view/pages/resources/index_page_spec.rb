@@ -79,6 +79,73 @@ do
 
     it { expect(rendered).to match_snapshot(snapshot) }
 
+    describe 'with resource: { actions: without "create" }' do
+      let(:resource) do
+        Cuprum::Rails::Resource.new(
+          actions:       %w[index show launch recover],
+          resource_name: 'rockets'
+        )
+      end
+      let(:snapshot) do
+        <<~HTML
+          <h1 class="title">Rockets</h1>
+
+          <div class="box">
+            <p class="has-text-centered">
+              <span class="icon is-large has-text-danger">
+                <i class="fas fa-2x fa-bug"></i>
+              </span>
+            </p>
+
+            <h2 class="title has-text-centered has-text-danger">Missing Component Table</h2>
+
+            <p class="has-text-centered">Rendered in Librum::Core::View::Pages::Resources::IndexPage</p>
+          </div>
+        HTML
+      end
+
+      it { expect(rendered).to match_snapshot(snapshot) }
+    end
+
+    describe 'with resource: { resource_name: a multi-word string }' do
+      let(:resource) do
+        Cuprum::Rails::Resource.new(resource_name: 'rocket_parts')
+      end
+      let(:snapshot) do
+        <<~HTML
+          <div class="level">
+            <div class="level-left">
+              <div class="level-item">
+                <h1 class="title">Rocket Parts</h1>
+              </div>
+            </div>
+
+            <div class="level-right">
+              <div class="level-item">
+                <a class="button is-primary is-light" href="/rocket_parts/new" target="_self">
+                  Create Rocket Part
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="box">
+            <p class="has-text-centered">
+              <span class="icon is-large has-text-danger">
+                <i class="fas fa-2x fa-bug"></i>
+              </span>
+            </p>
+
+            <h2 class="title has-text-centered has-text-danger">Missing Component Table</h2>
+
+            <p class="has-text-centered">Rendered in Librum::Core::View::Pages::Resources::IndexPage</p>
+          </div>
+        HTML
+      end
+
+      it { expect(rendered).to match_snapshot(snapshot) }
+    end
+
     describe 'with resource: { table_component: value }' do
       include_context 'with mock component', 'table'
 
@@ -143,45 +210,6 @@ do
 
         it { expect(rendered).to match_snapshot(snapshot) }
       end
-    end
-
-    describe 'with resource: { resource_name: a multi-word string }' do
-      let(:resource) do
-        Cuprum::Rails::Resource.new(resource_name: 'rocket_parts')
-      end
-      let(:snapshot) do
-        <<~HTML
-          <div class="level">
-            <div class="level-left">
-              <div class="level-item">
-                <h1 class="title">Rocket Parts</h1>
-              </div>
-            </div>
-
-            <div class="level-right">
-              <div class="level-item">
-                <a class="button is-primary is-light" href="/rocket_parts/new" target="_self">
-                  Create Rocket Part
-                </a>
-              </div>
-            </div>
-          </div>
-
-          <div class="box">
-            <p class="has-text-centered">
-              <span class="icon is-large has-text-danger">
-                <i class="fas fa-2x fa-bug"></i>
-              </span>
-            </p>
-
-            <h2 class="title has-text-centered has-text-danger">Missing Component Table</h2>
-
-            <p class="has-text-centered">Rendered in Librum::Core::View::Pages::Resources::IndexPage</p>
-          </div>
-        HTML
-      end
-
-      it { expect(rendered).to match_snapshot(snapshot) }
     end
   end
 

@@ -30,14 +30,20 @@ module Librum::Core::View::Pages::Resources
     end
 
     def buttons
-      [
-        {
-          color: 'primary',
-          label: "Create #{singular_resource_name.titleize}",
-          light: true,
-          url:   resource.routes.new_path
-        }
-      ]
+      buttons = []
+
+      buttons << create_button if resource.actions.include?('create')
+
+      buttons
+    end
+
+    def create_button
+      {
+        color: 'primary',
+        label: "Create #{singular_resource_name.titleize}",
+        light: true,
+        url:   resource.routes.new_path
+      }
     end
 
     def render_data_table

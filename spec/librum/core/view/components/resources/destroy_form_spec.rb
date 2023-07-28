@@ -23,19 +23,41 @@ do
 
   describe '#call' do
     let(:rendered) { render_inline(form) }
-    let(:snapshot) do
-      <<~HTML
-        <form action="/rockets/imp-iv" accept-charset="UTF-8" method="post">
-          <input type="hidden" name="_method" value="delete" autocomplete="off">
 
-          <input type="hidden" name="authenticity_token" value="[token]" autocomplete="off">
+    describe 'with a plural resource' do
+      let(:snapshot) do
+        <<~HTML
+          <form action="/rockets/imp-iv" accept-charset="UTF-8" method="post">
+            <input type="hidden" name="_method" value="delete" autocomplete="off">
 
-          <button type="submit" class="button is-danger">Destroy Rocket</button>
-        </form>
-      HTML
+            <input type="hidden" name="authenticity_token" value="[token]" autocomplete="off">
+
+            <button type="submit" class="button is-danger">Destroy Rocket</button>
+          </form>
+        HTML
+      end
+
+      it { expect(rendered).to match_snapshot(snapshot) }
     end
 
-    it { expect(rendered).to match_snapshot(snapshot) }
+    describe 'with a singular resource' do
+      let(:resource) do
+        Cuprum::Rails::Resource.new(resource_name: 'rocket', singular: true)
+      end
+      let(:snapshot) do
+        <<~HTML
+          <form action="/rocket" accept-charset="UTF-8" method="post">
+            <input type="hidden" name="_method" value="delete" autocomplete="off">
+
+            <input type="hidden" name="authenticity_token" value="[token]" autocomplete="off">
+
+            <button type="submit" class="button is-danger">Destroy Rocket</button>
+          </form>
+        HTML
+      end
+
+      it { expect(rendered).to match_snapshot(snapshot) }
+    end
   end
 
   describe '#data' do

@@ -40,6 +40,12 @@ module Librum::Core::View::Components::Resources
       )
     end
 
+    def destroy_resource_path
+      return resource.routes.destroy_path if resource.singular?
+
+      resource.routes.destroy_path(data['slug'])
+    end
+
     def render_button
       render(build_button)
     end
@@ -48,7 +54,7 @@ module Librum::Core::View::Components::Resources
       form_with(
         model:  data,
         method: 'delete',
-        url:    resource.routes.destroy_path(data['slug']),
+        url:    destroy_resource_path,
         &block
       )
     end
