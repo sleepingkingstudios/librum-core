@@ -1,4 +1,11 @@
-<h1 class="title"><%= record_name %></h1>
+<%=
+  render(
+    Librum::Core::View::Components::Heading.new(
+      record_name,
+      buttons: buttons
+    )
+  )
+%>
 
 <%= render_data_block %>
 

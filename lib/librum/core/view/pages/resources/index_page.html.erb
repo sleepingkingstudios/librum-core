@@ -1,3 +1,10 @@
-<h1 class="title"><%= resource_name.titleize %></h1>
+<%=
+  render(
+    Librum::Core::View::Components::Heading.new(
+      resource_name.titleize,
+      buttons: buttons
+    )
+  )
+%>
 
 <%= render_data_table %>

@@ -8,14 +8,26 @@ module Librum::Core::View::Components
     # @param errors [Stannum::Errors, Array<String>] the form errors to apply.
     # @param id [String] a unique identifier for the input.
     # @param name [String] the scoped name of the form input.
+    # @param placeholder [String] the placeholder value to display in an empty
+    #   input.
     # @param type [String] the input type.
-    def initialize(name, errors: nil, id: nil, type: 'text')
+    # @param value [String] the value to place in the input, if any.
+    def initialize( # rubocop:disable Metrics/ParameterLists
+      name,
+      errors:      nil,
+      id:          nil,
+      placeholder: nil,
+      type:        'text',
+      value:       nil
+    )
       super()
 
-      @errors = errors
-      @id     = id
-      @name   = name
-      @type   = type
+      @errors      = errors
+      @id          = id
+      @name        = name
+      @placeholder = placeholder
+      @type        = type
+      @value       = value
     end
 
     # @return [Stannum::Errors, Array<String>] the form errors to apply.
@@ -27,8 +39,14 @@ module Librum::Core::View::Components
     # @return [String] the scoped name of the form input.
     attr_reader :name
 
+    # @return [String] the placeholder value to display in an empty input.
+    attr_reader :placeholder
+
     # @return [String] the input type.
     attr_reader :type
+
+    # @return [String] the value to place in the input.
+    attr_reader :value
 
     # @return [String] the rendered component.
     def call
@@ -40,12 +58,13 @@ module Librum::Core::View::Components
     def attributes
       hsh = id.present? ? { id: id } : {}
 
-      hsh
-        .merge(
-          name:  name,
-          class: class_names,
-          type:  type
-        )
+      hsh.merge(
+        name:        name,
+        class:       class_names,
+        placeholder: placeholder,
+        type:        type,
+        value:       value
+      )
     end
 
     def class_names

@@ -15,7 +15,7 @@ RSpec.describe Librum::Core::View::Components::FormInput, type: :component do
       expect(described_class)
         .to be_constructible
         .with(1).argument
-        .and_keywords(:errors, :id, :type)
+        .and_keywords(:errors, :id, :placeholder, :type, :value)
     end
   end
 
@@ -61,12 +61,36 @@ RSpec.describe Librum::Core::View::Components::FormInput, type: :component do
       it { expect(rendered).to match_snapshot(snapshot) }
     end
 
+    describe 'with placeholder: value' do
+      let(:placeholder) { 'Enter Username' }
+      let(:options)     { super().merge(placeholder: placeholder) }
+      let(:snapshot) do
+        <<~HTML
+          <input name="username" class="input" placeholder="Enter Username" type="text">
+        HTML
+      end
+
+      it { expect(rendered).to match_snapshot(snapshot) }
+    end
+
     describe 'with type: value' do
       let(:type)    { 'email' }
       let(:options) { super().merge(type: type) }
       let(:snapshot) do
         <<~HTML
           <input name="username" class="input" type="email">
+        HTML
+      end
+
+      it { expect(rendered).to match_snapshot(snapshot) }
+    end
+
+    describe 'with value: a String' do
+      let(:value)   { 'Alan Bradley' }
+      let(:options) { super().merge(value: value) }
+      let(:snapshot) do
+        <<~HTML
+          <input name="username" class="input" type="text" value="Alan Bradley">
         HTML
       end
 
@@ -101,6 +125,17 @@ RSpec.describe Librum::Core::View::Components::FormInput, type: :component do
     include_examples 'should define reader', :name, -> { name }
   end
 
+  describe '#placeholder' do
+    include_examples 'should define reader', :placeholder, nil
+
+    context 'when initialized with placeholder: value' do
+      let(:placeholder) { 'Enter Username' }
+      let(:options)     { super().merge(placeholder: placeholder) }
+
+      it { expect(input.placeholder).to be == placeholder }
+    end
+  end
+
   describe '#type' do
     include_examples 'should define reader', :type, 'text'
 
@@ -109,6 +144,17 @@ RSpec.describe Librum::Core::View::Components::FormInput, type: :component do
       let(:options) { super().merge(type: type) }
 
       it { expect(input.type).to be == type }
+    end
+  end
+
+  describe '#value' do
+    include_examples 'should define reader', :value, nil
+
+    context 'when initialized with value: a String' do
+      let(:value)   { 'Alan Bradley' }
+      let(:options) { super().merge(value: value) }
+
+      it { expect(input.value).to be == value }
     end
   end
 end

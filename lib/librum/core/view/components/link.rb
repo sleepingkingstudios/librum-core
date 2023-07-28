@@ -4,19 +4,37 @@ module Librum::Core::View::Components
   # Renders an internal or external link.
   class Link < ViewComponent::Base
     # @param url [String] the url for the link.
+    # @param button [Boolean] if true, the link is rendered as a button.
+    #   Defaults to false.
     # @param class_names [Array<String>, String] additional class names to add
     #   to the rendered HTML.
     # @param color [String] the color of the link.
     # @param icon [String] the icon to display in the link, if any.
     # @param label [String] the label for the link. Defaults to the url.
-    def initialize(url, class_names: [], color: 'link', icon: nil, label: nil)
+    # @param light [Boolean] if true, a button link is rendered in light style.
+    #   Defaults to false.
+    # @param outline [Boolean] if true, a button link is rendered in outline
+    #   style. Defaults to false.
+    def initialize( # rubocop:disable Metrics/ParameterLists
+      url,
+      button:      false,
+      class_names: [],
+      color:       nil,
+      icon:        nil,
+      label:       nil,
+      light:       false,
+      outline:     false
+    )
       super()
 
       @url         = url
+      @button      = button
       @class_names = Array(class_names)
       @color       = color
       @icon        = icon
       @label       = label || url
+      @light       = light
+      @outline     = outline
       @external    = url.include?('.') || url.include?(':')
     end
 
@@ -32,11 +50,22 @@ module Librum::Core::View::Components
     # @return [String] the url for the link.
     attr_reader :url
 
+    # @return [Boolean] if true, the link is rendered as a button.
+    def button?
+      @button.present?
+    end
+
     # @return [String] additional class names to add to the rendered HTML.
     def class_names
       ary = @class_names.dup
 
-      ary << "has-text-#{color}"
+      if button?
+        ary.concat(button_class_names)
+      elsif color.present?
+        ary << "has-text-#{color}"
+      else
+        ary << 'has-text-link'
+      end
 
       ary.join(' ')
     end
@@ -47,7 +76,28 @@ module Librum::Core::View::Components
       @external
     end
 
+    # @return [Boolean] if true, a button link is rendered in light style.
+    def light?
+      @light
+    end
+
+    # @return [Boolean] if true, a button link is rendered in outline style.
+    def outline?
+      @outline.present?
+    end
+
     private
+
+    def button_class_names
+      ary = []
+
+      ary << 'button'
+      ary << "is-#{color}" if color
+      ary << 'is-light'    if light?
+      ary << 'is-outlined' if outline?
+
+      ary
+    end
 
     def target
       external? ? '_blank' : '_self'
