@@ -43,6 +43,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'cuprum-rails'
   gem.add_dependency 'stannum', '~> 0.3'
 
+  gem.add_dependency 'annotate',       '~> 3.2'
   gem.add_dependency 'pg',             '~> 1.5'
   gem.add_dependency 'rails',          '~> 7.0.4'
   gem.add_dependency 'view_component', '~> 3.0'
