@@ -9,10 +9,14 @@ module Librum::Core::View::Layouts
     #   breadcrumbs. Defaults to false.
     # @param navigation [Navigation::Configuration, false] the configured
     #   navigation, or false if the navigation bar is hidden. Defaults to false.
-    def initialize(
+    # @param subtitle [String] the subtitle to display.
+    # @param title [String] the title to display.
+    def initialize( # rubocop:disable Metrics/ParameterLists
       alerts:      nil,
       breadcrumbs: false,
       navigation:  false,
+      subtitle:    nil,
+      title:       nil,
       **
     )
       super()
@@ -20,6 +24,8 @@ module Librum::Core::View::Layouts
       @alerts      = alerts
       @breadcrumbs = breadcrumbs
       @navigation  = navigation
+      @subtitle    = subtitle
+      @title       = title
     end
 
     renders_one :after_content
@@ -37,5 +43,11 @@ module Librum::Core::View::Layouts
     # @return [Navigation::Configuration, false] the configured navigation, or
     #   false if the navigation bar is hidden.
     attr_reader :navigation
+
+    # @return [String] the subtitle to display.
+    attr_reader :subtitle
+
+    # @return [String] the title to display.
+    attr_reader :title
   end
 end

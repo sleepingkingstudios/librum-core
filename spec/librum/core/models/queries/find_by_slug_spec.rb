@@ -7,7 +7,7 @@ RSpec.describe Librum::Core::Models::Queries::FindBySlug do
 
   let(:repository) { Cuprum::Rails::Repository.new }
   let(:collection) do
-    repository.find_or_create(record_class: Spec::Support::User)
+    repository.find_or_create(entity_class: Spec::Support::User)
   end
 
   describe '.new' do

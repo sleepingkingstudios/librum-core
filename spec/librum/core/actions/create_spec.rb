@@ -17,9 +17,6 @@ RSpec.describe Librum::Core::Actions::Create, type: :action do
   let(:repository) { Cuprum::Rails::Repository.new }
   let(:resource) do
     Cuprum::Rails::Resource.new(
-      collection:           repository.find_or_create(
-        record_class: Spec::Support::User
-      ),
       permitted_attributes: %i[
         name
         slug

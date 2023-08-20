@@ -52,20 +52,6 @@ RSpec.describe Librum::Core::View::Layouts::Page, type: :component do
     let(:snapshot) do
       <<~HTML
         <div class="page is-flex is-flex-direction-column">
-          <section class="banner hero is-small">
-            <div class="hero-body">
-              <div class="container">
-                <div>
-                  <p class="title">Librum</p>
-
-                  <p class="subtitle">Tabletop Campaign Companion</p>
-                </div>
-
-                <hr class="is-fancy-hr">
-              </div>
-            </div>
-          </section>
-
           <section class="section primary-content is-flex-grow-1">
             <div class="container">
               Greetings, Starfighter!
@@ -90,20 +76,6 @@ RSpec.describe Librum::Core::View::Layouts::Page, type: :component do
       let(:snapshot) do
         <<~HTML
           <div class="page is-flex is-flex-direction-column">
-            <section class="banner hero is-small">
-              <div class="hero-body">
-                <div class="container">
-                  <div>
-                    <p class="title">Librum</p>
-
-                    <p class="subtitle">Tabletop Campaign Companion</p>
-                  </div>
-
-                  <hr class="is-fancy-hr">
-                </div>
-              </div>
-            </section>
-
             <section class="section primary-content is-flex-grow-1">
               <div class="container">
                 Greetings, Starfighter!
@@ -144,20 +116,6 @@ RSpec.describe Librum::Core::View::Layouts::Page, type: :component do
       let(:snapshot) do
         <<~HTML
           <div class="page is-flex is-flex-direction-column">
-            <section class="banner hero is-small">
-              <div class="hero-body">
-                <div class="container">
-                  <div>
-                    <p class="title">Librum</p>
-
-                    <p class="subtitle">Tabletop Campaign Companion</p>
-                  </div>
-
-                  <hr class="is-fancy-hr">
-                </div>
-              </div>
-            </section>
-
             <section class="section primary-content is-flex-grow-1">
               <div class="container">
                 <div class="notification is-danger">
@@ -197,20 +155,6 @@ RSpec.describe Librum::Core::View::Layouts::Page, type: :component do
       let(:snapshot) do
         <<~HTML
           <div class="page is-flex is-flex-direction-column">
-            <section class="banner hero is-small">
-              <div class="hero-body">
-                <div class="container">
-                  <div>
-                    <p class="title">Librum</p>
-
-                    <p class="subtitle">Tabletop Campaign Companion</p>
-                  </div>
-
-                  <hr class="is-fancy-hr">
-                </div>
-              </div>
-            </section>
-
             <section class="section primary-content is-flex-grow-1">
               <div class="container">
                 You are not currently logged in. [Log In]
@@ -244,20 +188,6 @@ RSpec.describe Librum::Core::View::Layouts::Page, type: :component do
       let(:snapshot) do
         <<~HTML
           <div class="page is-flex is-flex-direction-column">
-            <section class="banner hero is-small">
-              <div class="hero-body">
-                <div class="container">
-                  <div>
-                    <p class="title">Librum</p>
-
-                    <p class="subtitle">Tabletop Campaign Companion</p>
-                  </div>
-
-                  <hr class="is-fancy-hr">
-                </div>
-              </div>
-            </section>
-
             <section class="section primary-content is-flex-grow-1">
               <div class="container">
                 Greetings, Starfighter!
@@ -296,10 +226,6 @@ RSpec.describe Librum::Core::View::Layouts::Page, type: :component do
               <div class="hero-body">
                 <div class="container">
                   <div>
-                    <p class="title">Librum</p>
-
-                    <p class="subtitle">Tabletop Campaign Companion</p>
-
                     <nav class="navbar is-size-5" role="navigation" aria-label="main-navigation">
                       <div class="navbar-brand">
                         <a class="navbar-item pl-1 has-text-black" href="/" target="_self">
@@ -349,6 +275,88 @@ RSpec.describe Librum::Core::View::Layouts::Page, type: :component do
 
       it { expect(rendered).to match_snapshot(snapshot) }
     end
+
+    describe 'with title: value' do
+      let(:title)   { 'Librum' }
+      let(:options) { super().merge(title: title) }
+      let(:snapshot) do
+        <<~HTML
+          <div class="page is-flex is-flex-direction-column">
+            <section class="banner hero is-small">
+              <div class="hero-body">
+                <div class="container">
+                  <div>
+                    <p class="title">
+                      Librum
+                    </p>
+                  </div>
+
+                  <hr class="is-fancy-hr">
+                </div>
+              </div>
+            </section>
+
+            <section class="section primary-content is-flex-grow-1">
+              <div class="container">
+                Greetings, Starfighter!
+              </div>
+            </section>
+
+            <footer class="footer has-text-centered">
+              <div class="container">
+                <hr class="is-fancy-hr">
+
+                <p>What Lies Beyond The Farthest Reaches Of The Skies?</p>
+              </div>
+            </footer>
+          </div>
+        HTML
+      end
+
+      it { expect(rendered).to match_snapshot(snapshot) }
+
+      describe 'with subtitle: value' do
+        let(:subtitle) { 'Tabletop Campaign Companion' }
+        let(:options)  { super().merge(subtitle: subtitle) }
+        let(:snapshot) do
+          <<~HTML
+            <div class="page is-flex is-flex-direction-column">
+              <section class="banner hero is-small">
+                <div class="hero-body">
+                  <div class="container">
+                    <div>
+                      <p class="title">
+                        Librum
+
+                        <span class="subtitle is-block is-inline-tablet mt-3">Tabletop Campaign Companion</span>
+                      </p>
+                    </div>
+
+                    <hr class="is-fancy-hr">
+                  </div>
+                </div>
+              </section>
+
+              <section class="section primary-content is-flex-grow-1">
+                <div class="container">
+                  Greetings, Starfighter!
+                </div>
+              </section>
+
+              <footer class="footer has-text-centered">
+                <div class="container">
+                  <hr class="is-fancy-hr">
+
+                  <p>What Lies Beyond The Farthest Reaches Of The Skies?</p>
+                </div>
+              </footer>
+            </div>
+          HTML
+        end
+
+        it { expect(rendered).to match_snapshot(snapshot) }
+      end
+    end
   end
 
   describe '#navigation' do
@@ -359,6 +367,28 @@ RSpec.describe Librum::Core::View::Layouts::Page, type: :component do
       let(:options)    { super().merge(navigation: navigation) }
 
       it { expect(page.navigation).to be == navigation }
+    end
+  end
+
+  describe '#subtitle' do
+    include_examples 'should define reader', :subtitle, nil
+
+    context 'when initialized with subtitle: value' do
+      let(:subtitle) { 'Tabletop Campaign Companion' }
+      let(:options)  { super().merge(subtitle: subtitle) }
+
+      it { expect(page.subtitle).to be == subtitle }
+    end
+  end
+
+  describe '#title' do
+    include_examples 'should define reader', :title, nil
+
+    context 'when initialized with title: value' do
+      let(:title)   { 'Librum' }
+      let(:options) { super().merge(title: title) }
+
+      it { expect(page.title).to be == title }
     end
   end
 end

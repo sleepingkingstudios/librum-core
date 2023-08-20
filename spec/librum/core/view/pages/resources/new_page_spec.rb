@@ -110,9 +110,10 @@ do
         end
 
         before(:example) do
-          allow(errors).to receive(:inspect).and_return('#<Errors>')
-
-          allow(errors).to receive(:with_messages).and_return(errors)
+          allow(errors).to receive_messages(
+            inspect:       '#<Errors>',
+            with_messages: errors
+          )
         end
 
         it { expect(rendered).to match_snapshot(snapshot) }

@@ -151,6 +151,15 @@ RSpec.describe Librum::Core::Responders::Html::ViewResponder do
         'View::Pages::Namespace::Custom::ImplementPage'
     end
 
+    context 'when the result metadata is nil' do
+      let(:result) { Cuprum::Rails::Result.new(metadata: nil) }
+
+      include_contract 'should render the missing page'
+
+      include_examples 'should respond with the page when defined',
+        'View::Pages::Custom::ImplementPage'
+    end
+
     context 'when the result has metadata' do
       let(:value) do
         {

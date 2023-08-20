@@ -69,7 +69,7 @@ module Librum::Core::Responders::Html
     def assigns_from_metadata(result)
       return {} unless result.respond_to?(:metadata)
 
-      result.metadata.stringify_keys
+      result.metadata&.stringify_keys || {}
     end
 
     def assigns_from_value(result)
