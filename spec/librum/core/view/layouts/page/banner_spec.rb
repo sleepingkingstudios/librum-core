@@ -18,25 +18,8 @@ RSpec.describe Librum::Core::View::Layouts::Page::Banner, type: :component do
 
   describe '#call' do
     let(:rendered) { render_inline(banner) }
-    let(:snapshot) do
-      <<~HTML
-        <section class="banner hero is-small">
-          <div class="hero-body">
-            <div class="container">
-              <div>
-                <p class="title">Librum</p>
 
-                <p class="subtitle">Tabletop Campaign Companion</p>
-              </div>
-
-              <hr class="is-fancy-hr">
-            </div>
-          </div>
-        </section>
-      HTML
-    end
-
-    it { expect(rendered).to match_snapshot(snapshot) }
+    it { expect(rendered.to_s).to be == '' }
 
     describe 'with navigation: value' do
       let(:navigation) { { label: 'Sleeping King Studios' } }
@@ -47,10 +30,6 @@ RSpec.describe Librum::Core::View::Layouts::Page::Banner, type: :component do
             <div class="hero-body">
               <div class="container">
                 <div>
-                  <p class="title">Librum</p>
-
-                  <p class="subtitle">Tabletop Campaign Companion</p>
-
                   <nav class="navbar is-size-5" role="navigation" aria-label="main-navigation">
                     <div class="navbar-brand">
                       <a class="navbar-item pl-1 has-text-black" href="/" target="_self">
@@ -85,6 +64,56 @@ RSpec.describe Librum::Core::View::Layouts::Page::Banner, type: :component do
 
       it { expect(rendered).to match_snapshot(snapshot) }
     end
+
+    describe 'with title: value' do
+      let(:title)   { 'Librum' }
+      let(:options) { super().merge(title: title) }
+      let(:snapshot) do
+        <<~HTML
+          <section class="banner hero is-small">
+            <div class="hero-body">
+              <div class="container">
+                <div>
+                  <p class="title">
+                    Librum
+                  </p>
+                </div>
+
+                <hr class="is-fancy-hr">
+              </div>
+            </div>
+          </section>
+        HTML
+      end
+
+      it { expect(rendered).to match_snapshot(snapshot) }
+
+      describe 'with subtitle: value' do
+        let(:subtitle) { 'Tabletop Campaign Companion' }
+        let(:options)  { super().merge(subtitle: subtitle) }
+        let(:snapshot) do
+          <<~HTML
+            <section class="banner hero is-small">
+              <div class="hero-body">
+                <div class="container">
+                  <div>
+                    <p class="title">
+                      Librum
+
+                      <span class="subtitle is-block is-inline-tablet mt-3">Tabletop Campaign Companion</span>
+                    </p>
+                  </div>
+
+                  <hr class="is-fancy-hr">
+                </div>
+              </div>
+            </section>
+          HTML
+        end
+
+        it { expect(rendered).to match_snapshot(snapshot) }
+      end
+    end
   end
 
   describe '#navigation' do
@@ -95,6 +124,28 @@ RSpec.describe Librum::Core::View::Layouts::Page::Banner, type: :component do
       let(:options)    { super().merge(navigation: navigation) }
 
       it { expect(banner.navigation).to be == navigation }
+    end
+  end
+
+  describe '#subtitle' do
+    include_examples 'should define reader', :subtitle, nil
+
+    context 'when initialized with subtitle: value' do
+      let(:subtitle) { 'Tabletop Campaign Companion' }
+      let(:options)  { super().merge(subtitle: subtitle) }
+
+      it { expect(banner.subtitle).to be == subtitle }
+    end
+  end
+
+  describe '#title' do
+    include_examples 'should define reader', :title, nil
+
+    context 'when initialized with title: value' do
+      let(:title)   { 'Librum' }
+      let(:options) { super().merge(title: title) }
+
+      it { expect(banner.title).to be == title }
     end
   end
 end

@@ -1,7 +1,11 @@
 <div class="page is-flex is-flex-direction-column">
   <%=
     render(
-      Librum::Core::View::Layouts::Page::Banner.new(navigation: navigation)
+      Librum::Core::View::Layouts::Page::Banner.new(
+        navigation: navigation,
+        subtitle:   subtitle,
+        title:      title
+      )
     )
   %>
 

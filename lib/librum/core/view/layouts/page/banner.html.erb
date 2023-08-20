@@ -2,9 +2,15 @@
   <div class="hero-body">
     <div class="container">
       <div>
-        <p class="title">Librum</p>
+        <% if title.present? %>
+        <p class="title">
+          <%= title %>
 
-        <p class="subtitle">Tabletop Campaign Companion</p>
+          <% if subtitle.present? %>
+          <span class="subtitle is-block is-inline-tablet mt-3"><%= subtitle %></span>
+          <% end %>
+        </p>
+        <% end %>
 
         <% if navigation %>
         <%=
