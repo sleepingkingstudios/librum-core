@@ -7,8 +7,6 @@ module Librum::Core::RSpec::Utils
     #
     # @return [String] the rendered HTML.
     def call(document)
-      @document = document
-
       render_children(document)
     end
 
