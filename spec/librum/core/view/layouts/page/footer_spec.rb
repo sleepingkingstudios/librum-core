@@ -12,7 +12,8 @@ RSpec.describe Librum::Core::View::Layouts::Page::Footer, type: :component do
       expect(described_class)
         .to be_constructible
         .with(0).arguments
-        .and_keywords(:breadcrumbs)
+        .and_keywords(:breadcrumbs, :footer_text)
+        .and_any_keywords
     end
   end
 
@@ -45,19 +46,8 @@ RSpec.describe Librum::Core::View::Layouts::Page::Footer, type: :component do
 
   describe '#call' do
     let(:rendered) { render_inline(footer) }
-    let(:snapshot) do
-      <<~HTML
-        <footer class="footer has-text-centered">
-          <div class="container">
-            <hr class="is-fancy-hr">
 
-            <p>What Lies Beyond The Farthest Reaches Of The Skies?</p>
-          </div>
-        </footer>
-      HTML
-    end
-
-    it { expect(rendered).to match_snapshot(snapshot) }
+    it { expect(rendered.to_s).to be == '' }
 
     describe 'with breadcrumbs: value' do
       let(:breadcrumbs) do
@@ -99,16 +89,45 @@ RSpec.describe Librum::Core::View::Layouts::Page::Footer, type: :component do
                   </li>
                 </ul>
               </nav>
-
-              <hr class="is-fancy-hr">
-
-              <p>What Lies Beyond The Farthest Reaches Of The Skies?</p>
             </div>
           </footer>
         HTML
       end
 
       it { expect(rendered).to match_snapshot(snapshot) }
+    end
+
+    describe 'with footer_text: value' do
+      let(:footer_text) do
+        'Interdum feror cupidine partium magnarum Europae vincendarum'
+      end
+      let(:options) { super().merge(footer_text: footer_text) }
+      let(:snapshot) do
+        <<~HTML
+          <footer class="footer has-text-centered">
+            <div class="container">
+              <hr class="is-fancy-hr">
+
+              <p>Interdum feror cupidine partium magnarum Europae vincendarum</p>
+            </div>
+          </footer>
+        HTML
+      end
+
+      it { expect(rendered).to match_snapshot(snapshot) }
+    end
+  end
+
+  describe '#footer_text' do
+    include_examples 'should define reader', :footer_text, nil
+
+    context 'when initialized with footer_text: value' do
+      let(:footer_text) do
+        'Interdum feror cupidine partium magnarum Europae vincendarum'
+      end
+      let(:options) { super().merge(footer_text: footer_text) }
+
+      it { expect(footer.footer_text).to be == footer_text }
     end
   end
 end

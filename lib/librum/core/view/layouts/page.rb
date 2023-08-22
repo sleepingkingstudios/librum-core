@@ -9,23 +9,24 @@ module Librum::Core::View::Layouts
     #   breadcrumbs. Defaults to false.
     # @param navigation [Navigation::Configuration, false] the configured
     #   navigation, or false if the navigation bar is hidden. Defaults to false.
-    # @param subtitle [String] the subtitle to display.
-    # @param title [String] the title to display.
-    def initialize( # rubocop:disable Metrics/ParameterLists
+    # @param options [Hash] additional options for the page.
+    #
+    # @option options footer_text [String] text to display in the footer, if
+    #   any.
+    # @option options subtitle [String] the subtitle to display.
+    # @option options title [String] the title to display.
+    def initialize(
       alerts:      nil,
       breadcrumbs: false,
       navigation:  false,
-      subtitle:    nil,
-      title:       nil,
-      **
+      **options
     )
       super()
 
       @alerts      = alerts
       @breadcrumbs = breadcrumbs
       @navigation  = navigation
-      @subtitle    = subtitle
-      @title       = title
+      @options     = options
     end
 
     renders_one :after_content
@@ -44,10 +45,44 @@ module Librum::Core::View::Layouts
     #   false if the navigation bar is hidden.
     attr_reader :navigation
 
-    # @return [String] the subtitle to display.
-    attr_reader :subtitle
+    # @return [Hash] additional options for the page.
+    attr_reader :options
 
-    # @return [String] the title to display.
-    attr_reader :title
+    private
+
+    def build_alerts
+      Librum::Core::View::Layouts::Page::Alerts.new(
+        alerts: alerts,
+        **options
+      )
+    end
+
+    def build_banner
+      Librum::Core::View::Layouts::Page::Banner.new(
+        navigation: navigation,
+        **options
+      )
+    end
+
+    def build_footer
+      Librum::Core::View::Layouts::Page::Footer.new(
+        breadcrumbs: breadcrumbs,
+        **options
+      )
+    end
+
+    def render_alerts
+      return if alerts.blank?
+
+      render(build_alerts)
+    end
+
+    def render_banner
+      render(build_banner)
+    end
+
+    def render_footer
+      render(build_footer)
+    end
   end
 end

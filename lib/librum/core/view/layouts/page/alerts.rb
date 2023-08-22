@@ -4,7 +4,7 @@ module Librum::Core::View::Layouts
   # Renders the page alerts.
   class Page::Alerts < ViewComponent::Base
     # @param alerts [Hash{String=>String}] the alerts to display.
-    def initialize(alerts:)
+    def initialize(alerts:, **)
       super()
 
       @alerts = parse_alerts(alerts)

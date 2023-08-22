@@ -12,7 +12,8 @@ RSpec.describe Librum::Core::View::Layouts::Page::Banner, type: :component do
       expect(described_class)
         .to be_constructible
         .with(0).arguments
-        .and_keywords(:navigation)
+        .and_keywords(:navigation, :subtitle, :title)
+        .and_any_keywords
     end
   end
 
