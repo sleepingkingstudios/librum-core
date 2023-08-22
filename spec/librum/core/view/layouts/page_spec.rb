@@ -9,11 +9,20 @@ RSpec.describe Librum::Core::View::Layouts::Page, type: :component do
   let(:options) { {} }
 
   describe '.new' do
+    let(:expected_keywords) do
+      %i[
+        alerts
+        breadcrumbs
+        navigation
+      ]
+    end
+
     it 'should define the constructor' do
       expect(described_class)
         .to be_constructible
         .with(0).arguments
-        .and_keywords(:alerts, :breadcrumbs, :navigation)
+        .and_keywords(*expected_keywords)
+        .and_any_keywords
     end
   end
 
@@ -57,14 +66,6 @@ RSpec.describe Librum::Core::View::Layouts::Page, type: :component do
               Greetings, Starfighter!
             </div>
           </section>
-
-          <footer class="footer has-text-centered">
-            <div class="container">
-              <hr class="is-fancy-hr">
-
-              <p>What Lies Beyond The Farthest Reaches Of The Skies?</p>
-            </div>
-          </footer>
         </div>
       HTML
     end
@@ -83,14 +84,6 @@ RSpec.describe Librum::Core::View::Layouts::Page, type: :component do
                 Don't forget to like and subscribe!
               </div>
             </section>
-
-            <footer class="footer has-text-centered">
-              <div class="container">
-                <hr class="is-fancy-hr">
-
-                <p>What Lies Beyond The Farthest Reaches Of The Skies?</p>
-              </div>
-            </footer>
           </div>
         HTML
       end
@@ -135,14 +128,6 @@ RSpec.describe Librum::Core::View::Layouts::Page, type: :component do
                 Greetings, Starfighter!
               </div>
             </section>
-
-            <footer class="footer has-text-centered">
-              <div class="container">
-                <hr class="is-fancy-hr">
-
-                <p>What Lies Beyond The Farthest Reaches Of The Skies?</p>
-              </div>
-            </footer>
           </div>
         HTML
       end
@@ -163,14 +148,6 @@ RSpec.describe Librum::Core::View::Layouts::Page, type: :component do
                 Greetings, Starfighter!
               </div>
             </section>
-
-            <footer class="footer has-text-centered">
-              <div class="container">
-                <hr class="is-fancy-hr">
-
-                <p>What Lies Beyond The Farthest Reaches Of The Skies?</p>
-              </div>
-            </footer>
           </div>
         HTML
       end
@@ -203,10 +180,34 @@ RSpec.describe Librum::Core::View::Layouts::Page, type: :component do
                     </li>
                   </ul>
                 </nav>
+              </div>
+            </footer>
+          </div>
+        HTML
+      end
 
+      it { expect(rendered).to match_snapshot(snapshot) }
+    end
+
+    describe 'with footer_text: value' do
+      let(:footer_text) do
+        'Interdum feror cupidine partium magnarum Europae vincendarum'
+      end
+      let(:options) { super().merge(footer_text: footer_text) }
+      let(:snapshot) do
+        <<~HTML
+          <div class="page is-flex is-flex-direction-column">
+            <section class="section primary-content is-flex-grow-1">
+              <div class="container">
+                Greetings, Starfighter!
+              </div>
+            </section>
+
+            <footer class="footer has-text-centered">
+              <div class="container">
                 <hr class="is-fancy-hr">
 
-                <p>What Lies Beyond The Farthest Reaches Of The Skies?</p>
+                <p>Interdum feror cupidine partium magnarum Europae vincendarum</p>
               </div>
             </footer>
           </div>
@@ -261,14 +262,6 @@ RSpec.describe Librum::Core::View::Layouts::Page, type: :component do
                 Greetings, Starfighter!
               </div>
             </section>
-
-            <footer class="footer has-text-centered">
-              <div class="container">
-                <hr class="is-fancy-hr">
-
-                <p>What Lies Beyond The Farthest Reaches Of The Skies?</p>
-              </div>
-            </footer>
           </div>
         HTML
       end
@@ -301,14 +294,6 @@ RSpec.describe Librum::Core::View::Layouts::Page, type: :component do
                 Greetings, Starfighter!
               </div>
             </section>
-
-            <footer class="footer has-text-centered">
-              <div class="container">
-                <hr class="is-fancy-hr">
-
-                <p>What Lies Beyond The Farthest Reaches Of The Skies?</p>
-              </div>
-            </footer>
           </div>
         HTML
       end
@@ -342,14 +327,6 @@ RSpec.describe Librum::Core::View::Layouts::Page, type: :component do
                   Greetings, Starfighter!
                 </div>
               </section>
-
-              <footer class="footer has-text-centered">
-                <div class="container">
-                  <hr class="is-fancy-hr">
-
-                  <p>What Lies Beyond The Farthest Reaches Of The Skies?</p>
-                </div>
-              </footer>
             </div>
           HTML
         end
@@ -370,25 +347,30 @@ RSpec.describe Librum::Core::View::Layouts::Page, type: :component do
     end
   end
 
-  describe '#subtitle' do
-    include_examples 'should define reader', :subtitle, nil
+  describe '#options' do
+    include_examples 'should define reader', :options, {}
+
+    context 'when initialized with footer_text: value' do
+      let(:footer_text) do
+        'Interdum feror cupidine partium magnarum Europae vincendarum'
+      end
+      let(:options) { super().merge(footer_text: footer_text) }
+
+      it { expect(page.options).to be == options }
+    end
 
     context 'when initialized with subtitle: value' do
       let(:subtitle) { 'Tabletop Campaign Companion' }
       let(:options)  { super().merge(subtitle: subtitle) }
 
-      it { expect(page.subtitle).to be == subtitle }
+      it { expect(page.options).to be == options }
     end
-  end
-
-  describe '#title' do
-    include_examples 'should define reader', :title, nil
 
     context 'when initialized with title: value' do
       let(:title)   { 'Librum' }
       let(:options) { super().merge(title: title) }
 
-      it { expect(page.title).to be == title }
+      it { expect(page.options).to be == options }
     end
   end
 end

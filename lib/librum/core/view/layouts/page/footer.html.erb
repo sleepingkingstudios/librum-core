@@ -1,17 +1,11 @@
 <footer class="footer has-text-centered">
   <div class="container">
-    <% if breadcrumbs.present? %>
-    <%=
-      render(
-        Librum::Core::View::Layouts::Page::Breadcrumbs.new(
-          breadcrumbs: breadcrumbs
-        )
-      )
-    %>
-    <% end %>
+    <%= render_breadcrumbs %>
 
+    <% if footer_text.present? %>
     <hr class="is-fancy-hr">
 
-    <p>What Lies Beyond The Farthest Reaches Of The Skies?</p>
+    <p><%= footer_text %></p>
+    <% end %>
   </div>
 </footer>

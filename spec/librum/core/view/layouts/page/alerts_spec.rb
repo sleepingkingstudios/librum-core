@@ -21,6 +21,7 @@ RSpec.describe Librum::Core::View::Layouts::Page::Alerts, type: :component do
         .to be_constructible
         .with(0).arguments
         .and_keywords(:alerts)
+        .and_any_keywords
     end
   end
 

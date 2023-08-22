@@ -1,25 +1,11 @@
 <div class="page is-flex is-flex-direction-column">
-  <%=
-    render(
-      Librum::Core::View::Layouts::Page::Banner.new(
-        navigation: navigation,
-        subtitle:   subtitle,
-        title:      title
-      )
-    )
-  %>
+  <%= render_banner %>
 
   <section class="section primary-content is-flex-grow-1">
     <div class="container">
       <%= before_content %>
 
-      <% if alerts.present? %>
-      <%=
-        render(
-          Librum::Core::View::Layouts::Page::Alerts.new(alerts: alerts)
-        )
-      %>
-      <% end %>
+      <%= render_alerts %>
 
       <%= content %>
 
@@ -27,9 +13,5 @@
     </div>
   </section>
 
-  <%=
-    render(
-      Librum::Core::View::Layouts::Page::Footer.new(breadcrumbs: breadcrumbs)
-    )
-  %>
+  <%= render_footer %>
 </div>
