@@ -10,9 +10,7 @@ require 'support/user'
 RSpec.describe Librum::Core::Actions::Index, type: :action do
   include Cuprum::Rails::RSpec::Actions::IndexContracts
 
-  subject(:action) do
-    described_class.new(repository: repository, resource: resource)
-  end
+  subject(:action) { described_class.new }
 
   let(:repository) { Cuprum::Rails::Repository.new }
   let(:resource) do

@@ -20,11 +20,14 @@ RSpec.describe Librum::Core::Actions::View::Middleware::PageConfiguration do
     let(:next_result)   { Cuprum::Result.new(value: { 'ok' => true }) }
     let(:next_command)  { instance_double(Cuprum::Command, call: next_result) }
     let(:request)       { Cuprum::Rails::Request.new }
+    let(:options)       { { custom_option: 'custom value' } }
 
     it 'should call the next command' do
-      middleware.call(next_command, request: request)
+      middleware.call(next_command, request: request, **options)
 
-      expect(next_command).to have_received(:call).with(request: request)
+      expect(next_command)
+        .to have_received(:call)
+        .with(request: request, **options)
     end
 
     it 'should return a passing result' do
