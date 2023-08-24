@@ -39,9 +39,9 @@ module Librum::Core::Actions::View::Middleware
       {}
     end
 
-    def process(next_command, request:)
+    def process(next_command, request:, **rest)
       @request = request
-      @result  = next_command.call(request: request)
+      @result  = next_command.call(request: request, **rest)
 
       merge_result
     end

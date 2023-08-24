@@ -3,15 +3,16 @@
 require 'librum/core/actions/view/not_found'
 
 RSpec.describe Librum::Core::Actions::View::NotFound do
-  subject(:action) { described_class.new(resource: resource) }
-
-  let(:resource) { Cuprum::Rails::Resource.new(resource_name: 'rockets') }
+  subject(:action) { described_class.new }
 
   describe '#call' do
     let(:request) { Object.new.freeze }
 
     it 'should define the method' do
-      expect(action).to be_callable.with(0).arguments.and_keywords(:request)
+      expect(action)
+        .to be_callable
+        .with(0).arguments
+        .and_keywords(:request, :repository)
     end
 
     it 'should return a passing result' do
