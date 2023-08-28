@@ -69,7 +69,8 @@ module Librum::Core::RSpec::Contracts::Models
         model_name       =
           described_class.name.split('::').last.underscore.tr('_', ' ')
         display_name     = association_name.to_s.tr('_', ' ')
-        inverse_name     = options.fetch(:inverse_name, model_name).intern
+        inverse_name     =
+          options.fetch(:inverse_name, model_name.tr(' ', '_')).intern
 
         describe "##{association_name}" do
           include_examples 'should define property', association_name
@@ -115,7 +116,8 @@ module Librum::Core::RSpec::Contracts::Models
         model_name       =
           described_class.name.split('::').last.underscore.tr('_', ' ')
         display_name     = association_name.to_s.tr('_', ' ')
-        inverse_name     = options.fetch(:inverse_name, model_name).intern
+        inverse_name     =
+          options.fetch(:inverse_name, model_name.tr(' ', '_')).intern
 
         describe "##{association_name}" do
           include_examples 'should define reader', association_name, []
