@@ -155,5 +155,49 @@ do
 
       it { expect(rendered).to match_snapshot(snapshot) }
     end
+
+    context 'with resource_name: multi-word string' do
+      let(:resource) do
+        Cuprum::Rails::Resource.new(resource_name: 'launch_sites')
+      end
+      let(:snapshot) do
+        <<~HTML
+          <table class="table is-striped">
+            <thead>
+              <tr>
+                <th>First Name</th>
+
+                <th>Surname</th>
+
+                <th>Role</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td colspan="3">There are no launch sites matching the criteria.</td>
+              </tr>
+            </tbody>
+          </table>
+        HTML
+      end
+
+      it { expect(rendered).to match_snapshot(snapshot) }
+    end
+  end
+
+  describe '#empty_message' do
+    let(:expected) { 'There are no users matching the criteria.' }
+
+    include_examples 'should define reader', :empty_message, -> { expected }
+
+    context 'when initialized with resource_name: multi-word string' do
+      let(:resource) do
+        Cuprum::Rails::Resource.new(resource_name: 'launch_sites')
+      end
+      let(:expected) { 'There are no launch sites matching the criteria.' }
+
+      it { expect(table.empty_message).to be == expected }
+    end
   end
 end
