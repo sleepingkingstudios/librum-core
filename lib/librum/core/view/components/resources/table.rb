@@ -16,7 +16,7 @@ module Librum::Core::View::Components::Resources
         class_names:   %w[is-striped],
         columns:       columns,
         data:          data,
-        empty_message: "There are no #{resource_name} matching the criteria."
+        empty_message: empty_message
       )
     end
 
@@ -25,5 +25,10 @@ module Librum::Core::View::Components::Resources
 
     # @return resource [Cuprum::Rails::Resource] the controller resource.
     attr_reader :resource
+
+    # @return [String] the message to display when the table is empty.
+    def empty_message
+      "There are no #{resource_name.tr('_', ' ')} matching the criteria."
+    end
   end
 end
