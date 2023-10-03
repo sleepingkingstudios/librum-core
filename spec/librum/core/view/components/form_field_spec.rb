@@ -259,6 +259,41 @@ RSpec.describe Librum::Core::View::Components::FormField, type: :component do
       it { expect(rendered).to match_snapshot(snapshot) }
     end
 
+    describe 'with type: :select' do
+      let(:items) do
+        [
+          {
+            label: 'red',
+            value: '0'
+          },
+          {
+            label: 'blue',
+            value: '1'
+          }
+        ]
+      end
+      let(:options) { super().merge(items: items, type: :select) }
+      let(:snapshot) do
+        <<~HTML
+          <div class="field">
+            <label for="color" class="label">Color</label>
+
+            <div class="control">
+              <div class="select">
+                <select name="color" id="color">
+                  <option value="0">red</option>
+
+                  <option value="1">blue</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        HTML
+      end
+
+      it { expect(rendered).to match_snapshot(snapshot) }
+    end
+
     describe 'with type: value' do
       let(:type)    { 'email' }
       let(:options) { super().merge(type: type) }
@@ -330,6 +365,28 @@ RSpec.describe Librum::Core::View::Components::FormField, type: :component do
     end
   end
 
+  describe '#items' do
+    include_examples 'should define reader', :items, nil
+
+    context 'when initialized with type: :select' do
+      let(:items) do
+        [
+          {
+            label: 'KSC',
+            value: '0'
+          },
+          {
+            label: 'Baikerbanur',
+            value: '1'
+          }
+        ]
+      end
+      let(:options) { super().merge(items: items, type: :select) }
+
+      it { expect(field.items).to be == items }
+    end
+  end
+
   describe '#label' do
     let(:expected) { name.titleize }
 
@@ -359,6 +416,48 @@ RSpec.describe Librum::Core::View::Components::FormField, type: :component do
 
   describe '#name' do
     include_examples 'should define reader', :name, -> { name }
+  end
+
+  describe '#options' do
+    include_examples 'should define reader', :options, -> { {} }
+
+    context 'when initialized with icon: value' do
+      let(:icon)    { 'radiation' }
+      let(:options) { super().merge(icon: icon) }
+
+      it { expect(field.options).to be == { icon: icon } }
+    end
+
+    context 'when initialized with placeholder: value' do
+      let(:placeholder) { 'Enter Username' }
+      let(:options)     { super().merge(placeholder: placeholder) }
+
+      it { expect(field.options).to be == { placeholder: placeholder } }
+    end
+
+    context 'when initialized with type: :select' do
+      let(:items) do
+        [
+          {
+            label: 'KSC',
+            value: '0'
+          },
+          {
+            label: 'Baikerbanur',
+            value: '1'
+          }
+        ]
+      end
+      let(:options) { super().merge(items: items, type: :select) }
+
+      it { expect(field.options).to be == { items: items } }
+    end
+
+    context 'when initialized with custom options' do
+      let(:options) { super().merge(custom: 'value') }
+
+      it { expect(field.options).to be == { custom: 'value' } }
+    end
   end
 
   describe '#placeholder' do
