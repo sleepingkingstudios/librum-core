@@ -1,0 +1,7 @@
+<div <%= tag.attributes(**attributes) %>>
+  <select <%= tag.attributes(**select_attributes) %>>
+    <% items_with_options.each do |item| %>
+      <%= render_item(item) %>
+    <% end %>
+  </select>
+</div>

@@ -112,9 +112,8 @@ RSpec.describe Librum::Core::View::Components::FormInput, type: :component do
   describe '#id' do
     include_examples 'should define reader', :id, nil
 
-    context 'when initialized with type: value' do
-      let(:name)    { 'user[username]' }
-      let(:id)      { 'user_username' }
+    context 'when initialized with id: value' do
+      let(:id)      { 'username' }
       let(:options) { super().merge(id: id) }
 
       it { expect(input.id).to be == id }
