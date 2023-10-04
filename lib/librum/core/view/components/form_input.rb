@@ -8,26 +8,31 @@ module Librum::Core::View::Components
     # @param errors [Stannum::Errors, Array<String>] the form errors to apply.
     # @param id [String] a unique identifier for the input.
     # @param name [String] the scoped name of the form input.
-    # @param placeholder [String] the placeholder value to display in an empty
-    #   input.
     # @param type [String] the input type.
     # @param value [String] the value to place in the input, if any.
+    # @param options [Hash] additional options for the input.
+    #
+    # @option options disabled [Boolean] if true, renders the input as disabled.
+    # @option options error_key [String] the key used to identify matching
+    #   errors. Defaults to the input name.
+    # @option options placeholder [String] the placeholder value to display in
+    #   an empty input.
     def initialize( # rubocop:disable Metrics/ParameterLists
       name,
-      errors:      nil,
-      id:          nil,
-      placeholder: nil,
-      type:        'text',
-      value:       nil
+      errors: nil,
+      id:     nil,
+      type:   'text',
+      value:  nil,
+      **options
     )
       super()
 
-      @errors      = errors
-      @id          = id
-      @name        = name
-      @placeholder = placeholder
-      @type        = type
-      @value       = value
+      @errors  = errors
+      @id      = id
+      @name    = name
+      @type    = type
+      @value   = value
+      @options = options
     end
 
     # @return [Stannum::Errors, Array<String>] the form errors to apply.
@@ -39,8 +44,8 @@ module Librum::Core::View::Components
     # @return [String] the scoped name of the form input.
     attr_reader :name
 
-    # @return [String] the placeholder value to display in an empty input.
-    attr_reader :placeholder
+    # @return [Hash] additional options for the input.
+    attr_reader :options
 
     # @return [String] the input type.
     attr_reader :type
@@ -53,10 +58,27 @@ module Librum::Core::View::Components
       tag.input(**attributes)
     end
 
+    # @return [Boolean] if true, renders the input as disabled.
+    def disabled?
+      !!@options[:disabled]
+    end
+
+    # @return [String] the key used to identify matching errors.
+    def error_key
+      @options.fetch(:error_key, name)
+    end
+
+    # @return [String] the placeholder value to display in an empty input.
+    def placeholder
+      @options[:placeholder]
+    end
+
     private
 
     def attributes
       hsh = id.present? ? { id: id } : {}
+
+      hsh[:disabled] = true if disabled?
 
       hsh.merge(
         name:        name,

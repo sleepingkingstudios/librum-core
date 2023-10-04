@@ -343,6 +343,17 @@ RSpec.describe Librum::Core::View::Components::FormField, type: :component do
     end
   end
 
+  describe '#error_key' do
+    include_examples 'should define reader', :error_key, -> { name }
+
+    context 'when initialized with error_key: value' do
+      let(:error_key) { 'user_name' }
+      let(:options)   { super().merge(error_key: error_key) }
+
+      it { expect(field.error_key).to be == error_key }
+    end
+  end
+
   describe '#errors' do
     include_examples 'should define reader', :errors, nil
 
@@ -411,6 +422,61 @@ RSpec.describe Librum::Core::View::Components::FormField, type: :component do
       let(:expected) { 'Color' }
 
       it { expect(field.label).to be == expected }
+    end
+  end
+
+  describe '#matching_errors' do
+    include_examples 'should define reader', :matching_errors, []
+
+    context 'when initialized with errors: an Array' do
+      let(:errors)  { ["can't be blank"] }
+      let(:options) { super().merge(errors: errors) }
+
+      it { expect(field.matching_errors).to be == errors }
+    end
+
+    context 'when initialized with errors: an errors object' do
+      let(:errors)  { Stannum::Errors.new }
+      let(:options) { super().merge(errors: errors) }
+
+      it { expect(field.matching_errors).to be == [] }
+
+      context 'when the errors object has non-matching errors' do
+        let(:errors) do
+          super().tap do |err|
+            err['custom'].add('spec.error', message: "can't be blank")
+          end
+        end
+
+        it { expect(field.matching_errors).to be == [] }
+      end
+
+      context 'when the errors object has matching errors' do
+        let(:errors) do
+          super().tap do |err|
+            err[name].add('spec.error', message: "can't be blank")
+          end
+        end
+
+        it { expect(field.matching_errors).to be == ["can't be blank"] }
+      end
+
+      context 'when initialized with error_key: value' do
+        let(:error_key) { 'user_name' }
+        let(:options)   { super().merge(error_key: error_key) }
+
+        it { expect(field.matching_errors).to be == [] }
+
+        context 'when the errors object has matching errors' do
+          let(:errors) do
+            super().tap do |err|
+              err[error_key].add('spec.error', message: "can't be blank")
+            end
+          end
+
+          it { expect(field.matching_errors).to be == ["can't be blank"] }
+        end
+      end
     end
   end
 

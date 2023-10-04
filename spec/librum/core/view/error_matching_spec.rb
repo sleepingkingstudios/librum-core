@@ -12,6 +12,8 @@ RSpec.describe Librum::Core::View::ErrorMatching do
   example_class 'Spec::ComponentWithErrors',
     Struct.new(:name, :errors, keyword_init: true) do |klass|
       klass.include Librum::Core::View::ErrorMatching # rubocop:disable RSpec/DescribedClass
+
+      klass.define_method(:error_key) { name }
     end
 
   describe '#matching_errors' do

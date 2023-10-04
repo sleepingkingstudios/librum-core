@@ -14,6 +14,8 @@ module Librum::Core::View::Components
     #
     # @option options disabled [Boolean] if true, renders the select input as
     #   disabled.
+    # @option options error_key [String] the key used to identify matching
+    #   errors. Defaults to the input name.
     # @option options include_blank [Boolean] if true, prepends a blank option
     #   with empty value to the select options.
     def initialize( # rubocop:disable Metrics/ParameterLists
@@ -55,6 +57,11 @@ module Librum::Core::View::Components
     # @return [Boolean] if true, renders the select input as disabled.
     def disabled?
       !!@options[:disabled]
+    end
+
+    # @return [String] the key used to identify matching errors.
+    def error_key
+      @options.fetch(:error_key, name)
     end
 
     # @return [Boolean] if true, prepends a blank option with empty value to the

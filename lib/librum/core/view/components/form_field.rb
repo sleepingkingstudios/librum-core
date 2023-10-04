@@ -15,6 +15,8 @@ module Librum::Core::View::Components
     # @param value [String] the value to place in the input, if any.
     # @param options [Hash] additional options for the field or input.
     #
+    # @option options error_key [String] the key used to identify matching
+    #   errors. Defaults to the input name.
     # @option options icon [String] the icon to display as part of the field.
     # @option options items [Array] the options or option groups to display for
     #   a select input.
@@ -42,6 +44,11 @@ module Librum::Core::View::Components
 
     # @return [#[]] the data for the form.
     attr_reader :data
+
+    # @return [String] the key used to identify matching errors.
+    def error_key
+      @options.fetch(:error_key, name)
+    end
 
     # @return [Stannum::Errors, Array<String>] the form errors to apply.
     attr_reader :errors
