@@ -13,11 +13,16 @@ module Librum::Core::View
     private
 
     def find_errors_with_brackets
-      errors.dig(*name.gsub(']', '').split('[')).map { |err| err[:message] } # rubocop:disable Rails/Pluck
+      errors
+        .dig(*error_key.gsub(']', '')
+        .split('['))
+        .map { |err| err[:message] } # rubocop:disable Rails/Pluck
     end
 
     def find_errors_with_periods
-      errors.dig(*name.split('.')).map { |err| err[:message] } # rubocop:disable Rails/Pluck
+      errors
+        .dig(*error_key.split('.'))
+        .map { |err| err[:message] } # rubocop:disable Rails/Pluck
     end
 
     def find_matching_errors
@@ -29,11 +34,11 @@ module Librum::Core::View
     end
 
     def find_stannum_errors
-      matching = errors[name].map { |err| err[:message] } # rubocop:disable Rails/Pluck
+      matching = errors[error_key].map { |err| err[:message] } # rubocop:disable Rails/Pluck
 
-      if name.include?('.')
+      if error_key.include?('.')
         matching += find_errors_with_periods
-      elsif name.include?('[')
+      elsif error_key.include?('[')
         matching += find_errors_with_brackets
       end
 

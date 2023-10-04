@@ -259,6 +259,41 @@ RSpec.describe Librum::Core::View::Components::FormField, type: :component do
       it { expect(rendered).to match_snapshot(snapshot) }
     end
 
+    describe 'with type: :select' do
+      let(:items) do
+        [
+          {
+            label: 'red',
+            value: '0'
+          },
+          {
+            label: 'blue',
+            value: '1'
+          }
+        ]
+      end
+      let(:options) { super().merge(items: items, type: :select) }
+      let(:snapshot) do
+        <<~HTML
+          <div class="field">
+            <label for="color" class="label">Color</label>
+
+            <div class="control">
+              <div class="select">
+                <select name="color" id="color">
+                  <option value="0">red</option>
+
+                  <option value="1">blue</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        HTML
+      end
+
+      it { expect(rendered).to match_snapshot(snapshot) }
+    end
+
     describe 'with type: value' do
       let(:type)    { 'email' }
       let(:options) { super().merge(type: type) }
@@ -308,6 +343,17 @@ RSpec.describe Librum::Core::View::Components::FormField, type: :component do
     end
   end
 
+  describe '#error_key' do
+    include_examples 'should define reader', :error_key, -> { name }
+
+    context 'when initialized with error_key: value' do
+      let(:error_key) { 'user_name' }
+      let(:options)   { super().merge(error_key: error_key) }
+
+      it { expect(field.error_key).to be == error_key }
+    end
+  end
+
   describe '#errors' do
     include_examples 'should define reader', :errors, nil
 
@@ -327,6 +373,28 @@ RSpec.describe Librum::Core::View::Components::FormField, type: :component do
       let(:options) { super().merge(icon: icon) }
 
       it { expect(field.icon).to be == icon }
+    end
+  end
+
+  describe '#items' do
+    include_examples 'should define reader', :items, nil
+
+    context 'when initialized with type: :select' do
+      let(:items) do
+        [
+          {
+            label: 'KSC',
+            value: '0'
+          },
+          {
+            label: 'Baikerbanur',
+            value: '1'
+          }
+        ]
+      end
+      let(:options) { super().merge(items: items, type: :select) }
+
+      it { expect(field.items).to be == items }
     end
   end
 
@@ -357,8 +425,105 @@ RSpec.describe Librum::Core::View::Components::FormField, type: :component do
     end
   end
 
+  describe '#matching_errors' do
+    include_examples 'should define reader', :matching_errors, []
+
+    context 'when initialized with errors: an Array' do
+      let(:errors)  { ["can't be blank"] }
+      let(:options) { super().merge(errors: errors) }
+
+      it { expect(field.matching_errors).to be == errors }
+    end
+
+    context 'when initialized with errors: an errors object' do
+      let(:errors)  { Stannum::Errors.new }
+      let(:options) { super().merge(errors: errors) }
+
+      it { expect(field.matching_errors).to be == [] }
+
+      context 'when the errors object has non-matching errors' do
+        let(:errors) do
+          super().tap do |err|
+            err['custom'].add('spec.error', message: "can't be blank")
+          end
+        end
+
+        it { expect(field.matching_errors).to be == [] }
+      end
+
+      context 'when the errors object has matching errors' do
+        let(:errors) do
+          super().tap do |err|
+            err[name].add('spec.error', message: "can't be blank")
+          end
+        end
+
+        it { expect(field.matching_errors).to be == ["can't be blank"] }
+      end
+
+      context 'when initialized with error_key: value' do
+        let(:error_key) { 'user_name' }
+        let(:options)   { super().merge(error_key: error_key) }
+
+        it { expect(field.matching_errors).to be == [] }
+
+        context 'when the errors object has matching errors' do
+          let(:errors) do
+            super().tap do |err|
+              err[error_key].add('spec.error', message: "can't be blank")
+            end
+          end
+
+          it { expect(field.matching_errors).to be == ["can't be blank"] }
+        end
+      end
+    end
+  end
+
   describe '#name' do
     include_examples 'should define reader', :name, -> { name }
+  end
+
+  describe '#options' do
+    include_examples 'should define reader', :options, -> { {} }
+
+    context 'when initialized with icon: value' do
+      let(:icon)    { 'radiation' }
+      let(:options) { super().merge(icon: icon) }
+
+      it { expect(field.options).to be == { icon: icon } }
+    end
+
+    context 'when initialized with placeholder: value' do
+      let(:placeholder) { 'Enter Username' }
+      let(:options)     { super().merge(placeholder: placeholder) }
+
+      it { expect(field.options).to be == { placeholder: placeholder } }
+    end
+
+    context 'when initialized with type: :select' do
+      let(:items) do
+        [
+          {
+            label: 'KSC',
+            value: '0'
+          },
+          {
+            label: 'Baikerbanur',
+            value: '1'
+          }
+        ]
+      end
+      let(:options) { super().merge(items: items, type: :select) }
+
+      it { expect(field.options).to be == { items: items } }
+    end
+
+    context 'when initialized with custom options' do
+      let(:options) { super().merge(custom: 'value') }
+
+      it { expect(field.options).to be == { custom: 'value' } }
+    end
   end
 
   describe '#placeholder' do

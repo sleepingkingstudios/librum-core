@@ -8,53 +8,64 @@ module Librum::Core::View::Components
 
     # @param data [#[]] the data for the form.
     # @param errors [Stannum::Errors, Array<String>] the form errors to apply.
-    # @param icon [String] the icon to display as part of the field.
     # @param label [String] the label to display. Defaults to the last component
     #   of the name.
     # @param name [String] the scoped name of the form input.
-    # @param placeholder [String] the placeholder value to display in an empty
-    #   input.
     # @param type [String] the input type.
     # @param value [String] the value to place in the input, if any.
+    # @param options [Hash] additional options for the field or input.
+    #
+    # @option options error_key [String] the key used to identify matching
+    #   errors. Defaults to the input name.
+    # @option options icon [String] the icon to display as part of the field.
+    # @option options items [Array] the options or option groups to display for
+    #   a select input.
+    # @option options placeholder [String] the placeholder value to display in
+    #   an empty input.
     def initialize( # rubocop:disable Metrics/ParameterLists
       name,
-      data:        nil,
-      errors:      nil,
-      icon:        nil,
-      label:       nil,
-      placeholder: nil,
-      type:        'text',
-      value:       nil
+      data:   nil,
+      errors: nil,
+      label:  nil,
+      type:   'text',
+      value:  nil,
+      **options
     )
       super()
 
-      @data        = data
-      @errors      = errors
-      @icon        = icon
-      @label       = label
-      @name        = name
-      @placeholder = placeholder
-      @type        = type
-      @value       = value
+      @data    = data
+      @errors  = errors
+      @label   = label
+      @name    = name
+      @type    = type
+      @value   = value
+      @options = options
     end
 
     # @return [#[]] the data for the form.
     attr_reader :data
 
+    # @return [String] the key used to identify matching errors.
+    def error_key
+      @options.fetch(:error_key, name)
+    end
+
     # @return [Stannum::Errors, Array<String>] the form errors to apply.
     attr_reader :errors
-
-    # @return [String] the icon to display as part of the field.
-    attr_reader :icon
 
     # @return [String] the scoped name of the form input.
     attr_reader :name
 
-    # @return [String] the placeholder value to display in an empty input.
-    attr_reader :placeholder
+    # @return [Hash] additional options for the field or input.
+    attr_reader :options
 
     # @return [String] the input type.
     attr_reader :type
+
+    # @return [String] the icon to display as part of the field.
+    def icon
+      @options[:icon]
+    end
 
     # @return [String] the generated input ID.
     def id
@@ -65,16 +76,10 @@ module Librum::Core::View::Components
         .join('_')
     end
 
-    # @return [View::Components::FormInput] the default input component.
-    def input
-      Librum::Core::View::Components::FormInput.new(
-        name,
-        errors:      matching_errors,
-        id:          id,
-        placeholder: placeholder,
-        type:        type,
-        value:       value
-      )
+    # @return [Array] the options or option groups to display for a select
+    #   input.
+    def items
+      @options[:items]
     end
 
     # @return [String] the label text.
@@ -87,6 +92,11 @@ module Librum::Core::View::Components
         .titleize
     end
 
+    # @return [String] the placeholder value to display in an empty input.
+    def placeholder
+      @options[:placeholder]
+    end
+
     # @return [String] the value to place in the input.
     def value
       return @value if @value
@@ -96,6 +106,38 @@ module Librum::Core::View::Components
 
     private
 
+    def build_form_input
+      Librum::Core::View::Components::FormInput.new(
+        name,
+        errors:      matching_errors,
+        id:          id,
+        placeholder: placeholder,
+        type:        type,
+        value:       value,
+        **input_options
+      )
+    end
+
+    def build_input
+      case type
+      when :select
+        build_select_input
+      else
+        build_form_input
+      end
+    end
+
+    def build_select_input
+      Librum::Core::View::Components::FormSelect.new(
+        name,
+        errors: matching_errors,
+        id:     id,
+        items:  items,
+        value:  value,
+        **input_options
+      )
+    end
+
     def control_class_names
       names = %w[control]
 
@@ -104,6 +146,14 @@ module Librum::Core::View::Components
       names << 'has-icons-right' if matching_errors.any?
 
       names.join(' ')
+    end
+
+    def input_options
+      options.except(:icon, :items, :placeholder)
+    end
+
+    def render_input
+      render(build_input)
     end
   end
 end
