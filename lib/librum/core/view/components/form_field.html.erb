@@ -5,15 +5,27 @@
     <%= render_input %>
 
     <% if icon %>
-    <span class="icon is-left is-small">
-      <i class="fas fa-<%= icon %>"></i>
-    </span>
+    <%=
+      render(
+        Librum::Core::View::Components::Icon.new(
+          class_name: 'is-left',
+          icon:       icon,
+          size:       'small'
+        )
+      )
+    %>
     <% end %>
 
     <% if matching_errors.any? %>
-    <span class="icon is-right is-small">
-      <i class="fas fa-triangle-exclamation"></i>
-    </span>
+    <%=
+      render(
+        Librum::Core::View::Components::Icon.new(
+          class_name: 'is-right',
+          icon:       'triangle-exclamation',
+          size:       'small'
+        )
+      )
+    %>
     <% end %>
   </div>
 

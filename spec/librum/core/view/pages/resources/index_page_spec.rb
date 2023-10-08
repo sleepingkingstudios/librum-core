@@ -65,8 +65,8 @@ do
 
         <div class="box">
           <p class="has-text-centered">
-            <span class="icon is-large has-text-danger">
-              <i class="fas fa-2x fa-bug"></i>
+            <span class="icon has-text-danger is-large">
+              <i class="fas fa-bug fa-2x"></i>
             </span>
           </p>
 
@@ -92,8 +92,8 @@ do
 
           <div class="box">
             <p class="has-text-centered">
-              <span class="icon is-large has-text-danger">
-                <i class="fas fa-2x fa-bug"></i>
+              <span class="icon has-text-danger is-large">
+                <i class="fas fa-bug fa-2x"></i>
               </span>
             </p>
 
@@ -131,8 +131,8 @@ do
 
           <div class="box">
             <p class="has-text-centered">
-              <span class="icon is-large has-text-danger">
-                <i class="fas fa-2x fa-bug"></i>
+              <span class="icon has-text-danger is-large">
+                <i class="fas fa-bug fa-2x"></i>
               </span>
             </p>
 

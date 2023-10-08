@@ -1,14 +1,10 @@
 <% if render_icon? && render_label? %>
 <span class="icon-text">
-  <span class="icon">
-    <i class="fas fa-<%= icon %>"></i>
-  </span>
+  <%= render(Librum::Core::View::Components::Icon.new(icon: icon)) %>
   <span><%= label %></span>
 </span>
 <% elsif render_icon? %>
-<span class="icon">
-  <i class="fas fa-<%= icon %>"></i>
-</span>
+<%= render(Librum::Core::View::Components::Icon.new(icon: icon)) %>
 <% else %>
 <%= label %>
 <% end %>
