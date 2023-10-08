@@ -3,9 +3,10 @@
 module Librum::Core::View::Components
   # Renders a visual icon.
   class Icon < ViewComponent::Base
+    include Librum::Core::View::Options
+    include Librum::Core::View::ClassName
+
     # @param icon [String] the icon to render.
-    # @param color [String, nil] the color of the icon.
-    # @param size [String, nil] the size of the icon.
     # @param options [Hash] additional options for rendering the icon.
     #
     # @option options animation [String] renders the icon with the given
@@ -14,54 +15,34 @@ module Librum::Core::View::Components
     #   border.
     # @option options class_name [String, Array<String>] additional CSS class
     #   names for the icon.
+    # @option options color [String, nil] the color of the icon.
     # @option options fixed_width [Boolean] if true, renders the icon with a
     #   fixed width.
-    def initialize(icon:, color: nil, size: nil, **options)
-      super()
+    # @option options size [String, nil] the size of the icon.
+    def initialize(icon:, **options)
+      super(**options)
 
-      @icon    = icon
-      @color   = color
-      @size    = size
-      @options = options
+      @icon = icon
     end
 
-    # @return [String, nil] the color of the icon.
-    attr_reader :color
+    option :animation
+
+    option :bordered?, boolean: true
+
+    option :color
+
+    option :fixed_width?, boolean: true
+
+    option :size
 
     # @return [String] the icon to render.
     attr_reader :icon
-
-    # @return [Hash] additional options for rendering the icon.
-    attr_reader :options
-
-    # @return [String, nil] the size of the icon.
-    attr_reader :size
-
-    # @return [String] renders the icon with the given animation.
-    def animation
-      @options[:animation]
-    end
 
     # @return [String] the rendered component.
     def call
       tag.span(class: span_class_names) do
         tag.i(class: icon_class_names)
       end
-    end
-
-    # @return [Array<String>] additional CSS class names for the icon.
-    def class_name
-      Array(@options.fetch(:class_name, []))
-    end
-
-    # @return [Boolean] if true, renders the icon with a border.
-    def bordered?
-      !!@options[:bordered]
-    end
-
-    # @return [Boolean] if true, renders the icon with a fixed width.
-    def fixed_width?
-      !!@options[:fixed_width]
     end
 
     private
