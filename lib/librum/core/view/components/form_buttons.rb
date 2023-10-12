@@ -34,9 +34,9 @@ module Librum::Core::View::Components
     def build_cancel_button
       Librum::Core::View::Components::Link.new(
         cancel_url,
-        class_names: %w[button is-fullwidth],
-        color:       'black',
-        label:       cancel_label
+        class_name: %w[button is-fullwidth],
+        color:      'black',
+        label:      cancel_label
       )
     end
 

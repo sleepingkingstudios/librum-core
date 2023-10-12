@@ -32,5 +32,9 @@ module Librum::Core::View::Layouts
 
       names.join(' ')
     end
+
+    def render_icon?
+      icon.present?
+    end
   end
 end

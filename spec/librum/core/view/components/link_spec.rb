@@ -3,6 +3,8 @@
 require 'rails_helper'
 
 RSpec.describe Librum::Core::View::Components::Link, type: :component do
+  include Librum::Core::RSpec::Contracts::ComponentContracts
+
   subject(:link) { described_class.new(url, **options) }
 
   let(:url)     { 'path/to/resource' }
@@ -12,7 +14,7 @@ RSpec.describe Librum::Core::View::Components::Link, type: :component do
     let(:expected_keywords) do
       %i[
         button
-        class_names
+        class_name
         color
         label
         light
@@ -28,6 +30,20 @@ RSpec.describe Librum::Core::View::Components::Link, type: :component do
         .and_keywords(*expected_keywords)
     end
   end
+
+  include_contract 'should define options'
+
+  include_contract 'should define option', :button?, boolean: true
+
+  include_contract 'should define option', :color
+
+  include_contract 'should define option', :icon
+
+  include_contract 'should define option', :light?, boolean: true
+
+  include_contract 'should define option', :outline?, boolean: true
+
+  include_contract 'should define class name option'
 
   describe '#call' do
     let(:rendered) { render_inline(link) }
@@ -132,8 +148,8 @@ RSpec.describe Librum::Core::View::Components::Link, type: :component do
       end
     end
 
-    describe 'with class_names: value' do
-      let(:options) { super().merge(class_names: %w[custom-class]) }
+    describe 'with class_name: value' do
+      let(:options) { super().merge(class_name: %w[custom-class]) }
       let(:snapshot) do
         <<~HTML
           <a class="custom-class has-text-link" href="path/to/resource" target="_self">
@@ -193,47 +209,6 @@ RSpec.describe Librum::Core::View::Components::Link, type: :component do
     end
   end
 
-  describe '#button?' do
-    include_examples 'should define predicate', :button?, false
-
-    context 'when initialized with button: true' do
-      let(:options) { super().merge(button: true) }
-
-      it { expect(link.button?).to be true }
-    end
-  end
-
-  describe '#class_names' do
-    include_examples 'should define reader', :class_names, 'has-text-link'
-
-    context 'when initialized with class_names: an Array' do
-      let(:class_names) { %w[custom-class other-class] }
-      let(:options)     { super().merge(class_names: class_names) }
-      let(:expected)    { 'custom-class other-class has-text-link' }
-
-      it { expect(link.class_names).to be == expected }
-    end
-
-    context 'when initialized with class_names: a String' do
-      let(:class_names) { 'custom-class other-class' }
-      let(:options)     { super().merge(class_names: class_names) }
-      let(:expected)    { 'custom-class other-class has-text-link' }
-
-      it { expect(link.class_names).to be == expected }
-    end
-  end
-
-  describe '#color' do
-    include_examples 'should define reader', :color, nil
-
-    context 'when initialized with color: value' do
-      let(:color)   { 'danger' }
-      let(:options) { super().merge(color: color) }
-
-      it { expect(link.color).to be == color }
-    end
-  end
-
   describe '#external?' do
     include_examples 'should define predicate', :external?, false
 
@@ -256,17 +231,6 @@ RSpec.describe Librum::Core::View::Components::Link, type: :component do
     end
   end
 
-  describe '#icon' do
-    include_examples 'should define reader', :icon, nil
-
-    context 'when initialized with icon: value' do
-      let(:icon)    { 'radiation' }
-      let(:options) { super().merge(icon: icon) }
-
-      it { expect(link.icon).to be == icon }
-    end
-  end
-
   describe '#label' do
     include_examples 'should define reader', :label, -> { url }
 
@@ -275,26 +239,6 @@ RSpec.describe Librum::Core::View::Components::Link, type: :component do
       let(:options) { super().merge(label: label) }
 
       it { expect(link.label).to be == label }
-    end
-  end
-
-  describe '#light?' do
-    include_examples 'should define predicate', :light?, false
-
-    context 'when initialized with light: true' do
-      let(:options) { super().merge(light: true) }
-
-      it { expect(link.light?).to be true }
-    end
-  end
-
-  describe '#outline?' do
-    include_examples 'should define predicate', :outline?, false
-
-    context 'when initialized with outline: true' do
-      let(:options) { super().merge(outline: true) }
-
-      it { expect(link.outline?).to be true }
     end
   end
 
