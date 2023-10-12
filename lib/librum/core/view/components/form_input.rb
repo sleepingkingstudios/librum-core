@@ -3,9 +3,8 @@
 module Librum::Core::View::Components
   # Renders a basic form input.
   class FormInput < ViewComponent::Base
-    include Librum::Core::View::ErrorMatching
+    include Librum::Core::View::FormErrors
 
-    # @param errors [Stannum::Errors, Array<String>] the form errors to apply.
     # @param id [String] a unique identifier for the input.
     # @param name [String] the scoped name of the form input.
     # @param type [String] the input type.
@@ -15,28 +14,18 @@ module Librum::Core::View::Components
     # @option options disabled [Boolean] if true, renders the input as disabled.
     # @option options error_key [String] the key used to identify matching
     #   errors. Defaults to the input name.
+    # @option options errors [Stannum::Errors, Array<String>] the form errors to
+    #   apply.
     # @option options placeholder [String] the placeholder value to display in
     #   an empty input.
-    def initialize( # rubocop:disable Metrics/ParameterLists
-      name,
-      errors: nil,
-      id:     nil,
-      type:   'text',
-      value:  nil,
-      **options
-    )
-      super()
+    def initialize(name, id: nil, type: 'text', value: nil, **options)
+      super(**options)
 
-      @errors  = errors
       @id      = id
       @name    = name
       @type    = type
       @value   = value
-      @options = options
     end
-
-    # @return [Stannum::Errors, Array<String>] the form errors to apply.
-    attr_reader :errors
 
     # @return [String] a unique identifier for the input.
     attr_reader :id
@@ -61,11 +50,6 @@ module Librum::Core::View::Components
     # @return [Boolean] if true, renders the input as disabled.
     def disabled?
       !!@options[:disabled]
-    end
-
-    # @return [String] the key used to identify matching errors.
-    def error_key
-      @options.fetch(:error_key, name)
     end
 
     # @return [String] the placeholder value to display in an empty input.

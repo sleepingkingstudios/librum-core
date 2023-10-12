@@ -4,10 +4,9 @@ module Librum::Core::View::Components
   # Renders a form field wrapping a basic input or given contents.
   class FormField < ViewComponent::Base
     include Librum::Core::View::DataMatching
-    include Librum::Core::View::ErrorMatching
+    include Librum::Core::View::FormErrors
 
     # @param data [#[]] the data for the form.
-    # @param errors [Stannum::Errors, Array<String>] the form errors to apply.
     # @param label [String] the label to display. Defaults to the last component
     #   of the name.
     # @param name [String] the scoped name of the form input.
@@ -17,6 +16,7 @@ module Librum::Core::View::Components
     #
     # @option options error_key [String] the key used to identify matching
     #   errors. Defaults to the input name.
+    # @option options [Stannum::Errors, Array<String>] the form errors to apply.
     # @option options icon [String] the icon to display as part of the field.
     # @option options items [Array] the options or option groups to display for
     #   a select input.
@@ -24,34 +24,23 @@ module Librum::Core::View::Components
     #   an empty input.
     def initialize( # rubocop:disable Metrics/ParameterLists
       name,
-      data:   nil,
-      errors: nil,
-      label:  nil,
-      type:   'text',
-      value:  nil,
+      data:  nil,
+      label: nil,
+      type:  'text',
+      value: nil,
       **options
     )
-      super()
+      super(**options)
 
       @data    = data
-      @errors  = errors
       @label   = label
       @name    = name
       @type    = type
       @value   = value
-      @options = options
     end
 
     # @return [#[]] the data for the form.
     attr_reader :data
-
-    # @return [String] the key used to identify matching errors.
-    def error_key
-      @options.fetch(:error_key, name)
-    end
-
-    # @return [Stannum::Errors, Array<String>] the form errors to apply.
-    attr_reader :errors
 
     # @return [String] the scoped name of the form input.
     attr_reader :name
