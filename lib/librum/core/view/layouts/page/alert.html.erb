@@ -1,7 +1,14 @@
 <div class="<%= class_names %>">
+  <% if render_icon? %>
   <%=
     render(
-      Librum::Core::View::Components::IconText.new(icon: icon, label: message)
+      Librum::Core::View::Components::IconText.new(
+        contents: message,
+        icon:     icon
+      )
     )
   %>
+  <% else %>
+  <%= message %>
+  <% end %>
 </div>

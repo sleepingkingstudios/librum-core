@@ -3,10 +3,13 @@
 require 'rails_helper'
 
 RSpec.describe Librum::Core::View::Components::DataField, type: :component do
+  include Librum::Core::RSpec::Contracts::ComponentContracts
+
   subject(:data_field) { described_class.new(**constructor_options) }
 
   let(:data)                { Struct.new(:name).new('Alan Bradley') }
-  let(:field)               { { key: 'name' } }
+  let(:field)               { { key: 'name', **options } }
+  let(:options)             { {} }
   let(:constructor_options) { { data: data, field: field } }
 
   describe '::FieldDefinition' do
@@ -19,6 +22,8 @@ RSpec.describe Librum::Core::View::Components::DataField, type: :component do
     describe '.new' do
       let(:expected_keywords) do
         %i[
+          class_name
+          color
           default
           icon
           key
@@ -33,57 +38,26 @@ RSpec.describe Librum::Core::View::Components::DataField, type: :component do
           .to be_constructible
           .with(0).arguments
           .and_keywords(*expected_keywords)
+          .and_any_keywords
       end
     end
 
-    describe '#default' do
-      include_examples 'should define reader', :default, nil
+    include_contract 'should define options'
 
-      context 'when initialized with default: a Proc' do
-        let(:default) { ->(item) { "#{item.first_name} #{item.last_name}" } }
-        let(:options) { super().merge(default: default) }
+    include_contract 'should define option', :color
 
-        it { expect(field.default).to be default }
-      end
+    include_contract 'should define option', :default
 
-      context 'when initialized with default: a String' do
-        let(:default) { 'N/A' }
-        let(:options) { super().merge(default: default) }
+    include_contract 'should define option', :icon
 
-        it { expect(field.default).to be default }
-      end
-    end
+    include_contract 'should define option',
+      :label,
+      default: -> { key.titleize }
 
-    describe '#icon' do
-      include_examples 'should define reader', :icon, nil
-
-      context 'when initialized with icon: value' do
-        let(:icon)    { 'radiation' }
-        let(:options) { super().merge(icon: icon) }
-
-        it { expect(field.icon).to be == icon }
-      end
-    end
+    include_contract 'should define class name option'
 
     describe '#key' do
       include_examples 'should define reader', :key, -> { key }
-    end
-
-    describe '#label' do
-      include_examples 'should define reader', :label, 'Name'
-
-      context 'when initialized with key: multi-word String' do
-        let(:key) { 'full_name' }
-
-        it { expect(field.label).to be == 'Full Name' }
-      end
-
-      context 'when initialized with label: value' do
-        let(:label)   { 'Custom Label' }
-        let(:options) { super().merge(label: label) }
-
-        it { expect(field.label).to be == label }
-      end
     end
 
     describe '#type' do
@@ -128,6 +102,20 @@ RSpec.describe Librum::Core::View::Components::DataField, type: :component do
     end
   end
 
+  include_contract 'should define options'
+
+  include_contract 'should define option', :color
+
+  include_contract 'should define option', :default
+
+  include_contract 'should define option', :icon
+
+  include_contract 'should define option',
+    :label,
+    default: -> { key.titleize }
+
+  include_contract 'should define class name option'
+
   describe '#call' do
     let(:rendered) { render_inline(data_field) }
     let(:snapshot) do
@@ -138,8 +126,30 @@ RSpec.describe Librum::Core::View::Components::DataField, type: :component do
 
     it { expect(rendered).to match_snapshot(snapshot) }
 
+    describe 'with field: { class_name: value }' do
+      let(:options) { super().merge(class_name: 'is-uppercase') }
+      let(:snapshot) do
+        <<~HTML
+          <span class="is-uppercase">Alan Bradley</span>
+        HTML
+      end
+
+      it { expect(rendered).to match_snapshot(snapshot) }
+    end
+
+    describe 'with field: { color: value }' do
+      let(:options) { super().merge(color: 'danger') }
+      let(:snapshot) do
+        <<~HTML
+          <span class="has-text-danger">Alan Bradley</span>
+        HTML
+      end
+
+      it { expect(rendered).to match_snapshot(snapshot) }
+    end
+
     describe 'with field: { default: a value }' do
-      let(:field) { { key: 'name', default: '(none)' } }
+      let(:options) { super().merge(default: '(none)') }
 
       context 'when the value is nil' do
         let(:data) { Struct.new(:name).new(nil) }
@@ -169,12 +179,10 @@ RSpec.describe Librum::Core::View::Components::DataField, type: :component do
     end
 
     describe 'with field: { default: a Proc }' do
-      let(:field) do
-        {
-          key:     'slug',
-          default: ->(item) { item.name.underscore.tr('_ ', '--') }
-        }
+      let(:options) do
+        super().merge(default: ->(item) { item.name.underscore.tr('_ ', '--') })
       end
+      let(:field) { { key: 'slug', **options } }
 
       context 'when the value is nil' do
         let(:data) { Struct.new(:name, :slug).new('Alan Bradley', nil) }
@@ -211,7 +219,7 @@ RSpec.describe Librum::Core::View::Components::DataField, type: :component do
     end
 
     describe 'with field: { icon }' do
-      let(:field) { { key: 'name', icon: 'user' } }
+      let(:options) { super().merge(icon: 'user') }
       let(:snapshot) do
         <<~HTML
           <span class="icon-text">
@@ -227,9 +235,93 @@ RSpec.describe Librum::Core::View::Components::DataField, type: :component do
       it { expect(rendered).to match_snapshot(snapshot) }
     end
 
+    describe 'with field: { type: :boolean }' do
+      let(:options) { super().merge(type: :boolean) }
+      let(:field)   { { key: 'admin', **options } }
+
+      context 'when the field value is false' do
+        let(:data) { Struct.new(:name, :admin).new('Alan Bradley', false) }
+        let(:snapshot) do
+          <<~HTML
+            <span class="icon has-text-danger">
+              <i class="fas fa-xmark"></i>
+            </span>
+          HTML
+        end
+
+        it { expect(rendered).to match_snapshot(snapshot) }
+
+        describe 'with field: { class_name: value }' do
+          let(:options) { super().merge(class_name: 'is-animated') }
+          let(:snapshot) do
+            <<~HTML
+              <span class="icon is-animated has-text-danger">
+                <i class="fas fa-xmark"></i>
+              </span>
+            HTML
+          end
+
+          it { expect(rendered).to match_snapshot(snapshot) }
+        end
+
+        describe 'with field: { color: value }' do
+          let(:options) { super().merge(color: 'info') }
+          let(:snapshot) do
+            <<~HTML
+              <span class="icon has-text-info">
+                <i class="fas fa-xmark"></i>
+              </span>
+            HTML
+          end
+
+          it { expect(rendered).to match_snapshot(snapshot) }
+        end
+      end
+
+      context 'when the field value is true' do
+        let(:data) { Struct.new(:name, :admin).new('Alan Bradley', true) }
+        let(:snapshot) do
+          <<~HTML
+            <span class="icon has-text-success">
+              <i class="fas fa-check"></i>
+            </span>
+          HTML
+        end
+
+        it { expect(rendered).to match_snapshot(snapshot) }
+
+        describe 'with field: { class_name: value }' do
+          let(:options) { super().merge(class_name: 'is-animated') }
+          let(:snapshot) do
+            <<~HTML
+              <span class="icon is-animated has-text-success">
+                <i class="fas fa-check"></i>
+              </span>
+            HTML
+          end
+
+          it { expect(rendered).to match_snapshot(snapshot) }
+        end
+
+        describe 'with field: { color: value }' do
+          let(:options) { super().merge(color: 'info') }
+          let(:snapshot) do
+            <<~HTML
+              <span class="icon has-text-info">
+                <i class="fas fa-check"></i>
+              </span>
+            HTML
+          end
+
+          it { expect(rendered).to match_snapshot(snapshot) }
+        end
+      end
+    end
+
     describe 'with field: { type: :link }' do
-      let(:field)  { { key: 'url', type: :link } }
-      let(:data)   { Struct.new(:url).new('example.com/users/alan-bradley') }
+      let(:options) { super().merge(type: :link) }
+      let(:field)   { { key: 'url', **options } }
+      let(:data)    { Struct.new(:url).new('example.com/users/alan-bradley') }
       let(:snapshot) do
         <<~HTML
           <a class="has-text-link" href="https://example.com/users/alan-bradley" target="_blank">
@@ -239,6 +331,32 @@ RSpec.describe Librum::Core::View::Components::DataField, type: :component do
       end
 
       it { expect(rendered).to match_snapshot(snapshot) }
+
+      describe 'with field: { class_name: value }' do
+        let(:options) { super().merge(class_name: 'is-uppercase') }
+        let(:snapshot) do
+          <<~HTML
+            <a class="is-uppercase has-text-link" href="https://example.com/users/alan-bradley" target="_blank">
+              example.com/users/alan-bradley
+            </a>
+          HTML
+        end
+
+        it { expect(rendered).to match_snapshot(snapshot) }
+      end
+
+      describe 'with field: { color: value }' do
+        let(:options) { super().merge(color: 'danger') }
+        let(:snapshot) do
+          <<~HTML
+            <a class="has-text-danger" href="https://example.com/users/alan-bradley" target="_blank">
+              example.com/users/alan-bradley
+            </a>
+          HTML
+        end
+
+        it { expect(rendered).to match_snapshot(snapshot) }
+      end
 
       describe 'with field: { icon }' do
         let(:field) { { key: 'url', type: :link, icon: 'globe' } }
@@ -296,16 +414,6 @@ RSpec.describe Librum::Core::View::Components::DataField, type: :component do
     include_examples 'should define reader', :data, -> { data }
   end
 
-  describe '#default' do
-    include_examples 'should define reader', :default, nil
-
-    context 'when initialized with field: { default: a value }' do
-      let(:field) { { key: 'name', default: '(none)' } }
-
-      it { expect(data_field.default).to be == field[:default] }
-    end
-  end
-
   describe '#field' do
     include_examples 'should define reader', :field
 
@@ -319,16 +427,6 @@ RSpec.describe Librum::Core::View::Components::DataField, type: :component do
       end
 
       it { expect(data_field.field).to be == field }
-    end
-  end
-
-  describe '#icon' do
-    include_examples 'should define reader', :icon, nil
-
-    context 'when initialized with field: { icon: a value }' do
-      let(:field) { { key: 'name', icon: 'user' } }
-
-      it { expect(data_field.icon).to be == field[:icon] }
     end
   end
 

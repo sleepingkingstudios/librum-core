@@ -7,39 +7,44 @@ module Librum::Core::View::Components
 
     # Data object representing configuration for a data field.
     class FieldDefinition
+      include Librum::Core::View::Options
+      include Librum::Core::View::ClassName
+
       # @param key [String] the data key corresponding to the field contents.
-      # @param default [String, Proc] the default value for the field.
-      # @param icon [String] the name of the icon, if any, to display.
-      # @param label [String] the label for the field. Defaults to the key.
       # @param type [Symbol] the type of field.
       # @param value [Proc, ViewComponent::Base] the custom field value.
-      def initialize( # rubocop:disable Metrics/ParameterLists
+      # @param options [Hash] additional options for the data field.
+      #
+      # @option options class_name [String, Array<String>] additional CSS class
+      #   names for the field.
+      # @option options color [String] the color of the rendered field.
+      # @option options default [String, Proc] the default value for the field.
+      # @option options icon [String] the name of the icon, if any, to display.
+      # @option options label [String] the label for the field. Defaults to the
+      #   key.
+      def initialize(
         key:,
-        default: nil,
-        icon:    nil,
-        label:   nil,
         type:    :text,
-        value:   nil
+        value:   nil,
+        **options
       )
-        @key     = key
-        @default = default
-        @label   = label || key.titleize
-        @icon    = icon
-        @type    = type
-        @value   = value
+        super(**options)
+
+        @key   = key
+        @type  = type
+        @value = value
       end
 
-      # @return [String, Proc] the default value for the field.
-      attr_reader :default
+      option :color
 
-      # @return [String] the name of the icon, if any, to display.
-      attr_reader :icon
+      option :default
+
+      option :icon
+
+      option :label, default: -> { key.titleize }
 
       # @return [String] the data key corresponding to the field contents.
       attr_reader :key
-
-      # @return [String] the label for the field. Defaults to the key.
-      attr_reader :label
 
       # @return [Symbol] the type of field.
       attr_reader :type
@@ -59,9 +64,13 @@ module Librum::Core::View::Components
     end
 
     def_delegators :@field,
+      :class_name,
+      :color,
       :default,
       :icon,
       :key,
+      :label,
+      :options,
       :type,
       :value
 
@@ -73,6 +82,23 @@ module Librum::Core::View::Components
     attr_reader :field
 
     private
+
+    def build_link
+      Librum::Core::View::Components::Link.new(
+        field_value,
+        class_name: class_name,
+        color:      color,
+        icon:       icon
+      )
+    end
+
+    def class_names
+      return @class_names if @class_names
+
+      @class_names = class_name
+      @class_names << "has-text-#{color}" if color
+      @class_names
+    end
 
     def default_value
       return @default_value if @default_value
@@ -87,22 +113,22 @@ module Librum::Core::View::Components
 
       return @field_value = value.call(data) if value.is_a?(Proc)
 
-      return value if value.is_a?(ViewComponent::Base)
+      return @field_value = value if value.is_a?(ViewComponent::Base)
 
       @field_value = data[key]
     end
 
-    def render_contents
-      return render_default if field_value.blank? && default.present?
+    def render_boolean
+      icon  = self.icon  || (field_value ? 'check'   : 'xmark')
+      color = self.color || (field_value ? 'success' : 'danger')
 
-      return render(field_value) if field_value.is_a?(ViewComponent::Base)
-
-      case type
-      when :link
-        render_link(field_value)
-      else
-        field_value
-      end
+      render(
+        Librum::Core::View::Components::Icon.new(
+          class_name: class_name,
+          color:      color,
+          icon:       icon
+        )
+      )
     end
 
     def render_default
@@ -112,15 +138,25 @@ module Librum::Core::View::Components
     end
 
     def render_icon?
-      return false unless icon
-
-      return false if field_value.is_a?(ViewComponent::Base)
-
-      type != :link
+      icon.present?
     end
 
-    def render_link(value)
-      render(Librum::Core::View::Components::Link.new(value, icon: icon))
+    def render_link
+      render(build_link)
+    end
+
+    def render_value
+      return render_default if field_value.blank? && default.present?
+
+      return render(field_value) if field_value.is_a?(ViewComponent::Base)
+
+      return render_wrapper if class_names.present?
+
+      field_value
+    end
+
+    def render_wrapper
+      tag.span(class: class_names) { field_value }
     end
   end
 end

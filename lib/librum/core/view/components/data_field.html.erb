@@ -1,10 +1,18 @@
-<% if render_icon? %>
-<span class="icon-text">
-  <span class="icon">
-    <i class="fas fa-<%= icon %>"></i>
-  </span>
-  <span><%= render_contents %></span>
-</span>
+<% if type == :boolean %>
+<%= render_boolean %>
+<% elsif type == :link %>
+<%= render_link %>
+<% elsif render_icon? %>
+<%=
+  render(
+    Librum::Core::View::Components::IconText.new(
+      class_name: class_name,
+      color:      color,
+      contents:   render_value,
+      icon:       icon
+    )
+  )
+%>
 <% else %>
-<%= render_contents %>
+<%= render_value %>
 <% end %>

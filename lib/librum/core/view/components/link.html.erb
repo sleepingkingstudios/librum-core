@@ -1,7 +1,11 @@
-<a class="<%= class_names %>" href="<%= url_with_protocol %>" target="<%= target %>">
+<a <%= tag.attributes(**attributes) %>>
+  <% if render_icon? %>
   <%=
     render(
-      Librum::Core::View::Components::IconText.new(icon: icon, label: label)
+      Librum::Core::View::Components::IconText.new(contents: label, icon: icon)
     )
   %>
+  <% else %>
+  <%= label %>
+  <% end %>
 </a>

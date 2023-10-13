@@ -3,10 +3,9 @@
 module Librum::Core::View::Components
   # Renders a form select input.
   class FormSelect < ViewComponent::Base
-    include Librum::Core::View::ErrorMatching
+    include Librum::Core::View::FormErrors
 
     # @param items [Array] the options or option groups to display.
-    # @param errors [Stannum::Errors, Array<String>] the form errors to apply.
     # @param id [String] a unique identifier for the input.
     # @param name [String] the scoped name of the form input.
     # @param value [String] the selected option, if any.
@@ -16,28 +15,19 @@ module Librum::Core::View::Components
     #   disabled.
     # @option options error_key [String] the key used to identify matching
     #   errors. Defaults to the input name.
+    # @option options errors [Stannum::Errors, Array<String>] the form errors to
+    #   apply.
     # @option options include_blank [Boolean] if true, prepends a blank option
     #   with empty value to the select options.
-    def initialize( # rubocop:disable Metrics/ParameterLists
-      name,
-      items:,
-      errors: nil,
-      id:     nil,
-      value:  nil,
-      **options
-    )
-      super()
+    def initialize(name, items:, id: nil, value: nil, **options)
+      super(**options)
 
       @name    = name
       @items   = items
       @errors  = errors
       @id      = id
       @value   = value
-      @options = options
     end
-
-    # @return [Stannum::Errors, Array<String>] the form errors to apply.
-    attr_reader :errors
 
     # @return [String] a unique identifier for the input.
     attr_reader :id
@@ -48,20 +38,12 @@ module Librum::Core::View::Components
     # @return [String] the scoped name of the form input.
     attr_reader :name
 
-    # @return [Hash] additional options for displaying the select input.
-    attr_reader :options
-
     # @return [String] the currently selected value.
     attr_reader :value
 
     # @return [Boolean] if true, renders the select input as disabled.
     def disabled?
       !!@options[:disabled]
-    end
-
-    # @return [String] the key used to identify matching errors.
-    def error_key
-      @options.fetch(:error_key, name)
     end
 
     # @return [Boolean] if true, prepends a blank option with empty value to the

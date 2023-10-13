@@ -1,14 +1,5 @@
-<% if render_icon? && render_label? %>
-<span class="icon-text">
-  <span class="icon">
-    <i class="fas fa-<%= icon %>"></i>
-  </span>
-  <span><%= label %></span>
+<span <%= tag.attributes(class: wrapper_class_names) %>>
+  <%= render_icon %>
+
+  <%= render_contents %>
 </span>
-<% elsif render_icon? %>
-<span class="icon">
-  <i class="fas fa-<%= icon %>"></i>
-</span>
-<% else %>
-<%= label %>
-<% end %>

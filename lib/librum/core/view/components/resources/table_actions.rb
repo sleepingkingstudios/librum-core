@@ -40,22 +40,22 @@ module Librum::Core::View::Components::Resources
     def build_edit_link
       Librum::Core::View::Components::Link.new(
         resource.routes.edit_path(data['slug']),
-        button:      true,
-        class_names: 'is-small',
-        color:       'warning',
-        label:       'Update',
-        light:       true
+        button:     true,
+        class_name: 'is-small',
+        color:      'warning',
+        label:      'Update',
+        light:      true
       )
     end
 
     def build_show_link
       Librum::Core::View::Components::Link.new(
         resource.routes.show_path(data['slug']),
-        button:      true,
-        class_names: 'is-small',
-        color:       'link',
-        label:       'Show',
-        light:       true
+        button:     true,
+        class_name: 'is-small',
+        color:      'link',
+        label:      'Show',
+        light:      true
       )
     end
 

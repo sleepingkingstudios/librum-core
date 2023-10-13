@@ -1,8 +1,14 @@
 <div class="box">
   <p class="has-text-centered">
-    <span class="icon is-large has-text-danger">
-      <i class="fas fa-2x fa-<%= icon %>"></i>
-    </span>
+    <%=
+      render(
+        Librum::Core::View::Components::Icon.new(
+          color: 'danger',
+          icon:  icon,
+          size:  'large'
+        )
+      )
+    %>
   </p>
 
   <h2 class="title has-text-centered has-text-danger"><%= label %></h2>
