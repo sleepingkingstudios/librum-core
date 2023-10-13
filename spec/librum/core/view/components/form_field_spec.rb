@@ -259,6 +259,27 @@ RSpec.describe Librum::Core::View::Components::FormField, type: :component do
       it { expect(rendered).to match_snapshot(snapshot) }
     end
 
+    describe 'with type: :checkbox' do
+      let(:options) { super().merge(type: :checkbox) }
+      let(:snapshot) do
+        <<~HTML
+          <div class="field">
+            <div class="control">
+              <label class="checkbox" name="color" for="color">
+                <input autocomplete="off" name="color" type="hidden" value="0">
+
+                <input name="color" type="checkbox" value="1" id="color">
+
+                Color
+              </label>
+            </div>
+          </div>
+        HTML
+      end
+
+      it { expect(rendered).to match_snapshot(snapshot) }
+    end
+
     describe 'with type: :select' do
       let(:items) do
         [

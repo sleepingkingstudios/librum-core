@@ -1,5 +1,7 @@
 <div class="field">
+  <% if render_label? %>
   <label for="<%= id %>" class="label"><%= label %></label>
+  <% end %>
 
   <div class="<%= control_class_names %>">
     <%= render_input %>

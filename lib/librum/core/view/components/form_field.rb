@@ -2,7 +2,7 @@
 
 module Librum::Core::View::Components
   # Renders a form field wrapping a basic input or given contents.
-  class FormField < ViewComponent::Base
+  class FormField < ViewComponent::Base # rubocop:disable Metrics/ClassLength
     include Librum::Core::View::DataMatching
     include Librum::Core::View::FormErrors
 
@@ -95,6 +95,17 @@ module Librum::Core::View::Components
 
     private
 
+    def build_checkbox_input
+      Librum::Core::View::Components::FormCheckbox.new(
+        name,
+        checked: value ? true : false,
+        errors:  matching_errors,
+        id:      id,
+        label:   label,
+        **input_options
+      )
+    end
+
     def build_form_input
       Librum::Core::View::Components::FormInput.new(
         name,
@@ -109,6 +120,8 @@ module Librum::Core::View::Components
 
     def build_input
       case type
+      when :checkbox
+        build_checkbox_input
       when :select
         build_select_input
       else
@@ -143,6 +156,10 @@ module Librum::Core::View::Components
 
     def render_input
       render(build_input)
+    end
+
+    def render_label?
+      type != :checkbox
     end
   end
 end

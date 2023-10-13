@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'stannum/errors'
-
 require 'rails_helper'
 
 RSpec.describe Librum::Core::View::FormErrors, type: :item_component do

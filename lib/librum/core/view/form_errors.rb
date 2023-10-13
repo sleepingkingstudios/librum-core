@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'stannum/errors'
+
 module Librum::Core::View
   # Concern for mapping matching error messages from an errors object.
   module FormErrors
