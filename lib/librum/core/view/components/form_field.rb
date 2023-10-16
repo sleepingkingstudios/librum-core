@@ -119,11 +119,13 @@ module Librum::Core::View::Components
     end
 
     def build_input
-      case type
-      when :checkbox
+      case type.to_s
+      when 'checkbox'
         build_checkbox_input
-      when :select
+      when 'select'
         build_select_input
+      when 'textarea'
+        build_text_area
       else
         build_form_input
       end
@@ -135,6 +137,16 @@ module Librum::Core::View::Components
         errors: matching_errors,
         id:     id,
         items:  items,
+        value:  value,
+        **input_options
+      )
+    end
+
+    def build_text_area
+      Librum::Core::View::Components::FormTextArea.new(
+        name,
+        errors: matching_errors,
+        id:     id,
         value:  value,
         **input_options
       )
