@@ -315,6 +315,24 @@ RSpec.describe Librum::Core::View::Components::FormField, type: :component do
       it { expect(rendered).to match_snapshot(snapshot) }
     end
 
+    describe 'with type: :textarea' do
+      let(:type)    { 'textarea' }
+      let(:options) { super().merge(type: type) }
+      let(:snapshot) do
+        <<~HTML
+          <div class="field">
+            <label for="color" class="label">Color</label>
+
+            <div class="control">
+              <textarea class="textarea" name="color" id="color"></textarea>
+            </div>
+          </div>
+        HTML
+      end
+
+      it { expect(rendered).to match_snapshot(snapshot) }
+    end
+
     describe 'with type: value' do
       let(:type)    { 'email' }
       let(:options) { super().merge(type: type) }

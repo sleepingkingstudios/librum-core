@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 module Librum::Core::View::Components
-  # Renders a basic form input.
-  class FormInput < ViewComponent::Base
+  # Renders a form text area.
+  class FormTextArea < ViewComponent::Base
+    include Librum::Core::View::Options
     include Librum::Core::View::FormErrors
 
     # @param id [String] a unique identifier for the input.
     # @param name [String] the scoped name of the form input.
-    # @param type [String] the input type.
     # @param value [String] the value to place in the input, if any.
     # @param options [Hash] additional options for the input.
     #
@@ -18,14 +18,21 @@ module Librum::Core::View::Components
     #   apply.
     # @option options placeholder [String] the placeholder value to display in
     #   an empty input.
-    def initialize(name, id: nil, type: 'text', value: nil, **options)
+    # @option options rows [Integer] the height of the textarea, in rows of
+    #   text.
+    def initialize(name, id: nil, value: nil, **options)
       super(**options)
 
       @id    = id
       @name  = name
-      @type  = type
       @value = value
     end
+
+    option :disabled?, boolean: true
+
+    option :placeholder
+
+    option :rows
 
     # @return [String] a unique identifier for the input.
     attr_reader :id
@@ -36,49 +43,31 @@ module Librum::Core::View::Components
     # @return [Hash] additional options for the input.
     attr_reader :options
 
-    # @return [String] the input type.
-    attr_reader :type
-
     # @return [String] the value to place in the input.
     attr_reader :value
 
-    # @return [String] the rendered component.
-    def call
-      tag.input(**attributes)
-    end
-
-    # @return [Boolean] if true, renders the input as disabled.
-    def disabled?
-      !!@options[:disabled]
-    end
-
-    # @return [String] the placeholder value to display in an empty input.
-    def placeholder
-      @options[:placeholder]
-    end
-
     private
 
-    def attributes
-      hsh = id.present? ? { id: id } : {}
+    def attributes # rubocop:disable Metrics/AbcSize
+      hsh = {
+        class: class_names,
+        name:  name
+      }
 
-      hsh[:disabled] = true if disabled?
+      hsh[:id]          = id          if id.present?
+      hsh[:placeholder] = placeholder if placeholder.present?
+      hsh[:rows]        = rows.to_s   if rows
+      hsh[:disabled]    = true        if disabled?
 
-      hsh.merge(
-        name:        name,
-        class:       class_names,
-        placeholder: placeholder,
-        type:        type,
-        value:       value
-      )
+      hsh
     end
 
     def class_names
-      names = %w[input]
+      ary = %w[textarea]
 
-      names << 'is-danger' if matching_errors.any?
+      ary << 'is-danger' if matching_errors.any?
 
-      names.join(' ')
+      ary.join(' ')
     end
   end
 end
