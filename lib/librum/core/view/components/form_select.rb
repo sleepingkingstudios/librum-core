@@ -24,7 +24,6 @@ module Librum::Core::View::Components
 
       @name    = name
       @items   = items
-      @errors  = errors
       @id      = id
       @value   = value
     end

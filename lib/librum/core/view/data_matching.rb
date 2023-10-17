@@ -11,10 +11,14 @@ module Librum::Core::View
     private
 
     def dig(*path)
-      path.reduce(data) do |hsh, key|
-        return nil if hsh.blank? || !hsh.respond_to?(:[])
+      path.reduce(data) do |obj, key|
+        return nil if obj.blank?
 
-        hsh[key]
+        return obj.send(key) if obj.respond_to?(key)
+
+        return nil unless obj.respond_to?(:[])
+
+        obj[key]
       end
     end
 
@@ -33,7 +37,7 @@ module Librum::Core::View
 
       return find_data_with_brackets if name.include?('[')
 
-      data[name]
+      dig(name)
     end
   end
 end
