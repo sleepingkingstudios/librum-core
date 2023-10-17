@@ -2,7 +2,7 @@
 
 module Librum::Core::View::Components
   # Renders a formatted data field.
-  class DataField < ViewComponent::Base
+  class DataField < ViewComponent::Base # rubocop:disable Metrics/ClassLength
     extend Forwardable
 
     # Data object representing configuration for a data field.
@@ -17,11 +17,15 @@ module Librum::Core::View::Components
       #
       # @option options class_name [String, Array<String>] additional CSS class
       #   names for the field.
-      # @option options color [String] the color of the rendered field.
+      # @option options color [String, Proc] the color of the rendered field.
       # @option options default [String, Proc] the default value for the field.
-      # @option options icon [String] the name of the icon, if any, to display.
+      # @option options icon [String, Proc] the name of the icon, if any, to
+      #   display.
       # @option options label [String] the label for the field. Defaults to the
       #   key.
+      # @option options transform [String, Symbol] a transformation method to
+      #   apply to the value.
+      # @option options truncate [Integer] the maximum length of the value.
       def initialize(
         key:,
         type:    :text,
@@ -42,6 +46,10 @@ module Librum::Core::View::Components
       option :icon
 
       option :label, default: -> { key.titleize }
+
+      option :transform
+
+      option :truncate
 
       # @return [String] the data key corresponding to the field contents.
       attr_reader :key
@@ -71,6 +79,8 @@ module Librum::Core::View::Components
       :key,
       :label,
       :options,
+      :transform,
+      :truncate,
       :type,
       :value
 
@@ -83,12 +93,23 @@ module Librum::Core::View::Components
 
     private
 
+    def build_actions
+      Librum::Core::View::Components::Resources::TableActions.new(
+        data:     data,
+        resource: options.fetch(:resource)
+      )
+    end
+
     def build_link
+      label = processed_value
+      url   = resolve_option(:url, label)
+
       Librum::Core::View::Components::Link.new(
-        field_value,
+        url,
         class_name: class_name,
-        color:      color,
-        icon:       icon
+        color:      resolve_option(:color),
+        icon:       resolve_option(:icon),
+        label:      label
       )
     end
 
@@ -96,7 +117,7 @@ module Librum::Core::View::Components
       return @class_names if @class_names
 
       @class_names = class_name
-      @class_names << "has-text-#{color}" if color
+      @class_names << "has-text-#{resolve_option(:color)}" if color
       @class_names
     end
 
@@ -108,6 +129,12 @@ module Librum::Core::View::Components
       @default_value = default
     end
 
+    def extract_value
+      return data.send(key) if data.respond_to?(key)
+
+      data[key]
+    end
+
     def field_value
       return @field_value if @field_value
 
@@ -115,12 +142,27 @@ module Librum::Core::View::Components
 
       return @field_value = value if value.is_a?(ViewComponent::Base)
 
-      @field_value = data[key]
+      @field_value = extract_value
+    end
+
+    def processed_value
+      value = field_value
+
+      return value if value.is_a?(ViewComponent::Base)
+
+      value = transform_value(value) if transform.present?
+      value = truncate_value(value)  if truncate
+
+      value
+    end
+
+    def render_actions
+      render(build_actions)
     end
 
     def render_boolean
-      icon  = self.icon  || (field_value ? 'check'   : 'xmark')
-      color = self.color || (field_value ? 'success' : 'danger')
+      icon  = resolve_option(:icon)  || (field_value ? 'check'   : 'xmark')
+      color = resolve_option(:color) || (field_value ? 'success' : 'danger')
 
       render(
         Librum::Core::View::Components::Icon.new(
@@ -152,11 +194,29 @@ module Librum::Core::View::Components
 
       return render_wrapper if class_names.present?
 
-      field_value
+      processed_value
     end
 
     def render_wrapper
-      tag.span(class: class_names) { field_value }
+      tag.span(class: class_names) { processed_value }
+    end
+
+    def resolve_option(option_name, default = nil)
+      return default unless options.key?(option_name)
+
+      option = options[option_name]
+
+      option.is_a?(Proc) ? option.call(data) : option
+    end
+
+    def transform_value(value)
+      value.send(transform)
+    end
+
+    def truncate_value(value)
+      return value if value.length <= truncate
+
+      "#{value[0...truncate]}…"
     end
   end
 end

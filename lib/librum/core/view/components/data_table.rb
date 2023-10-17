@@ -3,8 +3,8 @@
 module Librum::Core::View::Components
   # Renders tabular data.
   class DataTable < ViewComponent::Base
-    # @param columns [Array<DataField::FieldDefinition>] the columns used to
-    #   render the table.
+    # @param columns [Array<DataField::FieldDefinition>, Proc] the columns used
+    #   to render the table.
     # @param data [Array<Hash{String=>Object}>] the table data to render.
     # @param class_names [Array<String>] additional class names to add to the
     #   rendered HTML.
@@ -64,10 +64,6 @@ module Librum::Core::View::Components
     # @returen [ViewComponent::Base] the component to render each table cell.
     attr_reader :cell_component
 
-    # @return [Array<DataField::FieldDefinition>] the columns used to render the
-    #   table.
-    attr_reader :columns
-
     # @return data [Array<Hash{String=>Object}>] the table data to render.
     attr_reader :data
 
@@ -87,6 +83,12 @@ module Librum::Core::View::Components
 
     # @return [ViewComponent::Base] the component to render each table row.
     attr_reader :row_component
+
+    # @return [Array<DataField::FieldDefinition>, Proc] the columns used to
+    #   render the table.
+    def columns
+      @columns.is_a?(Proc) ? instance_exec(&@columns) : @columns
+    end
 
     private
 
