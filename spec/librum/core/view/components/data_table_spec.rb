@@ -357,6 +357,26 @@ RSpec.describe Librum::Core::View::Components::DataTable, type: :component do
       end
     end
 
+    describe 'with columns: Proc' do
+      let(:expected_columns) do
+        [
+          { key: 'first_name' },
+          {
+            key:   'last_name',
+            label: 'Surname'
+          },
+          { key: 'role' }
+        ]
+      end
+      let(:columns) do
+        expected = expected_columns
+
+        -> { expected }
+      end
+
+      it { expect(rendered).to match_snapshot(snapshot) }
+    end
+
     describe 'with empty_message: value' do
       let(:empty_message)       { 'Something went wrong.' }
       let(:constructor_options) { super().merge(empty_message: empty_message) }
@@ -574,6 +594,26 @@ RSpec.describe Librum::Core::View::Components::DataTable, type: :component do
 
   describe '#columns' do
     include_examples 'should define reader', :columns, -> { columns }
+
+    context 'when initialized with columns: Proc' do
+      let(:expected_columns) do
+        [
+          { key: 'first_name' },
+          {
+            key:   'last_name',
+            label: 'Surname'
+          },
+          { key: 'role' }
+        ]
+      end
+      let(:columns) do
+        expected = expected_columns
+
+        -> { expected }
+      end
+
+      it { expect(table.columns).to be == expected_columns }
+    end
   end
 
   describe '#data' do

@@ -1,4 +1,6 @@
-<% if type == :boolean %>
+<% if type == :actions %>
+<%= render_actions %>
+<% elsif type == :boolean %>
 <%= render_boolean %>
 <% elsif type == :link %>
 <%= render_link %>
@@ -7,9 +9,9 @@
   render(
     Librum::Core::View::Components::IconText.new(
       class_name: class_name,
-      color:      color,
+      color:      resolve_option(:color),
       contents:   render_value,
-      icon:       icon
+      icon:       resolve_option(:icon)
     )
   )
 %>

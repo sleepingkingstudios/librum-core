@@ -2,6 +2,8 @@
 
 require 'rails_helper'
 
+require 'support/user'
+
 RSpec.describe Librum::Core::View::Components::DataField, type: :component do
   include Librum::Core::RSpec::Contracts::ComponentContracts
 
@@ -53,6 +55,10 @@ RSpec.describe Librum::Core::View::Components::DataField, type: :component do
     include_contract 'should define option',
       :label,
       default: -> { key.titleize }
+
+    include_contract 'should define option', :transform
+
+    include_contract 'should define option', :truncate
 
     include_contract 'should define class name option'
 
@@ -114,6 +120,10 @@ RSpec.describe Librum::Core::View::Components::DataField, type: :component do
     :label,
     default: -> { key.titleize }
 
+  include_contract 'should define option', :transform
+
+  include_contract 'should define option', :truncate
+
   include_contract 'should define class name option'
 
   describe '#call' do
@@ -137,7 +147,25 @@ RSpec.describe Librum::Core::View::Components::DataField, type: :component do
       it { expect(rendered).to match_snapshot(snapshot) }
     end
 
-    describe 'with field: { color: value }' do
+    describe 'with field: { color: a Proc }' do
+      let(:options) do
+        super().merge(
+          color: ->(item) { item.role == 'admin' ? 'danger' : 'info' }
+        )
+      end
+      let(:data) do
+        Struct.new(:name, :role).new('Alan Bradley', 'user')
+      end
+      let(:snapshot) do
+        <<~HTML
+          <span class="has-text-info">Alan Bradley</span>
+        HTML
+      end
+
+      it { expect(rendered).to match_snapshot(snapshot) }
+    end
+
+    describe 'with field: { color: a String }' do
       let(:options) { super().merge(color: 'danger') }
       let(:snapshot) do
         <<~HTML
@@ -218,7 +246,23 @@ RSpec.describe Librum::Core::View::Components::DataField, type: :component do
       end
     end
 
-    describe 'with field: { icon }' do
+    describe 'with field: { key: a predicate }' do
+      let(:field) { { key: 'admin?' } }
+      let(:data)  { Spec::User.new('user') }
+      let(:snapshot) do
+        <<~HTML
+          false
+        HTML
+      end
+
+      example_class 'Spec::User', Struct.new(:role) do |klass|
+        klass.define_method(:admin?) { role == 'admin' }
+      end
+
+      it { expect(rendered).to match_snapshot(snapshot) }
+    end
+
+    describe 'with field: { icon: a Proc }' do
       let(:options) { super().merge(icon: 'user') }
       let(:snapshot) do
         <<~HTML
@@ -229,6 +273,85 @@ RSpec.describe Librum::Core::View::Components::DataField, type: :component do
 
             <span>Alan Bradley</span>
           </span>
+        HTML
+      end
+
+      it { expect(rendered).to match_snapshot(snapshot) }
+    end
+
+    describe 'with field: { icon: a String }' do
+      let(:options) do
+        super().merge(
+          icon: ->(item) { item.role == 'admin' ? 'user-secret' : 'user' }
+        )
+      end
+      let(:data) { Struct.new(:name, :role).new('Ed Dillinger', 'admin') }
+      let(:snapshot) do
+        <<~HTML
+          <span class="icon-text">
+            <span class="icon">
+              <i class="fas fa-user-secret"></i>
+            </span>
+
+            <span>Ed Dillinger</span>
+          </span>
+        HTML
+      end
+
+      it { expect(rendered).to match_snapshot(snapshot) }
+    end
+
+    describe 'with field: { transform: value }' do
+      let(:options) { super().merge(transform: :titleize) }
+      let(:field)   { { key: 'title', **options } }
+      let(:data)    { Struct.new(:title).new('sr software engineer') }
+      let(:snapshot) do
+        <<~HTML
+          Sr Software Engineer
+        HTML
+      end
+
+      it { expect(rendered).to match_snapshot(snapshot) }
+    end
+
+    describe 'with field: { truncate: value }' do
+      let(:options) { super().merge(truncate: 10) }
+      let(:field)   { { key: 'catchphrase', **options } }
+      let(:data)    { Struct.new(:catchphrase).new('I wanna be the very best') }
+      let(:snapshot) do
+        <<~HTML
+          I wanna be…
+        HTML
+      end
+
+      it { expect(rendered).to match_snapshot(snapshot) }
+    end
+
+    describe 'with field: { type: :actions }' do
+      let(:data) do
+        Spec::Support::User.new(name: 'Alan Bradley', slug: 'alan-bradley')
+      end
+      let(:resource) { Cuprum::Rails::Resource.new(resource_name: 'users') }
+      let(:options)  { super().merge(type: :actions, resource: resource) }
+      let(:snapshot) do
+        <<~HTML
+          <div class="buttons" style="margin-top: -.125rem; margin-bottom: -.625rem;">
+            <a class="is-small button is-link is-light" href="/users/alan-bradley" target="_self">
+              Show
+            </a>
+
+            <a class="is-small button is-warning is-light" href="/users/alan-bradley/edit" target="_self">
+              Update
+            </a>
+
+            <form action="/users/alan-bradley" accept-charset="UTF-8" method="post">
+              <input type="hidden" name="_method" value="delete" autocomplete="off">
+
+              <input type="hidden" name="authenticity_token" value="[token]" autocomplete="off">
+
+              <button type="submit" class="button is-danger is-light is-small">Destroy</button>
+            </form>
+          </div>
         HTML
       end
 
@@ -370,6 +493,34 @@ RSpec.describe Librum::Core::View::Components::DataField, type: :component do
 
                 <span>example.com/users/alan-bradley</span>
               </span>
+            </a>
+          HTML
+        end
+
+        it { expect(rendered).to match_snapshot(snapshot) }
+      end
+
+      describe 'with field: { url: a Proc }' do
+        let(:options) { super().merge(url: ->(item) { "/users/#{item.slug}" }) }
+        let(:field)   { { key: 'slug', **options } }
+        let(:data)    { Struct.new(:slug).new('alan-bradley') }
+        let(:snapshot) do
+          <<~HTML
+            <a class="has-text-link" href="/users/alan-bradley" target="_self">
+              alan-bradley
+            </a>
+          HTML
+        end
+
+        it { expect(rendered).to match_snapshot(snapshot) }
+      end
+
+      describe 'with field: { url: a String }' do
+        let(:options) { super().merge(url: '/path/to/resource') }
+        let(:snapshot) do
+          <<~HTML
+            <a class="has-text-link" href="/path/to/resource" target="_self">
+              example.com/users/alan-bradley
             </a>
           HTML
         end
