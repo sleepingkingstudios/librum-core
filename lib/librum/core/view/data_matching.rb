@@ -12,11 +12,13 @@ module Librum::Core::View
 
     def dig(*path)
       path.reduce(data) do |obj, key|
-        return nil if obj.blank?
+        next nil if obj.blank?
 
-        return obj.send(key) if obj.respond_to?(key)
+        next obj[key] if obj.is_a?(Hash)
 
-        return nil unless obj.respond_to?(:[])
+        next obj.send(key) if obj.respond_to?(key)
+
+        next nil unless obj.respond_to?(:[])
 
         obj[key]
       end

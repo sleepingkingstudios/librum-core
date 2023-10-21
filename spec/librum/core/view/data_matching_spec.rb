@@ -39,6 +39,36 @@ RSpec.describe Librum::Core::View::DataMatching do
       it { expect(component.matching_data).to be nil }
     end
 
+    context 'with data: an Object that does not respond to the method' do
+      let(:data) { Spec::ExampleObject.new('name' => 'Imp IV') }
+
+      example_class 'Spec::ExampleObject' do |klass|
+        klass.define_method(:initialize) do |**attributes|
+          @attributes = attributes
+        end
+
+        klass.define_method(:[]) { |key| @attributes[key.to_s] } # rubocop:disable RSpec/InstanceVariable
+      end
+
+      context 'when initialized with name: a non-matching name' do
+        let(:data) { Spec::ExampleObject.new('name' => 'Imp IV') }
+
+        it { expect(component.matching_data).to be nil }
+      end
+
+      context 'when initialized with name: a matching name' do
+        let(:data) { Spec::ExampleObject.new('color' => 'red') }
+
+        it { expect(component.matching_data).to be == 'red' }
+      end
+    end
+
+    context 'with data: an Object that does not respond to #[]' do
+      let(:data) { Object.new }
+
+      it { expect(component.matching_data).to be nil }
+    end
+
     context 'with data: a matching Object' do
       let(:data) { Spec::Support::Rocket.new(name: 'Imp IV', color: 'red') }
 
@@ -69,7 +99,7 @@ RSpec.describe Librum::Core::View::DataMatching do
       it { expect(component.matching_data).to be == '#F00' }
     end
 
-    describe 'when initialized with name: a bracket-scoped name' do
+    context 'when initialized with name: a bracket-scoped name' do
       let(:name) { 'rocket[color]' }
 
       it { expect(component.matching_data).to be nil }
@@ -97,7 +127,7 @@ RSpec.describe Librum::Core::View::DataMatching do
       end
     end
 
-    describe 'when initialized with name: a period-scoped name' do
+    context 'when initialized with name: a period-scoped name' do
       let(:name) { 'rocket.color' }
 
       it { expect(component.matching_data).to be nil }
@@ -123,6 +153,13 @@ RSpec.describe Librum::Core::View::DataMatching do
 
         it { expect(component.matching_data).to be == 'red' }
       end
+    end
+
+    context 'when initialized with name: a Hash method name' do
+      let(:name) { 'cycle' }
+      let(:data) { { 'cycle' => 'bi' } }
+
+      it { expect(component.matching_data).to be == 'bi' }
     end
   end
 end
