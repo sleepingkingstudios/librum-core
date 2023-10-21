@@ -60,6 +60,15 @@ module Librum::Core::View::Components::Resources
       render(build_form_field(name, **options))
     end
 
+    # Builds and renders a form radio button group.
+    #
+    # @param name [String] the qualified name for the button group.
+    # @param items [Hash] the labels and values for the form buttons.
+    # @param options [Hash{Symbol=>Object}] options for the button group.
+    def render_form_radio_button_group(name, items:, **options)
+      render(build_form_radio_button_group(name, items: items, **options))
+    end
+
     # @return [#[]] the data for the displayed resource record.
     def resource_data
       return data unless data.is_a?(Hash)
@@ -81,6 +90,16 @@ module Librum::Core::View::Components::Resources
         name,
         data:   data,
         errors: errors,
+        **options
+      )
+    end
+
+    def build_form_radio_button_group(name, items:, **options)
+      Librum::Core::View::Components::FormRadioButtonGroup.new(
+        name,
+        data:   data,
+        errors: errors,
+        items:  items,
         **options
       )
     end
