@@ -36,7 +36,7 @@ do
       expect(described_class)
         .to be_constructible
         .with(0).arguments
-        .and_keywords(:action, :data, :resource)
+        .and_keywords(:action, :data, :errors, :resource)
         .and_any_keywords
     end
   end
@@ -481,6 +481,264 @@ do
 
         it { expect(rendered).to match_snapshot(snapshot) }
       end
+    end
+  end
+
+  describe '#render_form_radio_button_group' do
+    let(:described_class) { Spec::CustomForm }
+    let(:rendered)        { render_inline(form) }
+    let(:name)            { 'color' }
+    let(:options)         { {} }
+    let(:items) do
+      [
+        { value: 'red' },
+        { value: 'green' },
+        { value: 'blue' }
+      ]
+    end
+    let(:snapshot) do
+      <<~HTML
+        <div class="field">
+          <label class="label">Color</label>
+
+          <div class="control">
+            <div class="columns">
+              <div class="column">
+                <label class="radio" name="color">
+                  <input name="color" type="radio" value="red">
+
+                  Red
+                </label>
+              </div>
+
+              <div class="column">
+                <label class="radio" name="color">
+                  <input name="color" type="radio" value="green">
+
+                  Green
+                </label>
+              </div>
+
+              <div class="column">
+                <label class="radio" name="color">
+                  <input name="color" type="radio" value="blue">
+
+                  Blue
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      HTML
+    end
+
+    # rubocop:disable RSpec/DescribedClass
+    example_class 'Spec::CustomForm',
+      Librum::Core::View::Components::Resources::Form \
+    do |klass|
+      field_name    = name
+      field_items   = items
+      field_options = options
+
+      klass.define_method(:call) do
+        render_form_radio_button_group(
+          field_name,
+          items: field_items,
+          **field_options
+        )
+      end
+    end
+    # rubocop:enable RSpec/DescribedClass
+
+    it 'should define the method' do
+      expect(form)
+        .to respond_to(:render_form_radio_button_group)
+        .with(1).argument
+        .and_keywords(:items)
+        .and_any_keywords
+    end
+
+    it { expect(rendered).to match_snapshot(snapshot) }
+
+    describe 'with name: compound value' do
+      let(:name) { 'rocket[color]' }
+      let(:snapshot) do
+        <<~HTML
+          <div class="field">
+            <label class="label">Color</label>
+
+            <div class="control">
+              <div class="columns">
+                <div class="column">
+                  <label class="radio" name="rocket[color]">
+                    <input name="rocket[color]" type="radio" value="red">
+
+                    Red
+                  </label>
+                </div>
+
+                <div class="column">
+                  <label class="radio" name="rocket[color]">
+                    <input name="rocket[color]" type="radio" value="green">
+
+                    Green
+                  </label>
+                </div>
+
+                <div class="column">
+                  <label class="radio" name="rocket[color]">
+                    <input name="rocket[color]" type="radio" value="blue">
+
+                    Blue
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        HTML
+      end
+
+      it { expect(rendered).to match_snapshot(snapshot) }
+    end
+
+    describe 'with options: value' do
+      let(:options) { super().merge(label: 'Chroma') }
+      let(:snapshot) do
+        <<~HTML
+          <div class="field">
+            <label class="label">Chroma</label>
+
+            <div class="control">
+              <div class="columns">
+                <div class="column">
+                  <label class="radio" name="color">
+                    <input name="color" type="radio" value="red">
+
+                    Red
+                  </label>
+                </div>
+
+                <div class="column">
+                  <label class="radio" name="color">
+                    <input name="color" type="radio" value="green">
+
+                    Green
+                  </label>
+                </div>
+
+                <div class="column">
+                  <label class="radio" name="color">
+                    <input name="color" type="radio" value="blue">
+
+                    Blue
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        HTML
+      end
+
+      it { expect(rendered).to match_snapshot(snapshot) }
+    end
+
+    context 'when initialized with data: an object with matching key' do
+      let(:data) do
+        Spec::Support::Rocket.new(
+          name:  'Imp IV',
+          slug:  'imp-iv',
+          color: 'red'
+        )
+      end
+      let(:snapshot) do
+        <<~HTML
+          <div class="field">
+            <label class="label">Color</label>
+
+            <div class="control">
+              <div class="columns">
+                <div class="column">
+                  <label class="radio" name="color">
+                    <input name="color" type="radio" value="red" checked>
+
+                    Red
+                  </label>
+                </div>
+
+                <div class="column">
+                  <label class="radio" name="color">
+                    <input name="color" type="radio" value="green">
+
+                    Green
+                  </label>
+                </div>
+
+                <div class="column">
+                  <label class="radio" name="color">
+                    <input name="color" type="radio" value="blue">
+
+                    Blue
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        HTML
+      end
+
+      it { expect(rendered).to match_snapshot(snapshot) }
+    end
+
+    context 'when initialized with errors: matching errors' do # rubocop:disable RSpec/MultipleMemoizedHelpers
+      let(:errors) do
+        errors = Stannum::Errors.new
+        errors['color'].add('spec.error', message: 'Something went wrong')
+        errors
+      end
+      let(:constructor_options) { super().merge(errors: errors) }
+      let(:snapshot) do
+        <<~HTML
+          <div class="field">
+            <label class="label">Color</label>
+
+            <div class="control has-icons-right">
+              <div class="columns">
+                <div class="column">
+                  <label class="radio has-text-danger" name="color">
+                    <input name="color" type="radio" value="red">
+
+                    Red
+                  </label>
+                </div>
+
+                <div class="column">
+                  <label class="radio has-text-danger" name="color">
+                    <input name="color" type="radio" value="green">
+
+                    Green
+                  </label>
+                </div>
+
+                <div class="column">
+                  <label class="radio has-text-danger" name="color">
+                    <input name="color" type="radio" value="blue">
+
+                    Blue
+                  </label>
+                </div>
+              </div>
+
+              <span class="icon is-right is-small">
+                <i class="fas fa-triangle-exclamation"></i>
+              </span>
+            </div>
+
+            <p class="help is-danger">Something went wrong</p>
+          </div>
+        HTML
+      end
+
+      it { expect(rendered).to match_snapshot(snapshot) }
     end
   end
 

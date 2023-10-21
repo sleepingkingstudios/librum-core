@@ -1,0 +1,31 @@
+<div class="<%= field_class_names %>">
+  <% if render_label? %>
+  <label class="label"><%= label %></label>
+  <% end %>
+
+  <div class="<%= control_class_names %>">
+    <div class="columns">
+      <% items_with_options.each do |item| %>
+        <div class="column">
+          <%= render_item(item) %>
+        </div>
+      <% end %>
+    </div>
+
+    <% if matching_errors.any? %>
+    <%=
+      render(
+        Librum::Core::View::Components::Icon.new(
+          class_name: 'is-right',
+          icon:       'triangle-exclamation',
+          size:       'small'
+        )
+      )
+    %>
+    <% end %>
+  </div>
+
+  <% if matching_errors.any? %>
+  <p class="help is-danger"><%= matching_errors.join(', ') %></p>
+  <% end %>
+</div>
