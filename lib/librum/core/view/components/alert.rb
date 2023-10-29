@@ -30,6 +30,14 @@ module Librum::Core::View::Components
 
     private
 
+    def attributes
+      hsh = { 'class' => class_names }
+
+      hsh['data-controller'] = 'dismissable' if dismissable?
+
+      hsh
+    end
+
     def class_names
       names = %i[alert notification]
 

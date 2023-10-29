@@ -40,8 +40,8 @@ RSpec.describe Librum::Core::View::Layouts::Page::Alerts, type: :component do
           </span>
         </div>
 
-        <div class="alert notification is-info">
-          <button class="delete is-medium"></button>
+        <div class="alert notification is-info" data-controller="dismissable">
+          <button data-action="click-&gt;dismissable#close" class="delete is-medium"></button>
 
           Initializing activation sequence
         </div>

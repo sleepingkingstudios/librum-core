@@ -35,8 +35,8 @@ RSpec.describe Librum::Core::View::Components::Alert, type: :component do
     let(:rendered) { render_inline(component) }
     let(:snapshot) do
       <<~HTML
-        <div class="alert notification is-info">
-          <button class="delete is-medium"></button>
+        <div class="alert notification is-info" data-controller="dismissable">
+          <button data-action="click-&gt;dismissable#close" class="delete is-medium"></button>
 
           Reactor temperature critical
         </div>
@@ -49,8 +49,8 @@ RSpec.describe Librum::Core::View::Components::Alert, type: :component do
       let(:options) { super().merge(color: 'danger') }
       let(:snapshot) do
         <<~HTML
-          <div class="alert notification is-danger">
-            <button class="delete is-medium"></button>
+          <div class="alert notification is-danger" data-controller="dismissable">
+            <button data-action="click-&gt;dismissable#close" class="delete is-medium"></button>
 
             Reactor temperature critical
           </div>
@@ -77,8 +77,8 @@ RSpec.describe Librum::Core::View::Components::Alert, type: :component do
       let(:options) { super().merge(icon: 'radiation') }
       let(:snapshot) do
         <<~HTML
-          <div class="alert notification is-info">
-            <button class="delete is-medium"></button>
+          <div class="alert notification is-info" data-controller="dismissable">
+            <button data-action="click-&gt;dismissable#close" class="delete is-medium"></button>
 
             <span class="icon-text">
               <span class="icon">

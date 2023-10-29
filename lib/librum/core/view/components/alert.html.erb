@@ -1,6 +1,6 @@
-<div class="<%= class_names %>">
+<div <%= tag.attributes(**attributes) %>>
   <% if dismissable? %>
-  <button class="delete is-medium"></button>
+  <button data-action="click->dismissable#close" class="delete is-medium"></button>
   <% end %>
 
   <% if render_icon? %>
