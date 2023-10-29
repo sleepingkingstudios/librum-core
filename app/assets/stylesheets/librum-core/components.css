@@ -1,5 +1,22 @@
 /* COMPONENTS */
 
+/* ALERTS */
+
+.alert.notification {
+  margin-bottom: 1rem;
+
+  padding-bottom: 0.75rem;
+  padding-top: 0.75rem;
+  padding-left: 0.75rem;
+}
+
+.alert.notification > .delete {
+  right: 0.75rem;
+  top: 0.75rem;
+}
+
+/* HORIZONTAL RULES */
+
 hr.is-fancy-hr {
   border-top-style: solid;
   border-top-width: 2px;

@@ -1,4 +1,8 @@
 <div class="<%= class_names %>">
+  <% if dismissable? %>
+  <button class="delete is-medium"></button>
+  <% end %>
+
   <% if render_icon? %>
   <%=
     render(

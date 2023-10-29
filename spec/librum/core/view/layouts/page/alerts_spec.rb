@@ -8,8 +8,9 @@ RSpec.describe Librum::Core::View::Layouts::Page::Alerts, type: :component do
   let(:data) do
     {
       danger: {
-        icon:    'radiation',
-        message: 'Reactor temperature critical'
+        dismissable: false,
+        icon:        'radiation',
+        message:     'Reactor temperature critical'
       },
       info:   'Initializing activation sequence'
     }
@@ -29,7 +30,7 @@ RSpec.describe Librum::Core::View::Layouts::Page::Alerts, type: :component do
     let(:rendered) { render_inline(alerts) }
     let(:snapshot) do
       <<~HTML
-        <div class="notification is-danger">
+        <div class="alert notification is-danger">
           <span class="icon-text">
             <span class="icon">
               <i class="fas fa-radiation"></i>
@@ -39,7 +40,9 @@ RSpec.describe Librum::Core::View::Layouts::Page::Alerts, type: :component do
           </span>
         </div>
 
-        <div class="notification is-info">
+        <div class="alert notification is-info">
+          <button class="delete is-medium"></button>
+
           Initializing activation sequence
         </div>
       HTML

@@ -1,10 +1,9 @@
 <% alerts.each do |alert| %>
 <%=
   render(
-    Librum::Core::View::Layouts::Page::Alert.new(
+    Librum::Core::View::Components::Alert.new(
       alert['message'],
-      color: alert['color'],
-      icon:  alert['icon']
+      **alert.except('message').symbolize_keys
     )
   )
 %>
