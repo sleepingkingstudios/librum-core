@@ -1,0 +1,46 @@
+/* COMPONENTS */
+
+hr.is-fancy-hr {
+  border-top-style: solid;
+  border-top-width: 2px;
+  opacity: 1;
+  overflow: visible;
+}
+
+hr.is-fancy-hr:after {
+  content: ' ';
+
+  /* Display */
+  display: block;
+  border-top-style: solid;
+  border-top-width: 1px;
+  margin: 0 10px;
+
+  /* Positioning */
+  position: relative;
+  top: 2px;
+}
+
+/* FORMS */
+
+@media screen and (min-width: 769px) {
+  .field > .control:first-child {
+    padding-top: 2rem;
+  }
+
+  .control > .checkbox, .control > .radio {
+    padding: 0.5rem 0;
+  }
+}
+
+.control > .columns {
+  margin-top: 0;
+}
+
+.control > .select {
+  width: 100%;
+}
+
+.control > .select > select {
+  width: 100%;
+}
