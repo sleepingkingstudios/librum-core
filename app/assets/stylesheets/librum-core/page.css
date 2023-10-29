@@ -1,0 +1,68 @@
+/* PAGE */
+
+html, body, body > div.page {
+  height: 100%;
+}
+
+.page > .banner {
+  padding: 0 1.5rem;
+}
+
+/* BANNER */
+
+@media screen and (min-width: 1024px) {
+  .page > .banner {
+    padding: 0 3rem;
+  }
+}
+
+.page > .banner > .hero-body {
+  padding: 1.5rem 0;
+}
+
+.page > .banner .title {
+  margin-bottom: 0;
+}
+
+.page > .banner .title:last-child {
+  margin-bottom: 1.5rem;
+}
+
+@media screen and (min-width: 1024px) {
+  .page > .banner nav.navbar .navbar-brand {
+    margin-left: 0;
+  }
+}
+
+.page > .banner hr {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+/* SESSION */
+
+.page .user-session form.destroy_session_form {
+  flex-grow: 1;
+}
+
+.page .user-session form.destroy_session_form input.button {
+  padding: 0.5rem;
+  margin: -.75rem -0.5rem;
+}
+
+/* CONTENT */
+
+.page > section.primary-content {
+  padding-top: 0;
+}
+
+.page > section.primary-content .container h1:first-child {
+  margin-top: 0;
+}
+
+/* FOOTER */
+
+.page > footer.footer {
+  background-color: #fff;
+  padding: 1.5rem 1rem 2rem;
+}
