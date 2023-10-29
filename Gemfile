@@ -5,6 +5,10 @@ source 'https://rubygems.org'
 # Specify your gem's dependencies in librum-core.gemspec.
 gemspec
 
+### Assets
+gem 'sprockets-rails' # The original asset pipeline for Rails
+
+### Commands
 gem 'cuprum',
   branch: 'main',
   git:    'https://github.com/sleepingkingstudios/cuprum'
