@@ -6,6 +6,7 @@ source 'https://rubygems.org'
 gemspec
 
 ### Assets
+gem 'importmap-rails' # Use JavaScript with ESM import maps
 gem 'sprockets-rails' # The original asset pipeline for Rails
 
 ### Commands
