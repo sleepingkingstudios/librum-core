@@ -2,6 +2,9 @@
 /.bundle
 Gemfile.lock
 
+# Ignore node modules.
+/node_modules
+
 # Ignore all logfiles and tempfiles.
 .byebug_history
 /log/*
