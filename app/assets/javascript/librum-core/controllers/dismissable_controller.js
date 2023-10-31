@@ -1,6 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 
-export default class extends Controller {
+export default class DismissableController extends Controller {
   close() {
     this.element.remove();
   }
