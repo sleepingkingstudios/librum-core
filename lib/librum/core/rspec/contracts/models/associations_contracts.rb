@@ -8,7 +8,7 @@ module Librum::Core::RSpec::Contracts::Models
     module ShouldBelongToContract
       extend RSpec::SleepingKingStudios::Contract
 
-      contract do |association_name, **options|
+      contract do |association_name, **options, &block|
         include Librum::Core::RSpec::Contracts::Models::AttributesContracts
 
         association_name = association_name.intern
@@ -54,6 +54,8 @@ module Librum::Core::RSpec::Contracts::Models
             it { expect(association_value).to be == association }
           end
         end
+
+        instance_exec(&block) if block
       end
     end
 
@@ -61,7 +63,7 @@ module Librum::Core::RSpec::Contracts::Models
     module ShouldHaveOneContract
       extend RSpec::SleepingKingStudios::Contract
 
-      contract do |association_name, **options|
+      contract do |association_name, **options, &block|
         include Librum::Core::RSpec::Contracts::Models::AttributesContracts
 
         association_name = association_name.intern
@@ -102,6 +104,8 @@ module Librum::Core::RSpec::Contracts::Models
             it { expect(association_value).to be == association }
           end
         end
+
+        instance_exec(&block) if block
       end
     end
 
@@ -109,7 +113,7 @@ module Librum::Core::RSpec::Contracts::Models
     module ShouldHaveManyContract
       extend RSpec::SleepingKingStudios::Contract
 
-      contract do |association_name, **options|
+      contract do |association_name, **options, &block|
         association_name = association_name.intern
         singular_name    = association_name.to_s.singularize.intern
         factory_name     = options.fetch(:factory_name, singular_name)
@@ -151,6 +155,8 @@ module Librum::Core::RSpec::Contracts::Models
 
             it { expect(association_value).to match_array(associations) }
           end
+
+          instance_exec(&block) if block
         end
       end
     end
