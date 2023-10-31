@@ -12,6 +12,30 @@ on:
   - pull_request
 
 jobs:
+  jest:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Downloads a copy of the code in your repository before running CI tests
+    - uses: actions/checkout@v3
+
+    # Sets up the Node environment.
+    - name: Setup Node.js environment
+      uses: actions/setup-node@v4.0.0
+      with:
+        node-version: '18'
+        cache: yarn
+
+    # Installs Yarn and runs 'yarn install'.
+    - name: Set up Yarn
+      run: |
+        npm install yarn
+        yarn install
+
+    # Runs the JestJS unit tests.
+    - name: Run Jest tests.
+      run: yarn test
+
   rspec:
     runs-on: ubuntu-latest
 
