@@ -17,7 +17,9 @@ RSpec.describe Librum::Core::Responders::JsonResponder do
   let(:controller)    { Spec::CustomController.new }
   let(:member_action) { true }
   let(:request)       { Cuprum::Rails::Request.new }
-  let(:resource)      { Cuprum::Rails::Resource.new(resource_name: 'rockets') }
+  let(:resource_options) do
+    { name: 'rockets' }
+  end
   let(:constructor_options) do
     {
       action_name:   action_name,

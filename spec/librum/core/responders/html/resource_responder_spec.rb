@@ -58,7 +58,9 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
   let(:controller)    { CustomController.new }
   let(:member_action) { false }
   let(:request)       { Cuprum::Rails::Request.new }
-  let(:resource)      { Cuprum::Rails::Resource.new(resource_name: 'rockets') }
+  let(:resource_options) do
+    { name: 'rockets' }
+  end
   let(:constructor_options) do
     {
       action_name:   action_name,
