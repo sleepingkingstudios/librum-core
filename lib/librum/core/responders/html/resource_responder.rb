@@ -4,15 +4,14 @@ require 'cuprum/collections/errors/not_found'
 
 module Librum::Core::Responders::Html
   # Delegates missing pages to View::Pages::Resources.
-  class ResourceResponder < Librum::Core::Responders::Html::ViewResponder
+  class ResourceResponder < Librum::Core::Responders::Html::ViewResponder # rubocop:disable Metrics/ClassLength
     action :create do
       match :success do |result|
         record = result.value[resource.singular_resource_name]
+        path   =
+          resource.singular? ? routes.show_path : routes.show_path(record.slug)
 
-        redirect_to(
-          resource.routes.show_path(record.slug),
-          flash: success_flash('created')
-        )
+        redirect_to(path, flash: success_flash('created'))
       end
 
       match :failure, error: Cuprum::Collections::Errors::FailedValidation \
@@ -27,10 +26,9 @@ module Librum::Core::Responders::Html
 
     action :destroy do
       match :success do
-        redirect_to(
-          resource.routes.index_path,
-          flash: destroy_flash
-        )
+        path = resource.singular? ? routes.show_path : routes.index_path
+
+        redirect_to(path, flash: destroy_flash)
       end
 
       match :failure do
@@ -41,11 +39,10 @@ module Librum::Core::Responders::Html
     action :update do
       match :success do |result|
         record = result.value[resource.singular_resource_name]
+        path   =
+          resource.singular? ? routes.show_path : routes.show_path(record.slug)
 
-        redirect_to(
-          resource.routes.show_path(record.slug),
-          flash: success_flash('updated')
-        )
+        redirect_to(path, flash: success_flash('updated'))
       end
 
       match :failure, error: Cuprum::Collections::Errors::FailedValidation \
@@ -59,16 +56,7 @@ module Librum::Core::Responders::Html
     end
 
     match :failure, error: Cuprum::Collections::Errors::NotFound do |result|
-      message = Kernel.format(
-        '%<resource>s not found with key "%<value>s"',
-        resource: resource.singular_resource_name.titleize,
-        value:    result.error.attribute_value
-      )
-
-      redirect_to(
-        resource.routes.index_path,
-        flash: { warning: { icon: 'exclamation-triangle', message: message } }
-      )
+      handle_not_found_error(result)
     end
 
     private
@@ -98,10 +86,50 @@ module Librum::Core::Responders::Html
       { warning: { icon: 'exclamation-triangle', message: message } }
     end
 
+    def handle_not_found_error(result)
+      matching = matching_ancestor_for(result)
+
+      return render_not_found_page(result) unless matching
+
+      routes = matching.routes.with_wildcards(request.path_params || {})
+
+      redirect_to(
+        matching.singular? ? routes.show_path : routes.index_path,
+        flash: not_found_flash(error: result.error, matching: matching)
+      )
+    end
+
     def lazy_require(page_name)
       require page_name.split('::').map(&:underscore).join('/')
     rescue LoadError
       # Do nothing.
+    end
+
+    def matching_ancestor_for(result)
+      resource.each_ancestor.find do |ancestor|
+        ancestor.name == result.error.collection_name ||
+          ancestor.singular_name == result.error.collection_name
+      end
+    end
+
+    def not_found_flash(error:, matching: nil)
+      resource_name =
+        matching&.singular_resource_name || error.collection_name.singularize
+      message       = Kernel.format(
+        '%<resource>s not found with key "%<value>s"',
+        resource: resource_name.titleize,
+        value:    error.attribute_value
+      )
+
+      { warning: { icon: 'exclamation-triangle', message: message } }
+    end
+
+    def render_not_found_page(result)
+      render_component(
+        result,
+        flash:  not_found_flash(error: result.error),
+        status: :not_found
+      )
     end
 
     def resource_component_class(action: nil)
