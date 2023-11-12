@@ -16,17 +16,22 @@ module Librum::Core::View::Pages::Resources
       result.value.fetch(resource_name, [])
     end
 
+    # @return [Cuprum::Rails::Routes] the resource routes.
+    def routes
+      @routes ||=
+        resource.routes.with_wildcards(request.path_parameters.stringify_keys)
+    end
+
     private
 
     def build_data_table
-      if table_component.blank?
-        return Librum::Core::View::Components::MissingComponent.new(
-          name:    'Table',
-          message: 'Rendered in Librum::Core::View::Pages::Resources::IndexPage'
-        )
-      end
+      return missing_table_component if table_component.blank?
 
-      table_component.new(data: resource_data, resource: resource)
+      table_component.new(
+        data:     resource_data,
+        resource: resource,
+        routes:   routes
+      )
     end
 
     def buttons
@@ -42,8 +47,15 @@ module Librum::Core::View::Pages::Resources
         color: 'primary',
         label: "Create #{singular_resource_name.titleize}",
         light: true,
-        url:   resource.routes.new_path
+        url:   routes.new_path
       }
+    end
+
+    def missing_table_component
+      Librum::Core::View::Components::MissingComponent.new(
+        name:    'Table',
+        message: 'Rendered in Librum::Core::View::Pages::Resources::IndexPage'
+      )
     end
 
     def render_data_table

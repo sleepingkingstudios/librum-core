@@ -94,9 +94,13 @@ module Librum::Core::View::Components
     private
 
     def build_actions
+      resource = options.fetch(:resource)
+      routes   = options.fetch(:routes) { resource.routes }
+
       Librum::Core::View::Components::Resources::TableActions.new(
         data:     data,
-        resource: options.fetch(:resource)
+        resource: resource,
+        routes:   routes
       )
     end
 

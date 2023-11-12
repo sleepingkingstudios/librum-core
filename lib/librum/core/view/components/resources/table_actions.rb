@@ -7,11 +7,14 @@ module Librum::Core::View::Components::Resources
 
     # @param data [#[]] the record to render actions for.
     # @param resource [Cuprum::Rails::Resource] the current controller resource.
-    def initialize(data:, resource:, **options)
+    # @param routes [Cuprum::Rails::Routes] the routes for the resource.
+    # @param options [Hash] additional options for the table actions.
+    def initialize(data:, resource:, routes: nil, **options)
       super()
 
       @data     = data
       @resource = resource
+      @routes   = routes || resource.routes
       @options  = options
     end
 
@@ -25,6 +28,9 @@ module Librum::Core::View::Components::Resources
     # @return [Cuprum::Rails::Resource] the current controller resource.
     attr_reader :resource
 
+    # @return [Cuprum::Rails::Routes] the routes for the resource.
+    attr_reader :routes
+
     private
 
     def build_destroy_form
@@ -33,13 +39,14 @@ module Librum::Core::View::Components::Resources
         data:        data,
         label:       'Destroy',
         light:       true,
-        resource:    resource
+        resource:    resource,
+        routes:      routes
       )
     end
 
     def build_edit_link
       Librum::Core::View::Components::Link.new(
-        resource.routes.edit_path(data['slug']),
+        routes.edit_path(data['slug']),
         button:     true,
         class_name: 'is-small',
         color:      'warning',
@@ -50,7 +57,7 @@ module Librum::Core::View::Components::Resources
 
     def build_show_link
       Librum::Core::View::Components::Link.new(
-        resource.routes.show_path(data['slug']),
+        routes.show_path(data['slug']),
         button:     true,
         class_name: 'is-small',
         color:      'link',

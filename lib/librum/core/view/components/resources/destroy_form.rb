@@ -7,13 +7,15 @@ module Librum::Core::View::Components::Resources
 
     # @param data [#[]] the record to destroy.
     # @param resource [Cuprum::Rails::Resource] the current controller resource.
+    # @param routes [Cuprum::Rails::Routes] the routes for the resource.
     # @param options [Hash{Symbol=>Object}] additional options to pass to the
     #   button.
-    def initialize(data:, resource:, **options)
+    def initialize(data:, resource:, routes: nil, **options)
       super()
 
       @data     = data
       @resource = resource
+      @routes   = routes || resource.routes
       @options  = options
     end
 
@@ -29,6 +31,9 @@ module Librum::Core::View::Components::Resources
     # @return [Cuprum::Rails::Resource] the current controller resource.
     attr_reader :resource
 
+    # @return [Cuprum::Rails::Routes] the routes for the resource.
+    attr_reader :routes
+
     private
 
     def build_button
@@ -41,9 +46,9 @@ module Librum::Core::View::Components::Resources
     end
 
     def destroy_resource_path
-      return resource.routes.destroy_path if resource.singular?
+      return routes.destroy_path if resource.singular?
 
-      resource.routes.destroy_path(data['slug'])
+      routes.destroy_path(data['slug'])
     end
 
     def render_button

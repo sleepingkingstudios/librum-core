@@ -173,14 +173,18 @@ do
             </div>
           </div>
 
-          <mock name="table" data="[]" resource='#&lt;Resource name="rockets"&gt;'></mock>
+          <mock name="table" data="[]" resource='#&lt;Resource name="rockets"&gt;' routes="[routes]"></mock>
         HTML
       end
 
       before(:example) do
-        allow(resource)
-          .to receive(:inspect)
-          .and_return('#<Resource name="rockets">')
+        routes = resource.routes
+
+        allow(resource).to receive_messages(
+          inspect: '#<Resource name="rockets">',
+          routes:  routes
+        )
+        allow(routes).to receive(:inspect).and_return('[routes]')
       end
 
       it { expect(rendered).to match_snapshot(snapshot) }
@@ -204,12 +208,45 @@ do
               </div>
             </div>
 
-            <mock name="table" data='[{"name"=&gt;"Imp IV", "payload"=&gt;"10 tonnes"}, {"name"=&gt;"Imp VI", "payload"=&gt;"10 tonnes"}, {"name"=&gt;"Hellhound II", "payload"=&gt;"100 tonnes"}]' resource='#&lt;Resource name="rockets"&gt;'></mock>
+            <mock name="table" data='[{"name"=&gt;"Imp IV", "payload"=&gt;"10 tonnes"}, {"name"=&gt;"Imp VI", "payload"=&gt;"10 tonnes"}, {"name"=&gt;"Hellhound II", "payload"=&gt;"100 tonnes"}]' resource='#&lt;Resource name="rockets"&gt;' routes="[routes]"></mock>
           HTML
         end
 
         it { expect(rendered).to match_snapshot(snapshot) }
       end
+    end
+  end
+
+  describe '#resource' do
+    include_examples 'should define reader', :resource, -> { resource }
+  end
+
+  describe '#routes' do
+    let(:params) { {} }
+    let(:request) do
+      instance_double(ActionDispatch::Request, path_parameters: params)
+    end
+    let(:controller) do
+      instance_double(ActionController::Base, request: request)
+    end
+
+    before(:example) do
+      allow(page).to receive(:controller).and_return(controller) # rubocop:disable RSpec/SubjectStub
+    end
+
+    include_examples 'should define reader', :routes
+
+    it 'should return the resource routes', :aggregate_failures do
+      expect(page.routes).to be_a resource.routes.class
+
+      expect(page.routes.base_path).to be == resource.routes.base_path
+      expect(page.routes.wildcards).to be == resource.routes.wildcards
+    end
+
+    context 'when the request has path parameters' do
+      let(:params) { { 'id' => 'custom-slug' } }
+
+      it { expect(page.routes.wildcards).to be == params }
     end
   end
 

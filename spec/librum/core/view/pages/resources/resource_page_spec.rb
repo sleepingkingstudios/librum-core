@@ -83,6 +83,39 @@ do
     end
   end
 
+  describe '#resource' do
+    include_examples 'should define reader', :resource, -> { resource }
+  end
+
+  describe '#routes' do
+    let(:params) { {} }
+    let(:request) do
+      instance_double(ActionDispatch::Request, path_parameters: params)
+    end
+    let(:controller) do
+      instance_double(ActionController::Base, request: request)
+    end
+
+    before(:example) do
+      allow(page).to receive(:controller).and_return(controller) # rubocop:disable RSpec/SubjectStub
+    end
+
+    include_examples 'should define reader', :routes
+
+    it 'should return the resource routes', :aggregate_failures do
+      expect(page.routes).to be_a resource.routes.class
+
+      expect(page.routes.base_path).to be == resource.routes.base_path
+      expect(page.routes.wildcards).to be == resource.routes.wildcards
+    end
+
+    context 'when the request has path parameters' do
+      let(:params) { { 'id' => 'custom-slug' } }
+
+      it { expect(page.routes.wildcards).to be == params }
+    end
+  end
+
   describe '#resource_data' do
     include_examples 'should define reader', :resource_data, nil
 
