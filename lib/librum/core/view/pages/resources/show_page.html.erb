@@ -14,7 +14,7 @@
   <%=
     render(
       Librum::Core::View::Components::Link.new(
-        resource.routes.index_path,
+        routes.index_path,
         label: "Back to #{resource.resource_name.titleize}",
         icon:  'left-long'
       )

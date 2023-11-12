@@ -221,6 +221,20 @@ do
     include_examples 'should define reader', :resource, -> { resource }
   end
 
+  describe '#resource_data' do
+    include_examples 'should define reader', :resource_data, []
+
+    wrap_context 'with data' do
+      it { expect(page.resource_data).to be == value['rockets'] }
+    end
+  end
+
+  describe '#resource_name' do
+    include_examples 'should define reader',
+      :resource_name,
+      -> { resource.resource_name }
+  end
+
   describe '#routes' do
     let(:params) { {} }
     let(:request) do
@@ -248,20 +262,6 @@ do
 
       it { expect(page.routes.wildcards).to be == params }
     end
-  end
-
-  describe '#resource_data' do
-    include_examples 'should define reader', :resource_data, []
-
-    wrap_context 'with data' do
-      it { expect(page.resource_data).to be == value['rockets'] }
-    end
-  end
-
-  describe '#resource_name' do
-    include_examples 'should define reader',
-      :resource_name,
-      -> { resource.resource_name }
   end
 
   describe '#singular_resource_name' do

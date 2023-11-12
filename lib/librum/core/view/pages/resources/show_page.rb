@@ -32,14 +32,15 @@ module Librum::Core::View::Pages::Resources
       Librum::Core::View::Components::Resources::DestroyForm.new(
         data:     resource_data,
         light:    true,
-        resource: resource
+        resource: resource,
+        routes:   routes
       )
     end
 
     def edit_resource_path
-      return resource.routes.edit_path if resource.singular?
+      return routes.edit_path if resource.singular?
 
-      resource.routes.edit_path(resource_data['slug'])
+      routes.edit_path(resource_data['slug'])
     end
 
     def render_data_block
