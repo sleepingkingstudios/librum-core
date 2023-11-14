@@ -9,13 +9,15 @@ module Librum::Core::View::Components::Resources
     # @param data [#[]] the record to create or update.
     # @param errors [Stannum::Errors] the errors for the form.
     # @param resource [Cuprum::Rails::Resource] the current controller resource.
-    def initialize(action:, data:, resource:, errors: nil, **)
+    # @param routes [Cuprum::Rails::Routes] the routes for the resource.
+    def initialize(action:, data:, resource:, errors: nil, routes: nil, **) # rubocop:disable Metrics/ParameterLists
       super()
 
       @action   = action
       @data     = data || default_data
       @errors   = errors
       @resource = resource
+      @routes   = routes || resource.routes
     end
 
     def_delegators :@resource,
@@ -32,6 +34,9 @@ module Librum::Core::View::Components::Resources
 
     # @return [Cuprum::Rails::Resource] the current controller resource.
     attr_reader :resource
+
+    # @return [Cuprum::Rails::Routes] the routes for the resource.
+    attr_reader :routes
 
     # Builds and renders the form tag.
     #
@@ -105,15 +110,13 @@ module Librum::Core::View::Components::Resources
     end
 
     def cancel_url
-      if action == 'edit'
-        return resource.routes.show_path(resource_data['slug'])
-      end
+      return routes.show_path(resource_data['slug']) if action == 'edit'
 
-      resource.routes.index_path
+      routes.index_path
     end
 
     def create_url
-      resource.routes.create_path
+      routes.create_path
     end
 
     def form_method
@@ -131,7 +134,7 @@ module Librum::Core::View::Components::Resources
     end
 
     def update_url
-      resource.routes.update_path(resource_data['slug'])
+      routes.update_path(resource_data['slug'])
     end
   end
 end

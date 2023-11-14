@@ -258,6 +258,26 @@ RSpec.describe Librum::Core::Actions::Middleware::Associations::Parent do
         end
       end
 
+      context 'when the next command returns a failing result' do # rubocop:disable RSpec/MultipleMemoizedHelpers
+        include_context 'with a valid user id'
+
+        let(:next_error) { Cuprum::Error.new(message: 'Something went wrong.') }
+        let(:next_value) { { 'ok' => false } }
+        let(:next_result) do
+          Cuprum::Result.new(error: next_error, value: next_value)
+        end
+        let(:expected_value) { next_result.value.merge('user' => user) }
+
+        include_examples 'should call the next command'
+
+        it 'should return a passing result' do
+          expect(call_command)
+            .to be_a_failing_result
+            .with_error(next_error)
+            .and_value(expected_value)
+        end
+      end
+
       context 'when initialized with a singular resource' do
         let(:resource) do
           Cuprum::Rails::Resource.new(name: 'project', singular: true)
@@ -355,6 +375,26 @@ RSpec.describe Librum::Core::Actions::Middleware::Associations::Parent do
           value = call_command.value
 
           expect(cached_values(value['projects'])).to be == [user, user, user]
+        end
+      end
+
+      context 'when the next command returns a failing result' do # rubocop:disable RSpec/MultipleMemoizedHelpers
+        include_context 'with a valid user id'
+
+        let(:next_error) { Cuprum::Error.new(message: 'Something went wrong.') }
+        let(:next_value) { { 'ok' => false } }
+        let(:next_result) do
+          Cuprum::Result.new(error: next_error, value: next_value)
+        end
+        let(:expected_value) { next_result.value.merge('user' => user) }
+
+        include_examples 'should call the next command'
+
+        it 'should return a passing result' do
+          expect(call_command)
+            .to be_a_failing_result
+            .with_error(next_error)
+            .and_value(expected_value)
         end
       end
 

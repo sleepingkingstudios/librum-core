@@ -21,7 +21,8 @@ module Librum::Core::View::Pages::Resources
         action:   form_action,
         data:     data,
         errors:   form_errors,
-        resource: resource
+        resource: resource,
+        routes:   routes
       )
     end
 
