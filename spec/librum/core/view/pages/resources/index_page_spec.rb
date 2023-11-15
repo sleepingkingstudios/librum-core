@@ -107,6 +107,74 @@ do
       it { expect(rendered).to match_snapshot(snapshot) }
     end
 
+    describe 'with resource: { parent: value }' do
+      let(:space_programs_resource) do
+        Cuprum::Rails::Resource.new(name: 'space_programs')
+      end
+      let(:resource) do
+        Cuprum::Rails::Resource.new(
+          resource_name: 'rockets',
+          parent:        space_programs_resource
+        )
+      end
+      let(:params) { { 'space_program_id' => 'imp' } }
+      let(:request) do
+        instance_double(ActionDispatch::Request, path_parameters: params)
+      end
+      let(:controller) do
+        instance_double(ActionController::Base, request: request)
+      end
+      let(:snapshot) do
+        <<~HTML
+          <div class="level">
+            <div class="level-left">
+              <div class="level-item">
+                <h1 class="title">Rockets</h1>
+              </div>
+            </div>
+
+            <div class="level-right">
+              <div class="level-item">
+                <a class="button is-primary is-light" href="/space_programs/imp/rockets/new" target="_self">
+                  Create Rocket
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="box">
+            <p class="has-text-centered">
+              <span class="icon has-text-danger is-large">
+                <i class="fas fa-bug fa-2x"></i>
+              </span>
+            </p>
+
+            <h2 class="title has-text-centered has-text-danger">Missing Component Table</h2>
+
+            <p class="has-text-centered">Rendered in Librum::Core::View::Pages::Resources::IndexPage</p>
+          </div>
+
+          <p>
+            <a class="has-text-link" href="/space_programs/imp" target="_self">
+              <span class="icon-text">
+                <span class="icon">
+                  <i class="fas fa-left-long"></i>
+                </span>
+
+                <span>Back to Space Program</span>
+              </span>
+            </a>
+          </p>
+        HTML
+      end
+
+      before(:example) do
+        allow(page).to receive(:controller).and_return(controller) # rubocop:disable RSpec/SubjectStub
+      end
+
+      it { expect(rendered).to match_snapshot(snapshot) }
+    end
+
     describe 'with resource: { resource_name: a multi-word string }' do
       let(:resource) do
         Cuprum::Rails::Resource.new(resource_name: 'rocket_parts')
