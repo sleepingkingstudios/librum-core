@@ -76,14 +76,18 @@ do
         <<~HTML
           <h1 class="title">Create Rocket</h1>
 
-          <mock name="form" action="new" data="nil" errors="nil" resource='#&lt;Resource name="rockets"&gt;'></mock>
+          <mock name="form" action="new" data="nil" errors="nil" resource='#&lt;Resource name="rockets"&gt;' routes="[routes]"></mock>
         HTML
       end
 
       before(:example) do
-        allow(resource)
-          .to receive(:inspect)
-          .and_return('#<Resource name="rockets">')
+        routes = resource.routes
+
+        allow(resource).to receive_messages(
+          inspect: '#<Resource name="rockets">',
+          routes:  routes
+        )
+        allow(routes).to receive(:inspect).and_return('[routes]')
       end
 
       it { expect(rendered).to match_snapshot(snapshot) }
@@ -93,7 +97,7 @@ do
           <<~HTML
             <h1 class="title">Create Rocket</h1>
 
-            <mock name="form" action="new" data='{"rocket"=&gt;{"name"=&gt;"Imp IV"}}' errors="nil" resource='#&lt;Resource name="rockets"&gt;'></mock>
+            <mock name="form" action="new" data='{"rocket"=&gt;{"name"=&gt;"Imp IV"}}' errors="nil" resource='#&lt;Resource name="rockets"&gt;' routes="[routes]"></mock>
           HTML
         end
 
@@ -105,7 +109,7 @@ do
           <<~HTML
             <h1 class="title">Create Rocket</h1>
 
-            <mock name="form" action="new" data="nil" errors="#&lt;Errors&gt;" resource='#&lt;Resource name="rockets"&gt;'></mock>
+            <mock name="form" action="new" data="nil" errors="#&lt;Errors&gt;" resource='#&lt;Resource name="rockets"&gt;' routes="[routes]"></mock>
           HTML
         end
 

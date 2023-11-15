@@ -132,6 +132,25 @@ do
 
         it { expect(rendered).to match_snapshot(snapshot) }
       end
+
+      context 'when initialized with routes: value' do
+        let(:routes) do
+          Cuprum::Rails::Routing::PluralRoutes
+            .new(base_path: '/path/to/rockets')
+        end
+        let(:constructor_options) { super().merge(routes: routes) }
+        let(:snapshot) do
+          <<~HTML
+            <form action="/path/to/rockets/imp-iv" accept-charset="UTF-8" method="post">
+              <input type="hidden" name="_method" value="patch" autocomplete="off">
+
+              <input type="hidden" name="authenticity_token" value="[token]" autocomplete="off">
+            </form>
+          HTML
+        end
+
+        it { expect(rendered).to match_snapshot(snapshot) }
+      end
     end
 
     context 'when initialized with action: "new"' do
@@ -174,6 +193,23 @@ do
             resource_name: 'rockets'
           )
         end
+        let(:snapshot) do
+          <<~HTML
+            <form action="/path/to/rockets" accept-charset="UTF-8" method="post">
+              <input type="hidden" name="authenticity_token" value="[token]" autocomplete="off">
+            </form>
+          HTML
+        end
+
+        it { expect(rendered).to match_snapshot(snapshot) }
+      end
+
+      context 'when initialized with routes: value' do
+        let(:routes) do
+          Cuprum::Rails::Routing::PluralRoutes
+            .new(base_path: '/path/to/rockets')
+        end
+        let(:constructor_options) { super().merge(routes: routes) }
         let(:snapshot) do
           <<~HTML
             <form action="/path/to/rockets" accept-charset="UTF-8" method="post">
@@ -254,6 +290,35 @@ do
 
         it { expect(rendered).to match_snapshot(snapshot) }
       end
+
+      context 'when initialized with routes: value' do
+        let(:routes) do
+          Cuprum::Rails::Routing::PluralRoutes
+            .new(base_path: '/path/to/rockets')
+        end
+        let(:constructor_options) { super().merge(routes: routes) }
+        let(:snapshot) do
+          <<~HTML
+            <div class="field mt-5">
+              <div class="control">
+                <div class="columns">
+                  <div class="column is-half-tablet is-one-quarter-desktop">
+                    <button type="submit" class="button is-primary is-fullwidth">Update Rocket</button>
+                  </div>
+
+                  <div class="column is-half-tablet is-one-quarter-desktop">
+                    <a class="button is-fullwidth has-text-black" href="/path/to/rockets/imp-iv" target="_self">
+                      Cancel
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          HTML
+        end
+
+        it { expect(rendered).to match_snapshot(snapshot) }
+      end
     end
 
     context 'when initialized with action: "new"' do
@@ -287,6 +352,35 @@ do
             resource_name: 'rockets'
           )
         end
+        let(:snapshot) do
+          <<~HTML
+            <div class="field mt-5">
+              <div class="control">
+                <div class="columns">
+                  <div class="column is-half-tablet is-one-quarter-desktop">
+                    <button type="submit" class="button is-primary is-fullwidth">Create Rocket</button>
+                  </div>
+
+                  <div class="column is-half-tablet is-one-quarter-desktop">
+                    <a class="button is-fullwidth has-text-black" href="/path/to/rockets" target="_self">
+                      Cancel
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          HTML
+        end
+
+        it { expect(rendered).to match_snapshot(snapshot) }
+      end
+
+      context 'when initialized with routes: value' do
+        let(:routes) do
+          Cuprum::Rails::Routing::PluralRoutes
+            .new(base_path: '/path/to/rockets')
+        end
+        let(:constructor_options) { super().merge(routes: routes) }
         let(:snapshot) do
           <<~HTML
             <div class="field mt-5">
@@ -744,6 +838,25 @@ do
 
   describe '#resource' do
     include_examples 'should define reader', :resource, -> { resource }
+  end
+
+  describe '#routes' do
+    include_examples 'should define reader', :routes
+
+    it 'should return the resource routes', :aggregate_failures do
+      expect(form.routes).to be_a(resource.routes.class)
+
+      expect(form.routes.base_path).to be == resource.routes.base_path
+    end
+
+    context 'when initialized with routes: value' do
+      let(:routes) do
+        Cuprum::Rails::Routing::PluralRoutes.new(base_path: '/path/to/rockets')
+      end
+      let(:constructor_options) { super().merge(routes: routes) }
+
+      it { expect(form.routes).to be == routes }
+    end
   end
 
   describe '#singular_resource_name' do

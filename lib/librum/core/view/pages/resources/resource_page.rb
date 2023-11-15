@@ -24,6 +24,12 @@ module Librum::Core::View::Pages::Resources
       data.fetch(singular_resource_name)
     end
 
+    # @return [Cuprum::Rails::Routes] the resource routes.
+    def routes
+      @routes ||=
+        resource.routes.with_wildcards(request.path_parameters.stringify_keys)
+    end
+
     private
 
     def build_missing_component(component_name)

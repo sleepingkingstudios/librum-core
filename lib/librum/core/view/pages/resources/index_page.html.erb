@@ -8,3 +8,17 @@
 %>
 
 <%= render_data_table %>
+
+<% if resource.parent %>
+<p>
+  <%=
+    render(
+      Librum::Core::View::Components::Link.new(
+        routes.parent_path,
+        label: "Back to #{resource.parent.singular_name.titleize}",
+        icon:  'left-long'
+      )
+    )
+  %>
+</p>
+<% end %>

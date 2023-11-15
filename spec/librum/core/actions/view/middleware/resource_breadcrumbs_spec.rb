@@ -194,10 +194,12 @@ RSpec.describe Librum::Core::Actions::View::Middleware::ResourceBreadcrumbs do
     let(:next_command)  { instance_double(Cuprum::Command, call: next_result) }
     let(:action_name)   { :index }
     let(:member_action) { false }
+    let(:path_params)   { {} }
     let(:request) do
       Cuprum::Rails::Request.new(
         action_name:   action_name,
-        member_action: member_action
+        member_action: member_action,
+        path_params:   path_params
       )
     end
     let(:expected_breadcrumbs) { [] }
@@ -627,6 +629,44 @@ RSpec.describe Librum::Core::Actions::View::Middleware::ResourceBreadcrumbs do
             include_examples 'should merge the metadata'
           end
         end
+      end
+
+      context 'when initialized with a base_url with path wildcards' do
+        let(:action_name)   { :index }
+        let(:member_action) { false }
+        let(:path_params)   { { 'rocket_id' => 'imp-iv' } }
+        let(:breadcrumbs) do
+          [
+            {
+              label: 'Home',
+              url:   '/'
+            },
+            {
+              label: 'Rockets',
+              url:   '/rockets'
+            },
+            {
+              label: 'Rocket',
+              url:   '/rockets/:rocket_id'
+            },
+            {
+              label: 'Launches',
+              url:   '/rockets/:rocket_id/launches'
+            }
+          ]
+        end
+        let(:expected_breadcrumbs) do
+          *rest, last = breadcrumbs.map do |hsh|
+            {
+              label: hsh[:label],
+              url:   hsh[:url].gsub(':rocket_id', 'imp-iv')
+            }
+          end
+
+          [*rest, last.merge(active: true)]
+        end
+
+        include_examples 'should merge the metadata'
       end
     end
 

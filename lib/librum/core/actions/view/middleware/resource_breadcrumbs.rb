@@ -52,6 +52,16 @@ module Librum::Core::Actions::View::Middleware
       label.gsub(':name', resource_data['name'])
     end
 
+    def apply_params_wildcards(url)
+      (request.path_params || {}).reduce(url) do |str, (key, value)|
+        wildcard = ":#{key}"
+
+        next str unless str.include?(wildcard)
+
+        str.gsub(wildcard, value.to_s)
+      end
+    end
+
     def apply_slug_wildcard(url)
       return url unless url.include?(':slug')
 
@@ -62,13 +72,12 @@ module Librum::Core::Actions::View::Middleware
 
     def apply_wildcards(breadcrumbs)
       breadcrumbs.map do |breadcrumb|
-        label =
-          breadcrumb[:label]
-          .then { |str| apply_name_wildcard(str) }
+        label = breadcrumb[:label].then { |str| apply_name_wildcard(str) }
         url   =
           breadcrumb[:url]
           .then { |str| apply_base_url_wildcard(str) }
           .then { |str| apply_slug_wildcard(str) }
+          .then { |str| apply_params_wildcards(str) }
 
         breadcrumb.merge(label: label, url: url)
       end

@@ -55,6 +55,7 @@ do
         columns
         data
         resource
+        routes
       ]
     end
 
@@ -198,6 +199,29 @@ do
       let(:expected) { 'There are no launch sites matching the criteria.' }
 
       it { expect(table.empty_message).to be == expected }
+    end
+  end
+
+  describe '#resource' do
+    include_examples 'should define reader', :resource, -> { resource }
+  end
+
+  describe '#routes' do
+    include_examples 'should define reader', :routes
+
+    it 'should return the resource routes', :aggregate_failures do
+      expect(table.routes).to be_a(resource.routes.class)
+
+      expect(table.routes.base_path).to be == resource.routes.base_path
+    end
+
+    context 'when initialized with routes: value' do
+      let(:routes) do
+        Cuprum::Rails::Routing::PluralRoutes.new(base_path: '/path/to/rockets')
+      end
+      let(:constructor_options) { super().merge(routes: routes) }
+
+      it { expect(table.routes).to be == routes }
     end
   end
 end

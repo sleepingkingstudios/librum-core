@@ -356,6 +356,36 @@ RSpec.describe Librum::Core::View::Components::DataField, type: :component do
       end
 
       it { expect(rendered).to match_snapshot(snapshot) }
+
+      describe 'with options: { routes }' do
+        let(:routes) do
+          Cuprum::Rails::Routing::PluralRoutes.new(base_path: '/path/to/users')
+        end
+        let(:options) { super().merge(routes: routes) }
+        let(:snapshot) do
+          <<~HTML
+            <div class="buttons" style="margin-top: -.125rem; margin-bottom: -.625rem;">
+              <a class="is-small button is-link is-light" href="/path/to/users/alan-bradley" target="_self">
+                Show
+              </a>
+
+              <a class="is-small button is-warning is-light" href="/path/to/users/alan-bradley/edit" target="_self">
+                Update
+              </a>
+
+              <form action="/path/to/users/alan-bradley" accept-charset="UTF-8" method="post">
+                <input type="hidden" name="_method" value="delete" autocomplete="off">
+
+                <input type="hidden" name="authenticity_token" value="[token]" autocomplete="off">
+
+                <button type="submit" class="button is-danger is-light is-small">Destroy</button>
+              </form>
+            </div>
+          HTML
+        end
+
+        it { expect(rendered).to match_snapshot(snapshot) }
+      end
     end
 
     describe 'with field: { type: :boolean }' do
