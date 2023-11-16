@@ -8,17 +8,15 @@ module Librum::Core::RSpec::Contracts
     module ShouldRouteToApiResourceContract
       extend RSpec::SleepingKingStudios::Contract
 
-      contract do |resource_name, controller: nil, only: nil, singular: false|
+      contract do |resource_name, singular: false, **rest|
         if singular
           include_contract 'should route to singular api resource',
             resource_name,
-            controller: controller,
-            only:       only
+            **rest
         else
           include_contract 'should route to plural api resource',
             resource_name,
-            controller: controller,
-            only:       only
+            **rest
         end
       end
     end
@@ -27,17 +25,15 @@ module Librum::Core::RSpec::Contracts
     module ShouldRouteToViewResourceContract
       extend RSpec::SleepingKingStudios::Contract
 
-      contract do |resource_name, controller: nil, only: nil, singular: false|
+      contract do |resource_name, singular: false, **rest|
         if singular
           include_contract 'should route to singular view resource',
             resource_name,
-            controller: controller,
-            only:       only
+            **rest
         else
           include_contract 'should route to plural view resource',
             resource_name,
-            controller: controller,
-            only:       only
+            **rest
         end
       end
     end
@@ -46,7 +42,7 @@ module Librum::Core::RSpec::Contracts
     module ShouldRouteToPluralApiResourceContract
       extend RSpec::SleepingKingStudios::Contract
 
-      contract do |resource_name, controller: nil, only: nil|
+      contract do |resource_name, controller: nil, only: nil, wildcards: {}|
         root_route      = resource_name
         controller_name =
           resource_name
@@ -74,7 +70,8 @@ module Librum::Core::RSpec::Contracts
               expect(get: "/#{root_route}.json").to route_to(
                 controller: configured_controller,
                 action:     'index',
-                format:     'json'
+                format:     'json',
+                **wildcards
               )
             end
           else
@@ -92,7 +89,8 @@ module Librum::Core::RSpec::Contracts
               expect(post: "/#{root_route}.json").to route_to(
                 controller: configured_controller,
                 action:     'create',
-                format:     'json'
+                format:     'json',
+                **wildcards
               )
             end
           else
@@ -115,7 +113,8 @@ module Librum::Core::RSpec::Contracts
                   controller: configured_controller,
                   action:     'show',
                   id:         configured_resource_id,
-                  format:     'json'
+                  format:     'json',
+                  **wildcards
                 )
             end
           else
@@ -139,7 +138,8 @@ module Librum::Core::RSpec::Contracts
                   controller: configured_controller,
                   action:     'update',
                   id:         configured_resource_id,
-                  format:     'json'
+                  format:     'json',
+                  **wildcards
                 )
             end
           else
@@ -163,7 +163,8 @@ module Librum::Core::RSpec::Contracts
                   controller: configured_controller,
                   action:     'destroy',
                   id:         configured_resource_id,
-                  format:     'json'
+                  format:     'json',
+                  **wildcards
                 )
             end
           else
@@ -180,7 +181,7 @@ module Librum::Core::RSpec::Contracts
     module ShouldRouteToPluralViewResourceContract
       extend RSpec::SleepingKingStudios::Contract
 
-      contract do |resource_name, controller: nil, only: nil|
+      contract do |resource_name, controller: nil, only: nil, wildcards: {}|
         root_route      = resource_name
         controller_name =
           resource_name
@@ -210,7 +211,8 @@ module Librum::Core::RSpec::Contracts
               expect(get: "/#{root_route}.html").to route_to(
                 controller: configured_controller,
                 action:     'index',
-                format:     'html'
+                format:     'html',
+                **wildcards
               )
             end
           end
@@ -224,7 +226,8 @@ module Librum::Core::RSpec::Contracts
               expect(post: "/#{root_route}.html").to route_to(
                 controller: configured_controller,
                 action:     'create',
-                format:     'html'
+                format:     'html',
+                **wildcards
               )
             end
           else
@@ -242,7 +245,8 @@ module Librum::Core::RSpec::Contracts
               expect(get: "/#{root_route}/new.html").to route_to(
                 controller: configured_controller,
                 action:     'new',
-                format:     'html'
+                format:     'html',
+                **wildcards
               )
             end
           end
@@ -261,7 +265,8 @@ module Librum::Core::RSpec::Contracts
                   controller: configured_controller,
                   action:     'show',
                   id:         configured_resource_id,
-                  format:     'html'
+                  format:     'html',
+                  **wildcards
                 )
             end
           end
@@ -280,7 +285,8 @@ module Librum::Core::RSpec::Contracts
                   controller: configured_controller,
                   action:     'update',
                   id:         configured_resource_id,
-                  format:     'html'
+                  format:     'html',
+                  **wildcards
                 )
             end
           else
@@ -304,7 +310,8 @@ module Librum::Core::RSpec::Contracts
                   controller: configured_controller,
                   action:     'destroy',
                   id:         configured_resource_id,
-                  format:     'html'
+                  format:     'html',
+                  **wildcards
                 )
             end
           else
@@ -328,7 +335,8 @@ module Librum::Core::RSpec::Contracts
                   controller: configured_controller,
                   action:     'edit',
                   id:         configured_resource_id,
-                  format:     'html'
+                  format:     'html',
+                  **wildcards
                 )
             end
           end
@@ -340,7 +348,7 @@ module Librum::Core::RSpec::Contracts
     module ShouldRouteToSingularApiResourceContract
       extend RSpec::SleepingKingStudios::Contract
 
-      contract do |resource_name, controller: nil, only: nil|
+      contract do |resource_name, controller: nil, only: nil, wildcards: {}|
         root_route      = resource_name
         controller_name =
           resource_name
@@ -367,7 +375,8 @@ module Librum::Core::RSpec::Contracts
               expect(get: "/#{root_route}.json").to route_to(
                 controller: configured_controller,
                 action:     'show',
-                format:     'json'
+                format:     'json',
+                **wildcards
               )
             end
           else
@@ -385,7 +394,8 @@ module Librum::Core::RSpec::Contracts
               expect(post: "/#{root_route}.json").to route_to(
                 controller: configured_controller,
                 action:     'create',
-                format:     'json'
+                format:     'json',
+                **wildcards
               )
             end
           else
@@ -404,7 +414,8 @@ module Librum::Core::RSpec::Contracts
                 .to route_to(
                   controller: configured_controller,
                   action:     'update',
-                  format:     'json'
+                  format:     'json',
+                  **wildcards
                 )
             end
           else
@@ -424,7 +435,8 @@ module Librum::Core::RSpec::Contracts
                 .to route_to(
                   controller: configured_controller,
                   action:     'destroy',
-                  format:     'json'
+                  format:     'json',
+                  **wildcards
                 )
             end
           else
@@ -441,7 +453,7 @@ module Librum::Core::RSpec::Contracts
     module ShouldRouteToSingularViewResourceContract
       extend RSpec::SleepingKingStudios::Contract
 
-      contract do |resource_name, controller: nil, only: nil|
+      contract do |resource_name, controller: nil, only: nil, wildcards: {}|
         root_route      = resource_name
         controller_name =
           resource_name
@@ -470,7 +482,8 @@ module Librum::Core::RSpec::Contracts
               expect(get: "/#{root_route}.html").to route_to(
                 controller: configured_controller,
                 action:     'show',
-                format:     'html'
+                format:     'html',
+                **wildcards
               )
             end
           end
@@ -484,7 +497,8 @@ module Librum::Core::RSpec::Contracts
               expect(post: "/#{root_route}.html").to route_to(
                 controller: configured_controller,
                 action:     'create',
-                format:     'html'
+                format:     'html',
+                **wildcards
               )
             end
           else
@@ -503,7 +517,8 @@ module Librum::Core::RSpec::Contracts
                 .to route_to(
                   controller: configured_controller,
                   action:     'update',
-                  format:     'html'
+                  format:     'html',
+                  **wildcards
                 )
             end
           else
@@ -523,7 +538,8 @@ module Librum::Core::RSpec::Contracts
                 .to route_to(
                   controller: configured_controller,
                   action:     'destroy',
-                  format:     'html'
+                  format:     'html',
+                  **wildcards
                 )
             end
           else
@@ -542,7 +558,8 @@ module Librum::Core::RSpec::Contracts
               expect(get: "/#{root_route}/edit.html").to route_to(
                 controller: configured_controller,
                 action:     'edit',
-                format:     'html'
+                format:     'html',
+                **wildcards
               )
             end
           end
@@ -556,7 +573,8 @@ module Librum::Core::RSpec::Contracts
               expect(get: "/#{root_route}/new.html").to route_to(
                 controller: configured_controller,
                 action:     'new',
-                format:     'html'
+                format:     'html',
+                **wildcards
               )
             end
           end
