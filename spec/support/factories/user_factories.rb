@@ -4,8 +4,6 @@ require 'support/user'
 
 FactoryBot.define do
   factory :user, class: 'Spec::Support::User' do
-    id { SecureRandom.uuid }
-
     transient do
       sequence(:user_index) { |index| index }
     end

@@ -26,7 +26,7 @@ group :development, :test do
   gem 'byebug'
 
   # See https://github.com/thoughtbot/factory_bot/blob/master/GETTING_STARTED.md
-  gem 'factory_bot_rails', '~> 6.2'
+  gem 'factory_bot_rails', '~> 6.3'
 
   gem 'rspec', '~> 3.10'
   gem 'rspec-rails', '~> 5.0'
