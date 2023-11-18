@@ -50,12 +50,14 @@ module Librum::Core::RSpec::Contracts::Models
     module ShouldDefineDataProperty
       extend RSpec::SleepingKingStudios::Contract
 
-      contract do |property_name, predicate: false|
+      contract do |property_name, default: nil, predicate: false|
         describe "##{property_name}" do
+          let(:expected) do
+            attributes.fetch(:data, {}).fetch(property_name.to_s, default)
+          end
+
           it 'should define the reader' do
-            expect(subject)
-              .to define_reader(property_name)
-              .with_value(attributes[:data][property_name.to_s])
+            expect(subject).to define_reader(property_name).with_value(expected)
           end
         end
 
