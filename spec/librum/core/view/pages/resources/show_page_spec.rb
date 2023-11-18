@@ -60,6 +60,16 @@ do
       HTML
     end
 
+    before(:example) do
+      routes = resource.routes
+
+      allow(resource).to receive_messages(
+        inspect: '#<Resource name="rockets">',
+        routes:  routes
+      )
+      allow(routes).to receive(:inspect).and_return('[routes]')
+    end
+
     it { expect(rendered).to match_snapshot(snapshot) }
 
     describe 'with a plural resource with block_component: value' do
@@ -75,7 +85,7 @@ do
         <<~HTML
           <h1 class="title">Rocket</h1>
 
-          <mock name="block" data="nil" resource='#&lt;Resource name="rockets"&gt;'></mock>
+          <mock name="block" data="nil" resource='#&lt;Resource name="rockets"&gt;' routes="[routes]"></mock>
 
           <p>
             <a class="has-text-link" href="/rockets" target="_self">
@@ -128,7 +138,7 @@ do
               </div>
             </div>
 
-            <mock name="block" data='#&lt;Rocket name="Imp IV"&gt;' resource='#&lt;Resource name="rockets"&gt;'></mock>
+            <mock name="block" data='#&lt;Rocket name="Imp IV"&gt;' resource='#&lt;Resource name="rockets"&gt;' routes="[routes]"></mock>
 
             <p>
               <a class="has-text-link" href="/rockets" target="_self">
@@ -162,7 +172,7 @@ do
         <<~HTML
           <h1 class="title">Rocket</h1>
 
-          <mock name="block" data="nil" resource='#&lt;Resource name="rocket"&gt;'></mock>
+          <mock name="block" data="nil" resource='#&lt;Resource name="rocket"&gt;' routes="[routes]"></mock>
         HTML
       end
 
@@ -203,7 +213,7 @@ do
               </div>
             </div>
 
-            <mock name="block" data='#&lt;Rocket name="Imp IV"&gt;' resource='#&lt;Resource name="rocket"&gt;'></mock>
+            <mock name="block" data='#&lt;Rocket name="Imp IV"&gt;' resource='#&lt;Resource name="rocket"&gt;' routes="[routes]"></mock>
           HTML
         end
 
@@ -247,7 +257,7 @@ do
               </div>
             </div>
 
-            <mock name="block" data='#&lt;Rocket name="Imp IV"&gt;' resource='#&lt;Resource name="rockets"&gt;'></mock>
+            <mock name="block" data='#&lt;Rocket name="Imp IV"&gt;' resource='#&lt;Resource name="rockets"&gt;' routes="[routes]"></mock>
 
             <p>
               <a class="has-text-link" href="/rockets" target="_self">
@@ -307,7 +317,7 @@ do
               </div>
             </div>
 
-            <mock name="block" data='#&lt;Rocket name="Imp IV"&gt;' resource='#&lt;Resource name="rockets"&gt;'></mock>
+            <mock name="block" data='#&lt;Rocket name="Imp IV"&gt;' resource='#&lt;Resource name="rockets"&gt;' routes="[routes]"></mock>
 
             <p>
               <a class="has-text-link" href="/rockets" target="_self">

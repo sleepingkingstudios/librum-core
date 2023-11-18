@@ -14,7 +14,11 @@ module Librum::Core::View::Pages::Resources
     def build_data_block
       return build_missing_component('Block') if block_component.blank?
 
-      block_component.new(data: resource_data, resource: resource)
+      block_component.new(
+        data:     resource_data,
+        resource: resource,
+        routes:   routes
+      )
     end
 
     def buttons
