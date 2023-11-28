@@ -14,9 +14,7 @@ RSpec.describe Librum::Core::Actions::Show, type: :action do
 
   let(:repository) { Cuprum::Rails::Repository.new }
   let(:resource) do
-    Cuprum::Rails::Resource.new(
-      resource_class: Spec::Support::User
-    )
+    Cuprum::Rails::Resource.new(entity_class: Spec::Support::User)
   end
   let(:user) { FactoryBot.build(:user) }
 

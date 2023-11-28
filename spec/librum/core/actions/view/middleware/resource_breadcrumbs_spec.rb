@@ -19,7 +19,7 @@ RSpec.describe Librum::Core::Actions::View::Middleware::ResourceBreadcrumbs do
       }
     ]
   end
-  let(:resource) { Cuprum::Rails::Resource.new(resource_name: 'rockets') }
+  let(:resource) { Cuprum::Rails::Resource.new(name: 'rockets') }
   let(:options)  { {} }
 
   describe '.new' do
@@ -112,8 +112,8 @@ RSpec.describe Librum::Core::Actions::View::Middleware::ResourceBreadcrumbs do
       end
       let(:resource) do
         Cuprum::Rails::Resource.new(
-          resource_name: 'rocket',
-          singular:      true
+          name:     'rocket',
+          singular: true
         )
       end
       let(:expected) do
@@ -685,8 +685,8 @@ RSpec.describe Librum::Core::Actions::View::Middleware::ResourceBreadcrumbs do
       end
       let(:resource) do
         Cuprum::Rails::Resource.new(
-          resource_name: 'rocket',
-          singular:      true
+          name:     'rocket',
+          singular: true
         )
       end
 
@@ -854,22 +854,5 @@ RSpec.describe Librum::Core::Actions::View::Middleware::ResourceBreadcrumbs do
 
   describe '#resource' do
     include_examples 'should define reader', :resource, -> { resource }
-  end
-
-  describe '#singular_resource_name' do
-    include_examples 'should define reader',
-      :singular_resource_name,
-      -> { resource.singular_resource_name }
-
-    context 'when initialized with a resource with a singular name' do
-      let(:resource) do
-        Cuprum::Rails::Resource.new(
-          resource_name:          'rockets',
-          singular_resource_name: 'rocket_ship'
-        )
-      end
-
-      it { expect(middleware.singular_resource_name).to be == 'rocket_ship' }
-    end
   end
 end

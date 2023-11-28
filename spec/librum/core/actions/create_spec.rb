@@ -15,12 +15,12 @@ RSpec.describe Librum::Core::Actions::Create, type: :action do
   let(:repository) { Cuprum::Rails::Repository.new }
   let(:resource) do
     Cuprum::Rails::Resource.new(
+      entity_class:         Spec::Support::User,
       permitted_attributes: %i[
         name
         slug
         password
-      ],
-      resource_class:       Spec::Support::User
+      ]
     )
   end
   let(:invalid_attributes) do

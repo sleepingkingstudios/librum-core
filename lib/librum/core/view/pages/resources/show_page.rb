@@ -54,7 +54,7 @@ module Librum::Core::View::Pages::Resources
     def update_button
       {
         color: 'warning',
-        label: "Update #{singular_resource_name.titleize}",
+        label: "Update #{resource.singular_name.titleize}",
         light: true,
         url:   edit_resource_path
       }

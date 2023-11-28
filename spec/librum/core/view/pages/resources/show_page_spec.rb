@@ -11,12 +11,12 @@ do
 
   shared_context 'with data' do
     let(:data)   { Spec::Support::Rocket.new(name: 'Imp IV', slug: 'imp-iv') }
-    let(:value)  { { resource.singular_resource_name => data } }
+    let(:value)  { { resource.singular_name => data } }
     let(:result) { Cuprum::Result.new(value: value) }
   end
 
   let(:result)   { Cuprum::Result.new }
-  let(:resource) { Cuprum::Rails::Resource.new(resource_name: 'rockets') }
+  let(:resource) { Cuprum::Rails::Resource.new(name: 'rockets') }
 
   describe '.new' do
     it 'should define the constructor' do
@@ -78,7 +78,7 @@ do
       let(:resource) do
         Librum::Core::Resources::ViewResource.new(
           block_component: Spec::BlockComponent,
-          resource_name:   'rockets'
+          name:            'rockets'
         )
       end
       let(:snapshot) do
@@ -164,7 +164,7 @@ do
       let(:resource) do
         Librum::Core::Resources::ViewResource.new(
           block_component: Spec::BlockComponent,
-          resource_name:   'rocket',
+          name:            'rocket',
           singular:        true
         )
       end
@@ -228,7 +228,7 @@ do
         Librum::Core::Resources::ViewResource.new(
           actions:         %w[edit index show launch recover update],
           block_component: Spec::BlockComponent,
-          resource_name:   'rockets'
+          name:            'rockets'
         )
       end
 
@@ -284,7 +284,7 @@ do
         Librum::Core::Resources::ViewResource.new(
           actions:         %w[destroy index show launch recover],
           block_component: Spec::BlockComponent,
-          resource_name:   'rockets'
+          name:            'rockets'
         )
       end
 
@@ -350,12 +350,6 @@ do
     end
   end
 
-  describe '#resource_name' do
-    include_examples 'should define reader',
-      :resource_name,
-      -> { resource.resource_name }
-  end
-
   describe '#routes' do
     let(:params) { {} }
     let(:request) do
@@ -383,11 +377,5 @@ do
 
       it { expect(page.routes.wildcards).to be == params }
     end
-  end
-
-  describe '#singular_resource_name' do
-    include_examples 'should define reader',
-      :singular_resource_name,
-      -> { resource.singular_resource_name }
   end
 end

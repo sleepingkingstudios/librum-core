@@ -331,7 +331,7 @@ RSpec.describe Librum::Core::View::Components::DataField, type: :component do
       let(:data) do
         Spec::Support::User.new(name: 'Alan Bradley', slug: 'alan-bradley')
       end
-      let(:resource) { Cuprum::Rails::Resource.new(resource_name: 'users') }
+      let(:resource) { Cuprum::Rails::Resource.new(name: 'users') }
       let(:options)  { super().merge(type: :actions, resource: resource) }
       let(:snapshot) do
         <<~HTML

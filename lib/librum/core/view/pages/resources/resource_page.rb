@@ -5,10 +5,7 @@ module Librum::Core::View::Pages::Resources
   class ResourcePage < Librum::Core::View::Components::Page
     extend Forwardable
 
-    def_delegators :@resource,
-      :actions,
-      :resource_name,
-      :singular_resource_name
+    def_delegators :@resource, :actions
 
     # @return [#[]] the data to display on the page.
     def data
@@ -21,7 +18,7 @@ module Librum::Core::View::Pages::Resources
     def resource_data
       return data unless data.is_a?(Hash)
 
-      data.fetch(singular_resource_name)
+      data.fetch(resource.singular_name)
     end
 
     # @return [Cuprum::Rails::Routes] the resource routes.
@@ -45,7 +42,7 @@ module Librum::Core::View::Pages::Resources
 
     def record_name
       (resource_data && resource_data['name']) ||
-        singular_resource_name.titleize
+        resource.singular_name.titleize
     end
   end
 end

@@ -40,7 +40,7 @@ do
     ]
   end
   let(:data)     { [] }
-  let(:resource) { Cuprum::Rails::Resource.new(resource_name: 'users') }
+  let(:resource) { Cuprum::Rails::Resource.new(name: 'users') }
   let(:constructor_options) do
     {
       columns:  columns,
@@ -157,9 +157,9 @@ do
       it { expect(rendered).to match_snapshot(snapshot) }
     end
 
-    context 'with resource_name: multi-word string' do
+    context 'with name: multi-word string' do
       let(:resource) do
-        Cuprum::Rails::Resource.new(resource_name: 'launch_sites')
+        Cuprum::Rails::Resource.new(name: 'launch_sites')
       end
       let(:snapshot) do
         <<~HTML
@@ -192,9 +192,9 @@ do
 
     include_examples 'should define reader', :empty_message, -> { expected }
 
-    context 'when initialized with resource_name: multi-word string' do
+    context 'when initialized with name: multi-word string' do
       let(:resource) do
-        Cuprum::Rails::Resource.new(resource_name: 'launch_sites')
+        Cuprum::Rails::Resource.new(name: 'launch_sites')
       end
       let(:expected) { 'There are no launch sites matching the criteria.' }
 

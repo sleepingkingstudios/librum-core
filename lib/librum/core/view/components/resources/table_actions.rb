@@ -18,10 +18,6 @@ module Librum::Core::View::Components::Resources
       @options  = options
     end
 
-    def_delegators :@resource,
-      :actions,
-      :singular_resource_name
-
     # @return [#[]] the record to render actions for.
     attr_reader :data
 

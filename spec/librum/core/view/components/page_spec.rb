@@ -54,7 +54,7 @@ RSpec.describe Librum::Core::View::Components::Page do
     include_examples 'should define reader', :resource, {}
 
     context 'when initialized with resource: value' do
-      let(:resource) { Cuprum::Rails::Resource.new(resource_name: 'rockets') }
+      let(:resource) { Cuprum::Rails::Resource.new(name: 'rockets') }
       let(:constructor_options) do
         super().merge(resource: resource)
       end

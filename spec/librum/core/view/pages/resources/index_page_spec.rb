@@ -30,7 +30,7 @@ do
 
   let(:value)    { {} }
   let(:result)   { Cuprum::Rails::Result.new(value: value) }
-  let(:resource) { Cuprum::Rails::Resource.new(resource_name: 'rockets') }
+  let(:resource) { Cuprum::Rails::Resource.new(name: 'rockets') }
   let(:rendered) { render_inline(page) }
 
   describe '.new' do
@@ -82,8 +82,8 @@ do
     describe 'with resource: { actions: without "create" }' do
       let(:resource) do
         Cuprum::Rails::Resource.new(
-          actions:       %w[index show launch recover],
-          resource_name: 'rockets'
+          actions: %w[index show launch recover],
+          name:    'rockets'
         )
       end
       let(:snapshot) do
@@ -113,8 +113,8 @@ do
       end
       let(:resource) do
         Cuprum::Rails::Resource.new(
-          resource_name: 'rockets',
-          parent:        space_programs_resource
+          name:   'rockets',
+          parent: space_programs_resource
         )
       end
       let(:params) { { 'space_program_id' => 'imp' } }
@@ -175,9 +175,9 @@ do
       it { expect(rendered).to match_snapshot(snapshot) }
     end
 
-    describe 'with resource: { resource_name: a multi-word string }' do
+    describe 'with resource: { name: a multi-word string }' do
       let(:resource) do
-        Cuprum::Rails::Resource.new(resource_name: 'rocket_parts')
+        Cuprum::Rails::Resource.new(name: 'rocket_parts')
       end
       let(:snapshot) do
         <<~HTML
@@ -219,7 +219,7 @@ do
 
       let(:resource) do
         Librum::Core::Resources::ViewResource.new(
-          resource_name:   'rockets',
+          name:            'rockets',
           table_component: Spec::TableComponent
         )
       end
@@ -297,12 +297,6 @@ do
     end
   end
 
-  describe '#resource_name' do
-    include_examples 'should define reader',
-      :resource_name,
-      -> { resource.resource_name }
-  end
-
   describe '#routes' do
     let(:params) { {} }
     let(:request) do
@@ -330,11 +324,5 @@ do
 
       it { expect(page.routes.wildcards).to be == params }
     end
-  end
-
-  describe '#singular_resource_name' do
-    include_examples 'should define reader',
-      :singular_resource_name,
-      -> { resource.singular_resource_name }
   end
 end
