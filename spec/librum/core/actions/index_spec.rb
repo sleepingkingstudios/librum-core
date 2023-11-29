@@ -15,8 +15,8 @@ RSpec.describe Librum::Core::Actions::Index, type: :action do
   let(:repository) { Cuprum::Rails::Repository.new }
   let(:resource) do
     Cuprum::Rails::Resource.new(
-      default_order:  :name,
-      resource_class: Spec::Support::User
+      default_order: :name,
+      entity_class:  Spec::Support::User
     )
   end
   let(:users) do

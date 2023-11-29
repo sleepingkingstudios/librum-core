@@ -52,7 +52,7 @@ RSpec.describe Librum::Core::Actions::FindBySlug do
     end
 
     klass.define_method(:resource) do
-      Cuprum::Rails::Resource.new(resource_class: Spec::Support::User)
+      Cuprum::Rails::Resource.new(entity_class: Spec::Support::User)
     end
   end
 

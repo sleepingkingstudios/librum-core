@@ -22,7 +22,7 @@ do
     { 'rocket' => Spec::Support::Rocket.new(name: 'Imp IV', slug: 'imp-iv') }
   end
   let(:action)   { 'new' }
-  let(:resource) { Cuprum::Rails::Resource.new(resource_name: 'rockets') }
+  let(:resource) { Cuprum::Rails::Resource.new(name: 'rockets') }
   let(:constructor_options) do
     {
       action:   action,
@@ -116,8 +116,8 @@ do
       context 'when initialized with a resource with base_url: value' do
         let(:resource) do
           Cuprum::Rails::Resource.new(
-            base_path:     '/path/to/rockets',
-            resource_name: 'rockets'
+            base_path: '/path/to/rockets',
+            name:      'rockets'
           )
         end
         let(:snapshot) do
@@ -189,8 +189,8 @@ do
       context 'when initialized with a resource with base_url: value' do
         let(:resource) do
           Cuprum::Rails::Resource.new(
-            base_path:     '/path/to/rockets',
-            resource_name: 'rockets'
+            base_path: '/path/to/rockets',
+            name:      'rockets'
           )
         end
         let(:snapshot) do
@@ -264,8 +264,8 @@ do
       context 'when initialized with a resource with base_url: value' do
         let(:resource) do
           Cuprum::Rails::Resource.new(
-            base_path:     '/path/to/rockets',
-            resource_name: 'rockets'
+            base_path: '/path/to/rockets',
+            name:      'rockets'
           )
         end
         let(:snapshot) do
@@ -348,8 +348,8 @@ do
       context 'when initialized with a resource with base_url: value' do
         let(:resource) do
           Cuprum::Rails::Resource.new(
-            base_path:     '/path/to/rockets',
-            resource_name: 'rockets'
+            base_path: '/path/to/rockets',
+            name:      'rockets'
           )
         end
         let(:snapshot) do
@@ -857,11 +857,5 @@ do
 
       it { expect(form.routes).to be == routes }
     end
-  end
-
-  describe '#singular_resource_name' do
-    include_examples 'should define reader',
-      :singular_resource_name,
-      -> { resource.singular_resource_name }
   end
 end

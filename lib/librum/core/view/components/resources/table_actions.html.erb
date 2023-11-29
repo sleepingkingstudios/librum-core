@@ -1,13 +1,13 @@
 <div class="buttons" style="margin-top: -.125rem; margin-bottom: -.625rem;">
-  <% if actions.include?('show') %>
+  <% if resource.actions.include?('show') %>
   <%= render_show_link %>
   <% end %>
 
-  <% if actions.include?('update') %>
+  <% if resource.actions.include?('update') %>
   <%= render_edit_link %>
   <% end %>
 
-  <% if actions.include?('destroy') %>
+  <% if resource.actions.include?('destroy') %>
   <%= render_destroy_form %>
   <% end %>
 </div>

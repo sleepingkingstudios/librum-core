@@ -11,7 +11,7 @@ do
 
   shared_context 'with data' do
     let(:data)   { { 'name' => 'Imp IV' } }
-    let(:value)  { { resource.singular_resource_name => data } }
+    let(:value)  { { resource.singular_name => data } }
     let(:result) { Cuprum::Result.new(value: value) }
   end
 
@@ -29,7 +29,7 @@ do
   end
 
   let(:result)   { Cuprum::Result.new }
-  let(:resource) { Cuprum::Rails::Resource.new(resource_name: 'rockets') }
+  let(:resource) { Cuprum::Rails::Resource.new(name: 'rockets') }
 
   describe '.new' do
     it 'should define the constructor' do
@@ -69,7 +69,7 @@ do
       let(:resource) do
         Librum::Core::Resources::ViewResource.new(
           form_component: Spec::FormComponent,
-          resource_name:  'rockets'
+          name:           'rockets'
         )
       end
       let(:snapshot) do
@@ -139,17 +139,5 @@ do
     wrap_context 'with data' do
       it { expect(page.resource_data).to be == value['rocket'] }
     end
-  end
-
-  describe '#resource_name' do
-    include_examples 'should define reader',
-      :resource_name,
-      -> { resource.resource_name }
-  end
-
-  describe '#singular_resource_name' do
-    include_examples 'should define reader',
-      :singular_resource_name,
-      -> { resource.singular_resource_name }
   end
 end

@@ -5,18 +5,20 @@ require 'rails_helper'
 RSpec.describe Librum::Core::Resources::ViewResource do
   subject(:resource) { described_class.new(**constructor_options) }
 
-  let(:constructor_options) { { resource_name: 'rockets' } }
+  let(:constructor_options) { { name: 'rockets' } }
 
   describe '.new' do
     let(:expected_keywords) do
       %i[
         block_component
         collection
+        entity_class
         form_component
-        resource_class
-        resource_name
+        name
+        qualified_name
         routes
         singular
+        singular_name
         table_component
       ]
     end

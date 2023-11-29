@@ -24,9 +24,6 @@ module Librum::Core::View::Components::Resources
       )
     end
 
-    def_delegators :@resource,
-      :resource_name
-
     # @return resource [Cuprum::Rails::Resource] the controller resource.
     attr_reader :resource
 
@@ -35,7 +32,7 @@ module Librum::Core::View::Components::Resources
 
     # @return [String] the message to display when the table is empty.
     def empty_message
-      "There are no #{resource_name.tr('_', ' ')} matching the criteria."
+      "There are no #{resource.name.tr('_', ' ')} matching the criteria."
     end
   end
 end

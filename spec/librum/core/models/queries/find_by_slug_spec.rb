@@ -33,7 +33,7 @@ RSpec.describe Librum::Core::Models::Queries::FindBySlug do
         Cuprum::Collections::Errors::NotFound.new(
           attribute_name:  'slug',
           attribute_value: slug,
-          collection_name: collection.collection_name
+          collection_name: collection.name
         )
       end
 
@@ -63,7 +63,7 @@ RSpec.describe Librum::Core::Models::Queries::FindBySlug do
         Cuprum::Collections::Errors::NotUnique.new(
           attribute_name:  'slug',
           attribute_value: 'example-user',
-          collection_name: collection.collection_name
+          collection_name: collection.name
         )
       end
 

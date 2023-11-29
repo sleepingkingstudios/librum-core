@@ -19,9 +19,6 @@ module Librum::Core::View::Components::Resources
       @options  = options
     end
 
-    def_delegators :@resource,
-      :singular_resource_name
-
     # @return [#[]] the record to destroy.
     attr_reader :data
 
@@ -39,7 +36,7 @@ module Librum::Core::View::Components::Resources
     def build_button
       Librum::Core::View::Components::Button.new(
         color: 'danger',
-        label: "Destroy #{singular_resource_name.titleize}",
+        label: "Destroy #{resource.singular_name.titleize}",
         type:  'submit',
         **options
       )

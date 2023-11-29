@@ -12,7 +12,7 @@ do
   end
 
   let(:data)     { Spec::Support::Rocket.new(name: 'Imp IV', slug: 'imp-iv') }
-  let(:resource) { Cuprum::Rails::Resource.new(resource_name: 'rockets') }
+  let(:resource) { Cuprum::Rails::Resource.new(name: 'rockets') }
   let(:options)  { {} }
 
   describe '.new' do
@@ -66,7 +66,7 @@ do
 
     describe 'with a singular resource' do
       let(:resource) do
-        Cuprum::Rails::Resource.new(resource_name: 'rocket', singular: true)
+        Cuprum::Rails::Resource.new(name: 'rocket', singular: true)
       end
       let(:snapshot) do
         <<~HTML
@@ -130,11 +130,5 @@ do
 
       it { expect(form.routes).to be == routes }
     end
-  end
-
-  describe '#singular_resource_name' do
-    include_examples 'should define reader',
-      :singular_resource_name,
-      -> { resource.singular_resource_name }
   end
 end

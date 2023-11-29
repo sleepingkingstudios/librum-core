@@ -7,7 +7,7 @@ module Librum::Core::Responders::Html
   class ResourceResponder < Librum::Core::Responders::Html::ViewResponder # rubocop:disable Metrics/ClassLength
     action :create do
       match :success do |result|
-        record = result.value[resource.singular_resource_name]
+        record = result.value[resource.singular_name]
         path   =
           resource.singular? ? routes.show_path : routes.show_path(record.slug)
 
@@ -38,7 +38,7 @@ module Librum::Core::Responders::Html
 
     action :update do
       match :success do |result|
-        record = result.value[resource.singular_resource_name]
+        record = result.value[resource.singular_name]
         path   =
           resource.singular? ? routes.show_path : routes.show_path(record.slug)
 
@@ -70,7 +70,7 @@ module Librum::Core::Responders::Html
     def destroy_flash
       message = Kernel.format(
         'Successfully destroyed %<resource>s',
-        resource: resource.singular_resource_name.titleize
+        resource: resource.singular_name.titleize
       )
 
       { danger: { icon: 'bomb', message: message } }
@@ -80,7 +80,7 @@ module Librum::Core::Responders::Html
       message = Kernel.format(
         'Unable to %<action>s %<resource>s',
         action:   action,
-        resource: resource.singular_resource_name.titleize
+        resource: resource.singular_name.titleize
       )
 
       { warning: { icon: 'exclamation-triangle', message: message } }
@@ -114,7 +114,7 @@ module Librum::Core::Responders::Html
 
     def not_found_flash(error:, matching: nil)
       resource_name =
-        matching&.singular_resource_name || error.collection_name.singularize
+        matching&.singular_name || error.collection_name.singularize
       message       = Kernel.format(
         '%<resource>s not found with key "%<value>s"',
         resource: resource_name.titleize,
@@ -153,7 +153,7 @@ module Librum::Core::Responders::Html
       message = Kernel.format(
         'Successfully %<action>s %<resource>s',
         action:   action,
-        resource: resource.singular_resource_name.titleize
+        resource: resource.singular_name.titleize
       )
 
       { success: { icon: 'circle-check', message: message } }

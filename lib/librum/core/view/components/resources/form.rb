@@ -20,9 +20,6 @@ module Librum::Core::View::Components::Resources
       @routes   = routes || resource.routes
     end
 
-    def_delegators :@resource,
-      :singular_resource_name
-
     # @return [String] the name of the rendered action.
     attr_reader :action
 
@@ -78,7 +75,7 @@ module Librum::Core::View::Components::Resources
     def resource_data
       return data unless data.is_a?(Hash)
 
-      data.fetch(singular_resource_name)
+      data.fetch(resource.singular_name)
     end
 
     private
@@ -130,7 +127,7 @@ module Librum::Core::View::Components::Resources
     def submit_label
       action_label = action == 'edit' ? 'Update' : 'Create'
 
-      "#{action_label} #{singular_resource_name.titleize}"
+      "#{action_label} #{resource.singular_name.titleize}"
     end
 
     def update_url

@@ -9,7 +9,7 @@ do
 
   shared_context 'with data: a Hash' do
     let(:rocket) { Struct.new(:name).new('Imp IV') }
-    let(:value)  { { resource.singular_resource_name => rocket } }
+    let(:value)  { { resource.singular_name => rocket } }
     let(:result) { Cuprum::Result.new(value: value) }
   end
 
@@ -19,7 +19,7 @@ do
   end
 
   let(:result)   { Cuprum::Result.new }
-  let(:resource) { Cuprum::Rails::Resource.new(resource_name: 'rockets') }
+  let(:resource) { Cuprum::Rails::Resource.new(name: 'rockets') }
 
   describe '.new' do
     it 'should define the constructor' do
@@ -137,12 +137,6 @@ do
     end
   end
 
-  describe '#resource_name' do
-    include_examples 'should define reader',
-      :resource_name,
-      -> { resource.resource_name }
-  end
-
   describe '#routes' do
     let(:params) { {} }
     let(:request) do
@@ -170,11 +164,5 @@ do
 
       it { expect(page.routes.wildcards).to be == params }
     end
-  end
-
-  describe '#singular_resource_name' do
-    include_examples 'should define reader',
-      :singular_resource_name,
-      -> { resource.singular_resource_name }
   end
 end

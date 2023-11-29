@@ -10,7 +10,7 @@ do
   subject(:component) { described_class.new(**constructor_options) }
 
   let(:data)     { Spec::Support::Rocket.new(name: 'Imp IV', slug: 'imp-iv') }
-  let(:resource) { Cuprum::Rails::Resource.new(resource_name: 'rockets') }
+  let(:resource) { Cuprum::Rails::Resource.new(name: 'rockets') }
   let(:constructor_options) do
     {
       data:     data,
@@ -26,10 +26,6 @@ do
         .and_keywords(:data, :resource, :routes)
         .and_any_keywords
     end
-  end
-
-  describe '#actions' do
-    include_examples 'should define reader', :actions, -> { resource.actions }
   end
 
   describe '#call' do
@@ -61,8 +57,8 @@ do
     describe 'with resource: { actions: without "destroy" }' do
       let(:resource) do
         Cuprum::Rails::Resource.new(
-          actions:       %w[edit index show launch recover update],
-          resource_name: 'rockets'
+          actions: %w[edit index show launch recover update],
+          name:    'rockets'
         )
       end
       let(:snapshot) do
@@ -85,8 +81,8 @@ do
     describe 'with resource: { actions: without "show" }' do
       let(:resource) do
         Cuprum::Rails::Resource.new(
-          actions:       %w[destroy edit index launch recover update],
-          resource_name: 'rockets'
+          actions: %w[destroy edit index launch recover update],
+          name:    'rockets'
         )
       end
       let(:snapshot) do
@@ -113,8 +109,8 @@ do
     describe 'with resource: { actions: without "update" }' do
       let(:resource) do
         Cuprum::Rails::Resource.new(
-          actions:       %w[destroy index launch recover show],
-          resource_name: 'rockets'
+          actions: %w[destroy index launch recover show],
+          name:    'rockets'
         )
       end
       let(:snapshot) do
@@ -194,11 +190,5 @@ do
 
       it { expect(component.routes).to be == routes }
     end
-  end
-
-  describe '#singular_resource_name' do
-    include_examples 'should define reader',
-      :singular_resource_name,
-      -> { resource.singular_resource_name }
   end
 end

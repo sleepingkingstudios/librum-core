@@ -25,9 +25,6 @@ module Librum::Core::Actions::View::Middleware
     def_delegators :@request,
       :action_name
 
-    def_delegators :@resource,
-      :singular_resource_name
-
     # @return [Hash{Symbol => Array<
     #   View::Layouts::Page::Breadcrumbs::BreadcrumbConfiguration>}] the
     #   additional breadcrumbs configured for actions.
@@ -46,7 +43,7 @@ module Librum::Core::Actions::View::Middleware
       return label unless label.include?(':name')
 
       unless resource_data && resource_data['name'].present?
-        return singular_resource_name.titleize
+        return resource.singular_name.titleize
       end
 
       label.gsub(':name', resource_data['name'])
@@ -176,7 +173,7 @@ module Librum::Core::Actions::View::Middleware
     def resource_data
       return nil unless result.value.is_a?(Hash)
 
-      result.value[singular_resource_name]
+      result.value[resource.singular_name]
     end
   end
 end

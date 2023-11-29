@@ -10,9 +10,6 @@ gem 'importmap-rails' # Use JavaScript with ESM import maps
 gem 'sprockets-rails' # The original asset pipeline for Rails
 
 ### Commands
-gem 'cuprum',
-  branch: 'main',
-  git:    'https://github.com/sleepingkingstudios/cuprum'
 gem 'cuprum-collections',
   branch: 'main',
   git:    'https://github.com/sleepingkingstudios/cuprum-collections'
