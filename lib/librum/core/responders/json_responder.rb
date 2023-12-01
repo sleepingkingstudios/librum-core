@@ -25,9 +25,7 @@ module Librum::Core::Responders
       render_failure(result.error, status: 400)
     end
 
-    match :failure,
-      error: Librum::Core::Engine.config.authentication_error.constantize \
-    do |result|
+    match :failure, error: Librum::Core::Errors::AuthenticationError do |result|
       render_failure(
         Rails.env.development? ? result.error : authentication_error,
         status: 401
