@@ -3,12 +3,12 @@
 require 'rails_helper'
 
 require 'cuprum/rails/repository'
-require 'cuprum/rails/rspec/actions/show_contracts'
+require 'cuprum/rails/rspec/contracts/actions/show_contracts'
 
 require 'support/user'
 
 RSpec.describe Librum::Core::Actions::Show, type: :action do
-  include Cuprum::Rails::RSpec::Actions::ShowContracts
+  include Cuprum::Rails::RSpec::Contracts::Actions::ShowContracts
 
   subject(:action) { described_class.new }
 
@@ -20,7 +20,7 @@ RSpec.describe Librum::Core::Actions::Show, type: :action do
 
   before(:example) { user.save }
 
-  include_contract 'show action contract',
+  include_contract 'should be a show action',
     existing_entity:   -> { user },
     primary_key_value: -> { SecureRandom.uuid } \
   do

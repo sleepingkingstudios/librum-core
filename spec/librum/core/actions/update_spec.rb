@@ -3,12 +3,12 @@
 require 'rails_helper'
 
 require 'cuprum/rails/repository'
-require 'cuprum/rails/rspec/actions/update_contracts'
+require 'cuprum/rails/rspec/contracts/actions/update_contracts'
 
 require 'support/user'
 
 RSpec.describe Librum::Core::Actions::Update do
-  include Cuprum::Rails::RSpec::Actions::UpdateContracts
+  include Cuprum::Rails::RSpec::Contracts::Actions::UpdateContracts
 
   subject(:action) { described_class.new }
 
@@ -33,7 +33,7 @@ RSpec.describe Librum::Core::Actions::Update do
 
   before(:example) { user.save }
 
-  include_contract 'update action contract',
+  include_contract 'should be an update action',
     existing_entity:    -> { user },
     invalid_attributes: -> { invalid_attributes },
     valid_attributes:   -> { valid_attributes },

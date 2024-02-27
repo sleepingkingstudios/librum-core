@@ -584,7 +584,7 @@ RSpec.describe Librum::Core::View::Components::DataField, type: :component do
       end
 
       example_class 'Spec::CustomField', ViewComponent::Base do |klass|
-        klass.define_method(:call) { 'Custom Field' }
+        klass.define_method(:call) { 'Custom Field'.html_safe }
       end
 
       it { expect(rendered).to match_snapshot(snapshot) }

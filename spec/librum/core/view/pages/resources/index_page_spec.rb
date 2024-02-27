@@ -119,7 +119,11 @@ do
       end
       let(:params) { { 'space_program_id' => 'imp' } }
       let(:request) do
-        instance_double(ActionDispatch::Request, path_parameters: params)
+        instance_double(
+          ActionDispatch::Request,
+          format:          Mime::Type.lookup('text/html'),
+          path_parameters: params
+        )
       end
       let(:controller) do
         instance_double(ActionController::Base, request: request)

@@ -3,12 +3,12 @@
 require 'rails_helper'
 
 require 'cuprum/rails/repository'
-require 'cuprum/rails/rspec/actions/create_contracts'
+require 'cuprum/rails/rspec/contracts/actions/create_contracts'
 
 require 'support/user'
 
 RSpec.describe Librum::Core::Actions::Create, type: :action do
-  include Cuprum::Rails::RSpec::Actions::CreateContracts
+  include Cuprum::Rails::RSpec::Contracts::Actions::CreateContracts
 
   subject(:action) { described_class.new }
 
@@ -36,7 +36,7 @@ RSpec.describe Librum::Core::Actions::Create, type: :action do
     { 'slug' => 'example-user' }
   end
 
-  include_contract 'create action contract',
+  include_contract 'should be a create action',
     invalid_attributes:             -> { invalid_attributes },
     valid_attributes:               -> { valid_attributes },
     expected_attributes_on_failure: ->(hsh) { hsh.merge({ 'slug' => '' }) },

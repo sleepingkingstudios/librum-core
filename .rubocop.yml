@@ -107,3 +107,6 @@ Style/Documentation:
 Style/NestedParenthesizedCalls:
   Exclude:
     - spec/**/*
+
+Style/RedundantLineContinuation:
+  Enabled: false
