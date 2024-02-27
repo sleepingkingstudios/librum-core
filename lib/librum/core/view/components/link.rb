@@ -46,7 +46,7 @@ module Librum::Core::View::Components
     # @return [true, false, nil] true if the link is to an external url,
     #   otherwise false.
     def external?
-      @external ||= (url.include?('.') || url.include?(':'))
+      @external ||= url.include?('.') || url.include?(':')
     end
 
     private
