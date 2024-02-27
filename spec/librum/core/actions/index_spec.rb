@@ -3,12 +3,12 @@
 require 'rails_helper'
 
 require 'cuprum/rails/repository'
-require 'cuprum/rails/rspec/actions/index_contracts'
+require 'cuprum/rails/rspec/contracts/actions/index_contracts'
 
 require 'support/user'
 
 RSpec.describe Librum::Core::Actions::Index, type: :action do
-  include Cuprum::Rails::RSpec::Actions::IndexContracts
+  include Cuprum::Rails::RSpec::Contracts::Actions::IndexContracts
 
   subject(:action) { described_class.new }
 
@@ -27,5 +27,5 @@ RSpec.describe Librum::Core::Actions::Index, type: :action do
 
   before(:example) { users.map(&:save!) }
 
-  include_contract 'index action contract', existing_entities: -> { users }
+  include_contract 'should be an index action', existing_entities: -> { users }
 end

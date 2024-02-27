@@ -3,12 +3,12 @@
 require 'rails_helper'
 
 require 'cuprum/rails/repository'
-require 'cuprum/rails/rspec/actions/destroy_contracts'
+require 'cuprum/rails/rspec/contracts/actions/destroy_contracts'
 
 require 'support/user'
 
 RSpec.describe Librum::Core::Actions::Destroy, type: :action do
-  include Cuprum::Rails::RSpec::Actions::DestroyContracts
+  include Cuprum::Rails::RSpec::Contracts::Actions::DestroyContracts
 
   subject(:action) { described_class.new }
 
@@ -20,7 +20,7 @@ RSpec.describe Librum::Core::Actions::Destroy, type: :action do
 
   before(:example) { user.save }
 
-  include_contract 'destroy action contract',
+  include_contract 'should be a destroy action',
     existing_entity:   -> { user },
     primary_key_value: -> { SecureRandom.uuid } \
   do

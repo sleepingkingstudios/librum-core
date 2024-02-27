@@ -11,6 +11,7 @@ gem 'sprockets-rails' # The original asset pipeline for Rails
 
 ### Commands
 gem 'cuprum-collections',
+  '>= 0.5.0.alpha',
   branch: 'main',
   git:    'https://github.com/sleepingkingstudios/cuprum-collections'
 gem 'cuprum-rails',
