@@ -35,7 +35,7 @@ RSpec.describe Librum::Core::RSpec::Utils::PrettyRender do
     it { expect(rendered).to be == expected }
 
     describe 'with a tag with attributes' do
-      let(:contents) { '<hr class="is-fancy-hr" style="fancy: true;">' }
+      let(:contents) { '<hr class="is-fancy-hr" id="fancy-line">' }
 
       it { expect(rendered).to be == expected }
     end

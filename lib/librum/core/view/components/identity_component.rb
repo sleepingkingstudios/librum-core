@@ -9,7 +9,7 @@ module Librum::Core::View::Components
     def initialize(contents)
       super()
 
-      @contents = contents
+      @contents = sanitize(contents)
     end
 
     # @return [String] the HTML to return when rendered.
@@ -18,6 +18,16 @@ module Librum::Core::View::Components
     # @see ViewComponent::Base#call
     def call
       contents
+    end
+
+    private
+
+    def sanitize(raw)
+      Loofah
+        .html5_fragment(raw)
+        .scrub!(:strip)
+        .to_s
+        .html_safe # rubocop:disable Rails/OutputSafety
     end
   end
 end
