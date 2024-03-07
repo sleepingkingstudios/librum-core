@@ -33,12 +33,19 @@ module Librum::Core::View::Pages::Resources
     end
 
     def destroy_form
-      Librum::Core::View::Components::Resources::DestroyForm.new(
-        data:     resource_data,
-        light:    true,
-        resource: resource,
-        routes:   routes
-      )
+      {
+        color:       'danger',
+        http_method: 'delete',
+        label:       "Destroy #{resource.singular_name.titleize}",
+        light:       true,
+        url:         destroy_resource_path
+      }
+    end
+
+    def destroy_resource_path
+      return routes.destroy_path if resource.singular?
+
+      routes.destroy_path(resource_data['slug'])
     end
 
     def edit_resource_path
