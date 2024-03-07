@@ -30,13 +30,13 @@ module Librum::Core::View::Components::Resources
     private
 
     def build_destroy_form
-      Librum::Core::View::Components::Resources::DestroyForm.new(
+      Librum::Core::View::Components::ButtonWithForm.new(
         class_names: 'is-small',
-        data:        data,
+        color:       'danger',
+        http_method: 'delete',
         label:       'Destroy',
         light:       true,
-        resource:    resource,
-        routes:      routes
+        url:         routes.destroy_path(data['slug'])
       )
     end
 

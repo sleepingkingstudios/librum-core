@@ -9,6 +9,7 @@ RSpec.describe Librum::Core::View::Components::Heading, type: :component do
     let(:buttons) do
       [
         { label: 'Home', url: '/', color: 'info' },
+        { label: 'Launch', url: '/launch', http_method: 'post' },
         Librum::Core::View::Components::IdentityComponent.new('Custom Button')
       ]
     end
@@ -60,6 +61,14 @@ RSpec.describe Librum::Core::View::Components::Heading, type: :component do
                 <a class="button is-info" href="/" target="_self">
                   Home
                 </a>
+              </div>
+
+              <div class="level-item">
+                <form action="/launch" accept-charset="UTF-8" method="post">
+                  <input type="hidden" name="authenticity_token" value="[token]" autocomplete="off">
+
+                  <button type="submit" class="button">Launch</button>
+                </form>
               </div>
 
               <div class="level-item">

@@ -25,12 +25,20 @@ module Librum::Core::View::Components
 
     private
 
-    def build_button(label:, url:, color: nil, **options)
+    def build_button(label:, url:, **options)
       Librum::Core::View::Components::Link.new(
         url,
         button: true,
-        color:  color,
         label:  label,
+        **options
+      )
+    end
+
+    def build_button_with_form(label:, url:, http_method:, **options)
+      Librum::Core::View::Components::ButtonWithForm.new(
+        http_method: http_method,
+        label:       label,
+        url:         url,
         **options
       )
     end
@@ -49,6 +57,10 @@ module Librum::Core::View::Components
 
     def render_button(button)
       return render(button) if button.is_a?(ViewComponent::Base)
+
+      if button.key?(:http_method)
+        return render(build_button_with_form(**button))
+      end
 
       render(build_button(**button))
     end
