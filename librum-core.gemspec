@@ -46,9 +46,9 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'annotate',        '~> 3.2'
   gem.add_dependency 'importmap-rails', '~> 1.2'
   gem.add_dependency 'pg',              '~> 1.5'
-  gem.add_dependency 'rails',           '~> 7.0.4'
+  gem.add_dependency 'rails',           '~> 7.1.5'
   gem.add_dependency 'stimulus-rails',  '~> 1.3'
-  gem.add_dependency 'view_component',  '~> 3.11'
+  gem.add_dependency 'view_component',  '~> 3.21'
 
   gem.add_dependency 'diffy', '~> 3.4.2'
 end
