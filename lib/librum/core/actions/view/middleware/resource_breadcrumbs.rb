@@ -167,7 +167,7 @@ module Librum::Core::Actions::View::Middleware
     end
 
     def page_metadata
-      super().merge(breadcrumbs: generate_breadcrumbs)
+      super.merge(breadcrumbs: generate_breadcrumbs)
     end
 
     def resource_data

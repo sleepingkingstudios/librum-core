@@ -1,7 +1,10 @@
 require:
+  - rubocop-rspec_rails
+
+plugins:
   - rubocop-factory_bot
-  - rubocop-rails
   - rubocop-rake
+  - rubocop-rails
   - rubocop-rspec
 
 AllCops:

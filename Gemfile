@@ -5,11 +5,17 @@ source 'https://rubygems.org'
 # Specify your gem's dependencies in librum-core.gemspec.
 gemspec
 
+gem 'concurrent-ruby', '1.3.4' # Rails 7.0 only.
+
 ### Assets
 gem 'importmap-rails' # Use JavaScript with ESM import maps
 gem 'sprockets-rails' # The original asset pipeline for Rails
 
 ### Commands
+gem 'cuprum',
+  '>= 1.3.0.alpha',
+  branch: 'main',
+  git:    'https://github.com/sleepingkingstudios/cuprum'
 gem 'cuprum-collections',
   '>= 0.5.0.alpha',
   branch: 'main',
@@ -17,6 +23,13 @@ gem 'cuprum-collections',
 gem 'cuprum-rails',
   branch: 'main',
   git:    'https://github.com/sleepingkingstudios/cuprum-rails'
+gem 'stannum',
+  branch: 'main',
+  git:    'https://github.com/sleepingkingstudios/stannum'
+
+gem 'sleeping_king_studios-tools',
+  branch: 'main',
+  git:    'https://github.com/sleepingkingstudios/sleeping_king_studios-tools'
 
 group :development, :test do
   gem 'annotate'
@@ -24,16 +37,18 @@ group :development, :test do
   gem 'byebug'
 
   # See https://github.com/thoughtbot/factory_bot/blob/master/GETTING_STARTED.md
-  gem 'factory_bot_rails', '~> 6.3'
+  gem 'factory_bot_rails', '~> 6.4'
 
-  gem 'rspec', '~> 3.10'
-  gem 'rspec-rails', '~> 5.0'
+  gem 'rspec', '~> 3.13'
+  gem 'rspec-rails', '~> 7.1'
   gem 'rspec-sleeping_king_studios', '~> 2.7'
 
-  gem 'rubocop', '~> 1.60', '>= 1.60.2'
-  gem 'rubocop-rails', '~> 2.23', '>= 2.23.1' # https://docs.rubocop.org/rubocop-rails/
-  gem 'rubocop-rake', '~> 0.6'
-  gem 'rubocop-rspec', '~> 2.26', '>= 2.26.1' # https://docs.rubocop.org/rubocop-rspec/
+  gem 'rubocop', '~> 1.73'
+  gem 'rubocop-factory_bot', '~> 2.27'
+  gem 'rubocop-rails', '~> 2.30' # https://docs.rubocop.org/rubocop-rails/
+  gem 'rubocop-rake', '~> 0.7'
+  gem 'rubocop-rspec', '~> 3.5' # https://docs.rubocop.org/rubocop-rspec/
+  gem 'rubocop-rspec_rails', '~> 2.30'
 
   gem 'simplecov', '~> 0.21'
 end
