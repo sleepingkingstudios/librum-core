@@ -5,8 +5,6 @@ source 'https://rubygems.org'
 # Specify your gem's dependencies in librum-core.gemspec.
 gemspec
 
-gem 'concurrent-ruby', '1.3.4' # Rails 7.0 only.
-
 ### Assets
 gem 'importmap-rails' # Use JavaScript with ESM import maps
 gem 'sprockets-rails' # The original asset pipeline for Rails
@@ -32,8 +30,6 @@ gem 'sleeping_king_studios-tools',
   git:    'https://github.com/sleepingkingstudios/sleeping_king_studios-tools'
 
 group :development, :test do
-  gem 'annotate'
-
   gem 'byebug'
 
   # See https://github.com/thoughtbot/factory_bot/blob/master/GETTING_STARTED.md

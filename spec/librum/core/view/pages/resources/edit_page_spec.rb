@@ -97,7 +97,7 @@ do
           <<~HTML
             <h1 class="title">Update Imp IV</h1>
 
-            <mock name="form" action="edit" data='{"rocket"=&gt;{"name"=&gt;"Imp IV"}}' errors="nil" resource='#&lt;Resource name="rockets"&gt;' routes="[routes]"></mock>
+            <mock name="form" action="edit" data='{"rocket" =&gt; {"name" =&gt; "Imp IV"}}' errors="nil" resource='#&lt;Resource name="rockets"&gt;' routes="[routes]"></mock>
           HTML
         end
 

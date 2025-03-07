@@ -8,7 +8,7 @@ module Librum::Core
     include Cuprum::Rails::Controller
 
     def self.repository
-      @repository ||= Cuprum::Rails::Repository.new
+      @repository ||= Cuprum::Rails::Records::Repository.new
     end
 
     default_format :html

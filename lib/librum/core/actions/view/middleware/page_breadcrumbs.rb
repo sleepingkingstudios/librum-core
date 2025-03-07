@@ -8,8 +8,8 @@ module Librum::Core::Actions::View::Middleware
     #   breadcrumbs to render.
     # @param options [Hash{Symbol=>Object}] additional options for configuring
     #   the view page.
-    def initialize(breadcrumbs:, **options)
-      super(**options)
+    def initialize(breadcrumbs:, **)
+      super(**)
 
       @breadcrumbs = breadcrumbs
     end

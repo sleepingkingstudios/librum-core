@@ -19,8 +19,8 @@ module Librum::Core::View::Components
     #   apply.
     # @option options include_blank [Boolean] if true, prepends a blank option
     #   with empty value to the select options.
-    def initialize(name, items:, id: nil, value: nil, **options)
-      super(**options)
+    def initialize(name, items:, id: nil, value: nil, **)
+      super(**)
 
       @name    = name
       @items   = items

@@ -25,21 +25,21 @@ module Librum::Core::View::Components
 
     private
 
-    def build_button(label:, url:, **options)
+    def build_button(label:, url:, **)
       Librum::Core::View::Components::Link.new(
         url,
         button: true,
         label:  label,
-        **options
+        **
       )
     end
 
-    def build_button_with_form(label:, url:, http_method:, **options)
+    def build_button_with_form(label:, url:, http_method:, **)
       Librum::Core::View::Components::ButtonWithForm.new(
         http_method: http_method,
         label:       label,
         url:         url,
-        **options
+        **
       )
     end
 

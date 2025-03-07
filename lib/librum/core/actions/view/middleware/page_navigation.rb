@@ -10,8 +10,8 @@ module Librum::Core::Actions::View::Middleware
     #   render.
     # @param options [Hash{Symbol=>Object}] additional options for configuring
     #   the view page.
-    def initialize(navigation: nil, **options)
-      super(**options)
+    def initialize(navigation: nil, **)
+      super(**)
 
       @navigation = navigation
     end

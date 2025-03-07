@@ -9,7 +9,7 @@ plugins:
 
 AllCops:
   NewCops: enable
-  TargetRubyVersion: 3.0
+  TargetRubyVersion: 3.4
 
 RSpec:
   Language:
@@ -96,7 +96,7 @@ RSpec/NamedSubject:
 RSpec/NestedGroups:
   Max: 5
 
-RSpec/Rails/InferredSpecType:
+RSpecRails/InferredSpecType:
   Enabled: false
 
 Style/ClassAndModuleChildren:

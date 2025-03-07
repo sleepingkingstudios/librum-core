@@ -91,7 +91,7 @@ RSpec.describe Librum::Core::View::Components::DataList, type: :component do
               </div>
 
               <div class="column">
-                <mock name="item" data='{"first_name"=&gt;"Alan", "last_name"=&gt;"Bradley", "role"=&gt;"user"}' field='#&lt;Field key="first_name"&gt;'></mock>
+                <mock name="item" data='{"first_name" =&gt; "Alan", "last_name" =&gt; "Bradley", "role" =&gt; "user"}' field='#&lt;Field key="first_name"&gt;'></mock>
               </div>
             </div>
 
@@ -101,7 +101,7 @@ RSpec.describe Librum::Core::View::Components::DataList, type: :component do
               </div>
 
               <div class="column">
-                <mock name="item" data='{"first_name"=&gt;"Alan", "last_name"=&gt;"Bradley", "role"=&gt;"user"}' field='#&lt;Field key="last_name"&gt;'></mock>
+                <mock name="item" data='{"first_name" =&gt; "Alan", "last_name" =&gt; "Bradley", "role" =&gt; "user"}' field='#&lt;Field key="last_name"&gt;'></mock>
               </div>
             </div>
 
@@ -111,7 +111,7 @@ RSpec.describe Librum::Core::View::Components::DataList, type: :component do
               </div>
 
               <div class="column">
-                <mock name="item" data='{"first_name"=&gt;"Alan", "last_name"=&gt;"Bradley", "role"=&gt;"user"}' field='#&lt;Field key="role"&gt;'></mock>
+                <mock name="item" data='{"first_name" =&gt; "Alan", "last_name" =&gt; "Bradley", "role" =&gt; "user"}' field='#&lt;Field key="role"&gt;'></mock>
               </div>
             </div>
           </div>
@@ -140,7 +140,7 @@ RSpec.describe Librum::Core::View::Components::DataList, type: :component do
                 </div>
 
                 <div class="column">
-                  <mock name="item" data='{"first_name"=&gt;"Alan", "last_name"=&gt;"Bradley", "role"=&gt;"user"}' field='#&lt;Field key="first_name"&gt;' key="value"></mock>
+                  <mock name="item" data='{"first_name" =&gt; "Alan", "last_name" =&gt; "Bradley", "role" =&gt; "user"}' field='#&lt;Field key="first_name"&gt;' key="value"></mock>
                 </div>
               </div>
 
@@ -150,7 +150,7 @@ RSpec.describe Librum::Core::View::Components::DataList, type: :component do
                 </div>
 
                 <div class="column">
-                  <mock name="item" data='{"first_name"=&gt;"Alan", "last_name"=&gt;"Bradley", "role"=&gt;"user"}' field='#&lt;Field key="last_name"&gt;' key="value"></mock>
+                  <mock name="item" data='{"first_name" =&gt; "Alan", "last_name" =&gt; "Bradley", "role" =&gt; "user"}' field='#&lt;Field key="last_name"&gt;' key="value"></mock>
                 </div>
               </div>
 
@@ -160,7 +160,7 @@ RSpec.describe Librum::Core::View::Components::DataList, type: :component do
                 </div>
 
                 <div class="column">
-                  <mock name="item" data='{"first_name"=&gt;"Alan", "last_name"=&gt;"Bradley", "role"=&gt;"user"}' field='#&lt;Field key="role"&gt;' key="value"></mock>
+                  <mock name="item" data='{"first_name" =&gt; "Alan", "last_name" =&gt; "Bradley", "role" =&gt; "user"}' field='#&lt;Field key="role"&gt;' key="value"></mock>
                 </div>
               </div>
             </div>

@@ -280,7 +280,7 @@ do
               </div>
             </div>
 
-            <mock name="table" data='[{"name"=&gt;"Imp IV", "payload"=&gt;"10 tonnes"}, {"name"=&gt;"Imp VI", "payload"=&gt;"10 tonnes"}, {"name"=&gt;"Hellhound II", "payload"=&gt;"100 tonnes"}]' resource='#&lt;Resource name="rockets"&gt;' routes="[routes]"></mock>
+            <mock name="table" data='[{"name" =&gt; "Imp IV", "payload" =&gt; "10 tonnes"}, {"name" =&gt; "Imp VI", "payload" =&gt; "10 tonnes"}, {"name" =&gt; "Hellhound II", "payload" =&gt; "100 tonnes"}]' resource='#&lt;Resource name="rockets"&gt;' routes="[routes]"></mock>
           HTML
         end
 

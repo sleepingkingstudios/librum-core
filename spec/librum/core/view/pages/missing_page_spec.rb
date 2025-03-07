@@ -128,7 +128,7 @@ RSpec.describe Librum::Core::View::Pages::MissingPage, type: :component do
               <strong>Error</strong>
             </p>
 
-            <pre>{"data"=&gt;{}, "message"=&gt;"Something went wrong", "type"=&gt;"cuprum.error"}</pre>
+            <pre>{"data" =&gt; {}, "message" =&gt; "Something went wrong", "type" =&gt; "cuprum.error"}</pre>
 
             <p>
               <strong>Metadata</strong>
@@ -180,7 +180,7 @@ RSpec.describe Librum::Core::View::Pages::MissingPage, type: :component do
               <strong>Value</strong>
             </p>
 
-            <pre>{"ok"=&gt;true}</pre>
+            <pre>{"ok" =&gt; true}</pre>
 
             <p>
               <strong>Error</strong>
@@ -250,7 +250,7 @@ RSpec.describe Librum::Core::View::Pages::MissingPage, type: :component do
               <strong>Metadata</strong>
             </p>
 
-            <pre>{:session=&gt;{:token=&gt;"12345"}}</pre>
+            <pre>{session: {token: "12345"}}</pre>
           </div>
         HTML
       end

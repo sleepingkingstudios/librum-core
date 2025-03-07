@@ -21,8 +21,8 @@ module Librum::Core::View::Components
     # @option options label [ViewComponent::Base, String, nil] the label to
     #   display for the radio button.
     # @option options value [String] the value for the radio button.
-    def initialize(name, **options)
-      super(**options)
+    def initialize(name, **)
+      super(**)
 
       @name = name
     end

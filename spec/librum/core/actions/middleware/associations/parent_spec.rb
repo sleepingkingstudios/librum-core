@@ -98,7 +98,7 @@ RSpec.describe Librum::Core::Actions::Middleware::Associations::Parent do
     let(:next_command) { instance_double(Cuprum::Command, call: next_result) }
     let(:params)       { {} }
     let(:request)      { Cuprum::Rails::Request.new(params: params) }
-    let(:repository)   { Cuprum::Rails::Repository.new }
+    let(:repository)   { Cuprum::Rails::Records::Repository.new }
     let(:resource) do
       Cuprum::Rails::Resource.new(
         entity_class: Spec::Support::Project,

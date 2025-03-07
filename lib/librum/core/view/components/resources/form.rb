@@ -38,12 +38,12 @@ module Librum::Core::View::Components::Resources
     # Builds and renders the form tag.
     #
     # @yield the form contents.
-    def render_form(&block)
+    def render_form(&)
       form_with(
         model:  resource_data,
         method: form_method,
         url:    form_url,
-        &block
+        &
       )
     end
 
@@ -58,8 +58,8 @@ module Librum::Core::View::Components::Resources
     # @param options [Hash{Symbol=>Object}] options for the field.
     #
     # @see Librum::Core::View::Components::FormField.
-    def render_form_field(name, **options)
-      render(build_form_field(name, **options))
+    def render_form_field(name, **)
+      render(build_form_field(name, **))
     end
 
     # Builds and renders a form radio button group.
@@ -67,8 +67,8 @@ module Librum::Core::View::Components::Resources
     # @param name [String] the qualified name for the button group.
     # @param items [Hash] the labels and values for the form buttons.
     # @param options [Hash{Symbol=>Object}] options for the button group.
-    def render_form_radio_button_group(name, items:, **options)
-      render(build_form_radio_button_group(name, items: items, **options))
+    def render_form_radio_button_group(name, items:, **)
+      render(build_form_radio_button_group(name, items: items, **))
     end
 
     # @return [#[]] the data for the displayed resource record.
@@ -87,22 +87,22 @@ module Librum::Core::View::Components::Resources
       )
     end
 
-    def build_form_field(name, **options)
+    def build_form_field(name, **)
       Librum::Core::View::Components::FormField.new(
         name,
         data:   data,
         errors: errors,
-        **options
+        **
       )
     end
 
-    def build_form_radio_button_group(name, items:, **options)
+    def build_form_radio_button_group(name, items:, **)
       Librum::Core::View::Components::FormRadioButtonGroup.new(
         name,
         data:   data,
         errors: errors,
         items:  items,
-        **options
+        **
       )
     end
 

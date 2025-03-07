@@ -189,7 +189,7 @@ RSpec.describe Librum::Core::View::Components::DataTable, type: :component do
               </tr>
             </thead>
 
-            <mock name="body" cell_component="Librum::Core::View::Components::DataField" columns='[{:key=&gt;"first_name"}, {:key=&gt;"last_name", :label=&gt;"Surname"}, {:key=&gt;"role"}]' data="[]" empty_message="nil" row_component="Librum::Core::View::Components::DataTable::Row"></mock>
+            <mock name="body" cell_component="Librum::Core::View::Components::DataField" columns='[{key: "first_name"}, {key: "last_name", label: "Surname"}, {key: "role"}]' data="[]" empty_message="nil" row_component="Librum::Core::View::Components::DataTable::Row"></mock>
           </table>
         HTML
       end
@@ -212,7 +212,7 @@ RSpec.describe Librum::Core::View::Components::DataTable, type: :component do
                 </tr>
               </thead>
 
-              <mock name="body" cell_component="Librum::Core::View::Components::DataField" columns='[{:key=&gt;"first_name"}, {:key=&gt;"last_name", :label=&gt;"Surname"}, {:key=&gt;"role"}]' data="[]" empty_message="nil" row_component="Librum::Core::View::Components::DataTable::Row" option="value"></mock>
+              <mock name="body" cell_component="Librum::Core::View::Components::DataField" columns='[{key: "first_name"}, {key: "last_name", label: "Surname"}, {key: "role"}]' data="[]" empty_message="nil" row_component="Librum::Core::View::Components::DataTable::Row" option="value"></mock>
             </table>
           HTML
         end
@@ -244,43 +244,43 @@ RSpec.describe Librum::Core::View::Components::DataTable, type: :component do
             <tbody>
               <tr>
                 <td>
-                  <mock name="cell" field='{:key=&gt;"first_name"}' data='{"first_name"=&gt;"Alan", "last_name"=&gt;"Bradley", "role"=&gt;"user"}'></mock>
+                  <mock name="cell" field='{key: "first_name"}' data='{"first_name" =&gt; "Alan", "last_name" =&gt; "Bradley", "role" =&gt; "user"}'></mock>
                 </td>
 
                 <td>
-                  <mock name="cell" field='{:key=&gt;"last_name", :label=&gt;"Surname"}' data='{"first_name"=&gt;"Alan", "last_name"=&gt;"Bradley", "role"=&gt;"user"}'></mock>
+                  <mock name="cell" field='{key: "last_name", label: "Surname"}' data='{"first_name" =&gt; "Alan", "last_name" =&gt; "Bradley", "role" =&gt; "user"}'></mock>
                 </td>
 
                 <td>
-                  <mock name="cell" field='{:key=&gt;"role"}' data='{"first_name"=&gt;"Alan", "last_name"=&gt;"Bradley", "role"=&gt;"user"}'></mock>
-                </td>
-              </tr>
-
-              <tr>
-                <td>
-                  <mock name="cell" field='{:key=&gt;"first_name"}' data='{"first_name"=&gt;"Kevin", "last_name"=&gt;"Flynn", "role"=&gt;"user"}'></mock>
-                </td>
-
-                <td>
-                  <mock name="cell" field='{:key=&gt;"last_name", :label=&gt;"Surname"}' data='{"first_name"=&gt;"Kevin", "last_name"=&gt;"Flynn", "role"=&gt;"user"}'></mock>
-                </td>
-
-                <td>
-                  <mock name="cell" field='{:key=&gt;"role"}' data='{"first_name"=&gt;"Kevin", "last_name"=&gt;"Flynn", "role"=&gt;"user"}'></mock>
+                  <mock name="cell" field='{key: "role"}' data='{"first_name" =&gt; "Alan", "last_name" =&gt; "Bradley", "role" =&gt; "user"}'></mock>
                 </td>
               </tr>
 
               <tr>
                 <td>
-                  <mock name="cell" field='{:key=&gt;"first_name"}' data='{"first_name"=&gt;"Ed", "last_name"=&gt;"Dillinger", "role"=&gt;"admin"}'></mock>
+                  <mock name="cell" field='{key: "first_name"}' data='{"first_name" =&gt; "Kevin", "last_name" =&gt; "Flynn", "role" =&gt; "user"}'></mock>
                 </td>
 
                 <td>
-                  <mock name="cell" field='{:key=&gt;"last_name", :label=&gt;"Surname"}' data='{"first_name"=&gt;"Ed", "last_name"=&gt;"Dillinger", "role"=&gt;"admin"}'></mock>
+                  <mock name="cell" field='{key: "last_name", label: "Surname"}' data='{"first_name" =&gt; "Kevin", "last_name" =&gt; "Flynn", "role" =&gt; "user"}'></mock>
                 </td>
 
                 <td>
-                  <mock name="cell" field='{:key=&gt;"role"}' data='{"first_name"=&gt;"Ed", "last_name"=&gt;"Dillinger", "role"=&gt;"admin"}'></mock>
+                  <mock name="cell" field='{key: "role"}' data='{"first_name" =&gt; "Kevin", "last_name" =&gt; "Flynn", "role" =&gt; "user"}'></mock>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <mock name="cell" field='{key: "first_name"}' data='{"first_name" =&gt; "Ed", "last_name" =&gt; "Dillinger", "role" =&gt; "admin"}'></mock>
+                </td>
+
+                <td>
+                  <mock name="cell" field='{key: "last_name", label: "Surname"}' data='{"first_name" =&gt; "Ed", "last_name" =&gt; "Dillinger", "role" =&gt; "admin"}'></mock>
+                </td>
+
+                <td>
+                  <mock name="cell" field='{key: "role"}' data='{"first_name" =&gt; "Ed", "last_name" =&gt; "Dillinger", "role" =&gt; "admin"}'></mock>
                 </td>
               </tr>
             </tbody>
@@ -309,43 +309,43 @@ RSpec.describe Librum::Core::View::Components::DataTable, type: :component do
               <tbody>
                 <tr>
                   <td>
-                    <mock name="cell" field='{:key=&gt;"first_name"}' data='{"first_name"=&gt;"Alan", "last_name"=&gt;"Bradley", "role"=&gt;"user"}' option="value"></mock>
+                    <mock name="cell" field='{key: "first_name"}' data='{"first_name" =&gt; "Alan", "last_name" =&gt; "Bradley", "role" =&gt; "user"}' option="value"></mock>
                   </td>
 
                   <td>
-                    <mock name="cell" field='{:key=&gt;"last_name", :label=&gt;"Surname"}' data='{"first_name"=&gt;"Alan", "last_name"=&gt;"Bradley", "role"=&gt;"user"}' option="value"></mock>
+                    <mock name="cell" field='{key: "last_name", label: "Surname"}' data='{"first_name" =&gt; "Alan", "last_name" =&gt; "Bradley", "role" =&gt; "user"}' option="value"></mock>
                   </td>
 
                   <td>
-                    <mock name="cell" field='{:key=&gt;"role"}' data='{"first_name"=&gt;"Alan", "last_name"=&gt;"Bradley", "role"=&gt;"user"}' option="value"></mock>
-                  </td>
-                </tr>
-
-                <tr>
-                  <td>
-                    <mock name="cell" field='{:key=&gt;"first_name"}' data='{"first_name"=&gt;"Kevin", "last_name"=&gt;"Flynn", "role"=&gt;"user"}' option="value"></mock>
-                  </td>
-
-                  <td>
-                    <mock name="cell" field='{:key=&gt;"last_name", :label=&gt;"Surname"}' data='{"first_name"=&gt;"Kevin", "last_name"=&gt;"Flynn", "role"=&gt;"user"}' option="value"></mock>
-                  </td>
-
-                  <td>
-                    <mock name="cell" field='{:key=&gt;"role"}' data='{"first_name"=&gt;"Kevin", "last_name"=&gt;"Flynn", "role"=&gt;"user"}' option="value"></mock>
+                    <mock name="cell" field='{key: "role"}' data='{"first_name" =&gt; "Alan", "last_name" =&gt; "Bradley", "role" =&gt; "user"}' option="value"></mock>
                   </td>
                 </tr>
 
                 <tr>
                   <td>
-                    <mock name="cell" field='{:key=&gt;"first_name"}' data='{"first_name"=&gt;"Ed", "last_name"=&gt;"Dillinger", "role"=&gt;"admin"}' option="value"></mock>
+                    <mock name="cell" field='{key: "first_name"}' data='{"first_name" =&gt; "Kevin", "last_name" =&gt; "Flynn", "role" =&gt; "user"}' option="value"></mock>
                   </td>
 
                   <td>
-                    <mock name="cell" field='{:key=&gt;"last_name", :label=&gt;"Surname"}' data='{"first_name"=&gt;"Ed", "last_name"=&gt;"Dillinger", "role"=&gt;"admin"}' option="value"></mock>
+                    <mock name="cell" field='{key: "last_name", label: "Surname"}' data='{"first_name" =&gt; "Kevin", "last_name" =&gt; "Flynn", "role" =&gt; "user"}' option="value"></mock>
                   </td>
 
                   <td>
-                    <mock name="cell" field='{:key=&gt;"role"}' data='{"first_name"=&gt;"Ed", "last_name"=&gt;"Dillinger", "role"=&gt;"admin"}' option="value"></mock>
+                    <mock name="cell" field='{key: "role"}' data='{"first_name" =&gt; "Kevin", "last_name" =&gt; "Flynn", "role" =&gt; "user"}' option="value"></mock>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <mock name="cell" field='{key: "first_name"}' data='{"first_name" =&gt; "Ed", "last_name" =&gt; "Dillinger", "role" =&gt; "admin"}' option="value"></mock>
+                  </td>
+
+                  <td>
+                    <mock name="cell" field='{key: "last_name", label: "Surname"}' data='{"first_name" =&gt; "Ed", "last_name" =&gt; "Dillinger", "role" =&gt; "admin"}' option="value"></mock>
+                  </td>
+
+                  <td>
+                    <mock name="cell" field='{key: "role"}' data='{"first_name" =&gt; "Ed", "last_name" =&gt; "Dillinger", "role" =&gt; "admin"}' option="value"></mock>
                   </td>
                 </tr>
               </tbody>
@@ -477,7 +477,7 @@ RSpec.describe Librum::Core::View::Components::DataTable, type: :component do
       let(:snapshot) do
         <<~HTML
           <table class="table">
-            <mock name="header" columns='[{:key=&gt;"first_name"}, {:key=&gt;"last_name", :label=&gt;"Surname"}, {:key=&gt;"role"}]'></mock>
+            <mock name="header" columns='[{key: "first_name"}, {key: "last_name", label: "Surname"}, {key: "role"}]'></mock>
 
             <tbody>
               <tr>
@@ -496,7 +496,7 @@ RSpec.describe Librum::Core::View::Components::DataTable, type: :component do
         let(:snapshot) do
           <<~HTML
             <table class="table">
-              <mock name="header" columns='[{:key=&gt;"first_name"}, {:key=&gt;"last_name", :label=&gt;"Surname"}, {:key=&gt;"role"}]' option="value"></mock>
+              <mock name="header" columns='[{key: "first_name"}, {key: "last_name", label: "Surname"}, {key: "role"}]' option="value"></mock>
 
               <tbody>
                 <tr>
@@ -532,11 +532,11 @@ RSpec.describe Librum::Core::View::Components::DataTable, type: :component do
             </thead>
 
             <tbody>
-              <mock name="row" cell_component="Librum::Core::View::Components::DataField" columns='[{:key=&gt;"first_name"}, {:key=&gt;"last_name", :label=&gt;"Surname"}, {:key=&gt;"role"}]' data='{"first_name"=&gt;"Alan", "last_name"=&gt;"Bradley", "role"=&gt;"user"}'></mock>
+              <mock name="row" cell_component="Librum::Core::View::Components::DataField" columns='[{key: "first_name"}, {key: "last_name", label: "Surname"}, {key: "role"}]' data='{"first_name" =&gt; "Alan", "last_name" =&gt; "Bradley", "role" =&gt; "user"}'></mock>
 
-              <mock name="row" cell_component="Librum::Core::View::Components::DataField" columns='[{:key=&gt;"first_name"}, {:key=&gt;"last_name", :label=&gt;"Surname"}, {:key=&gt;"role"}]' data='{"first_name"=&gt;"Kevin", "last_name"=&gt;"Flynn", "role"=&gt;"user"}'></mock>
+              <mock name="row" cell_component="Librum::Core::View::Components::DataField" columns='[{key: "first_name"}, {key: "last_name", label: "Surname"}, {key: "role"}]' data='{"first_name" =&gt; "Kevin", "last_name" =&gt; "Flynn", "role" =&gt; "user"}'></mock>
 
-              <mock name="row" cell_component="Librum::Core::View::Components::DataField" columns='[{:key=&gt;"first_name"}, {:key=&gt;"last_name", :label=&gt;"Surname"}, {:key=&gt;"role"}]' data='{"first_name"=&gt;"Ed", "last_name"=&gt;"Dillinger", "role"=&gt;"admin"}'></mock>
+              <mock name="row" cell_component="Librum::Core::View::Components::DataField" columns='[{key: "first_name"}, {key: "last_name", label: "Surname"}, {key: "role"}]' data='{"first_name" =&gt; "Ed", "last_name" =&gt; "Dillinger", "role" =&gt; "admin"}'></mock>
             </tbody>
           </table>
         HTML
@@ -561,11 +561,11 @@ RSpec.describe Librum::Core::View::Components::DataTable, type: :component do
               </thead>
 
               <tbody>
-                <mock name="row" cell_component="Librum::Core::View::Components::DataField" columns='[{:key=&gt;"first_name"}, {:key=&gt;"last_name", :label=&gt;"Surname"}, {:key=&gt;"role"}]' data='{"first_name"=&gt;"Alan", "last_name"=&gt;"Bradley", "role"=&gt;"user"}' option="value"></mock>
+                <mock name="row" cell_component="Librum::Core::View::Components::DataField" columns='[{key: "first_name"}, {key: "last_name", label: "Surname"}, {key: "role"}]' data='{"first_name" =&gt; "Alan", "last_name" =&gt; "Bradley", "role" =&gt; "user"}' option="value"></mock>
 
-                <mock name="row" cell_component="Librum::Core::View::Components::DataField" columns='[{:key=&gt;"first_name"}, {:key=&gt;"last_name", :label=&gt;"Surname"}, {:key=&gt;"role"}]' data='{"first_name"=&gt;"Kevin", "last_name"=&gt;"Flynn", "role"=&gt;"user"}' option="value"></mock>
+                <mock name="row" cell_component="Librum::Core::View::Components::DataField" columns='[{key: "first_name"}, {key: "last_name", label: "Surname"}, {key: "role"}]' data='{"first_name" =&gt; "Kevin", "last_name" =&gt; "Flynn", "role" =&gt; "user"}' option="value"></mock>
 
-                <mock name="row" cell_component="Librum::Core::View::Components::DataField" columns='[{:key=&gt;"first_name"}, {:key=&gt;"last_name", :label=&gt;"Surname"}, {:key=&gt;"role"}]' data='{"first_name"=&gt;"Ed", "last_name"=&gt;"Dillinger", "role"=&gt;"admin"}' option="value"></mock>
+                <mock name="row" cell_component="Librum::Core::View::Components::DataField" columns='[{key: "first_name"}, {key: "last_name", label: "Surname"}, {key: "role"}]' data='{"first_name" =&gt; "Ed", "last_name" =&gt; "Dillinger", "role" =&gt; "admin"}' option="value"></mock>
               </tbody>
             </table>
           HTML
