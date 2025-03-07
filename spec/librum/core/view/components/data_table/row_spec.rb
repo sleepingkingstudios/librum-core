@@ -70,15 +70,15 @@ do
         <<~HTML
           <tr>
             <td>
-              <mock name="cell" field='{:key=&gt;"first_name"}' data='{"first_name"=&gt;"Alan", "last_name"=&gt;"Bradley", "role"=&gt;"user"}'></mock>
+              <mock name="cell" field='{key: "first_name"}' data='{"first_name" =&gt; "Alan", "last_name" =&gt; "Bradley", "role" =&gt; "user"}'></mock>
             </td>
 
             <td>
-              <mock name="cell" field='{:key=&gt;"last_name"}' data='{"first_name"=&gt;"Alan", "last_name"=&gt;"Bradley", "role"=&gt;"user"}'></mock>
+              <mock name="cell" field='{key: "last_name"}' data='{"first_name" =&gt; "Alan", "last_name" =&gt; "Bradley", "role" =&gt; "user"}'></mock>
             </td>
 
             <td>
-              <mock name="cell" field='{:key=&gt;"role"}' data='{"first_name"=&gt;"Alan", "last_name"=&gt;"Bradley", "role"=&gt;"user"}'></mock>
+              <mock name="cell" field='{key: "role"}' data='{"first_name" =&gt; "Alan", "last_name" =&gt; "Bradley", "role" =&gt; "user"}'></mock>
             </td>
           </tr>
         HTML
@@ -93,15 +93,15 @@ do
           <<~HTML
             <tr>
               <td>
-                <mock name="cell" field='{:key=&gt;"first_name"}' data='{"first_name"=&gt;"Alan", "last_name"=&gt;"Bradley", "role"=&gt;"user"}' option="value"></mock>
+                <mock name="cell" field='{key: "first_name"}' data='{"first_name" =&gt; "Alan", "last_name" =&gt; "Bradley", "role" =&gt; "user"}' option="value"></mock>
               </td>
 
               <td>
-                <mock name="cell" field='{:key=&gt;"last_name"}' data='{"first_name"=&gt;"Alan", "last_name"=&gt;"Bradley", "role"=&gt;"user"}' option="value"></mock>
+                <mock name="cell" field='{key: "last_name"}' data='{"first_name" =&gt; "Alan", "last_name" =&gt; "Bradley", "role" =&gt; "user"}' option="value"></mock>
               </td>
 
               <td>
-                <mock name="cell" field='{:key=&gt;"role"}' data='{"first_name"=&gt;"Alan", "last_name"=&gt;"Bradley", "role"=&gt;"user"}' option="value"></mock>
+                <mock name="cell" field='{key: "role"}' data='{"first_name" =&gt; "Alan", "last_name" =&gt; "Bradley", "role" =&gt; "user"}' option="value"></mock>
               </td>
             </tr>
           HTML
