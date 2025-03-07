@@ -190,7 +190,7 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
 
             it { expect(response.path).to be == expected_path }
 
-            it { expect(response.status).to be 302 } # rubocop:disable RSpec/Rails/HaveHttpStatus
+            it { expect(response.status).to be 302 } # rubocop:disable RSpecRails/HaveHttpStatus
           end
         end
 
@@ -227,7 +227,7 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
 
             it { expect(response.path).to be == expected_path }
 
-            it { expect(response.status).to be 302 } # rubocop:disable RSpec/Rails/HaveHttpStatus
+            it { expect(response.status).to be 302 } # rubocop:disable RSpecRails/HaveHttpStatus
           end
 
           context 'when the error matches the top-level resource' do
@@ -265,7 +265,7 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
 
             it { expect(response.path).to be == expected_path }
 
-            it { expect(response.status).to be 302 } # rubocop:disable RSpec/Rails/HaveHttpStatus
+            it { expect(response.status).to be 302 } # rubocop:disable RSpecRails/HaveHttpStatus
           end
         end
       end
