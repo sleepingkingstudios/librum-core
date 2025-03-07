@@ -13,7 +13,7 @@ RSpec.describe Librum::Core::ViewController do
     it 'should define the class reader' do
       expect(described_class)
         .to define_reader(:repository)
-        .with_value(an_instance_of(Cuprum::Rails::Repository))
+        .with_value(an_instance_of(Cuprum::Rails::Records::Repository))
     end
   end
 

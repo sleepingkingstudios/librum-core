@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe Librum::Core::Models::Queries::FindOne do
   subject(:query) { described_class.new(collection: collection) }
 
-  let(:repository) { Cuprum::Rails::Repository.new }
+  let(:repository) { Cuprum::Rails::Records::Repository.new }
   let(:collection) do
     repository.find_or_create(entity_class: Spec::Support::User)
   end
