@@ -28,9 +28,9 @@ module Librum::Core::View::Components
       label: nil,
       type:  'text',
       value: nil,
-      **options
+      **
     )
-      super(**options)
+      super(**)
 
       @data    = data
       @label   = label

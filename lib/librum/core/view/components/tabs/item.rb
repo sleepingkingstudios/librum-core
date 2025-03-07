@@ -65,10 +65,10 @@ module Librum::Core::View::Components
       )
     end
 
-    def render_wrapper(&block)
+    def render_wrapper(&)
       options = active? ? { class: 'is-active' } : {}
 
-      tag.li(**options, &block)
+      tag.li(**options, &)
     end
   end
 end

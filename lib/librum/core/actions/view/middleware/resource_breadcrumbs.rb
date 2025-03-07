@@ -15,8 +15,8 @@ module Librum::Core::Actions::View::Middleware
     # @param resource [Cuprum::Rails::Resource] the resource for the controller.
     # @param options [Hash{Symbol=>Object}] additional options for configuring
     #   the view page.
-    def initialize(breadcrumbs:, resource:, actions: {}, **options)
-      super(breadcrumbs: breadcrumbs, **options)
+    def initialize(breadcrumbs:, resource:, actions: {}, **)
+      super(breadcrumbs: breadcrumbs, **)
 
       @resource = resource
       @actions  = generate_actions.merge(actions)

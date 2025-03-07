@@ -19,8 +19,8 @@ module Librum::Core::View::Components
     # @option options errors [Stannum::Errors, Array<String>] the form errors to
     #   apply.
     # @option options label [String] the label to display for the group.
-    def initialize(name, items:, data: nil, value: nil, **options)
-      super(**options)
+    def initialize(name, items:, data: nil, value: nil, **)
+      super(**)
 
       @data  = data
       @name  = name

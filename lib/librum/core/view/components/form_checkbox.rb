@@ -24,9 +24,9 @@ module Librum::Core::View::Components
       checked: false,
       id:      nil,
       label:   nil,
-      **options
+      **
     )
-      super(**options)
+      super(**)
 
       @name    = name
       @checked = checked

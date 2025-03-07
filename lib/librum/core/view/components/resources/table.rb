@@ -11,7 +11,7 @@ module Librum::Core::View::Components::Resources
     # @param resource [Cuprum::Rails::Resource] the controller resource.
     # @param routes [Cuprum::Rails::Routes] the routes for the resource.
     # @param options [Hash] additional options for the table.
-    def initialize(columns:, data:, resource:, routes: nil, **options)
+    def initialize(columns:, data:, resource:, routes: nil, **)
       @resource = resource
       @routes   = routes || resource.routes
 
@@ -20,7 +20,7 @@ module Librum::Core::View::Components::Resources
         columns:       columns,
         data:          data,
         empty_message: empty_message,
-        **options
+        **
       )
     end
 

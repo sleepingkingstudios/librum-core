@@ -14,9 +14,9 @@ module Librum::Core::Resources
       block_component: nil,
       form_component:  nil,
       table_component: nil,
-      **options
+      **
     )
-      super(**options)
+      super(**)
 
       @block_component = block_component
       @form_component  = form_component

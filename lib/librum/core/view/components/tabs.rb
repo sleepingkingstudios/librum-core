@@ -17,8 +17,8 @@ module Librum::Core::View::Components
       # @option options icon [String] the name of the icon, if any, to display.
       # @option options label [String] the label used when rendering the tab.
       # @option options url [String] the url for the tab link, if any.
-      def initialize(key:, **options)
-        super(**options)
+      def initialize(key:, **)
+        super(**)
 
         @key   = key
         @label = label || key.titleize

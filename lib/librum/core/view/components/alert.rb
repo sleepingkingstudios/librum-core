@@ -13,8 +13,8 @@ module Librum::Core::View::Components
     #   the alert. Defaults to true.
     # @option options icon [String] the name of the icon to display, if any.
     #   Defaults to 'info'.
-    def initialize(message, **options)
-      super(**options)
+    def initialize(message, **)
+      super(**)
 
       @message = message
     end

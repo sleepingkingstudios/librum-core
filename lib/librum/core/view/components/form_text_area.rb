@@ -20,8 +20,8 @@ module Librum::Core::View::Components
     #   an empty input.
     # @option options rows [Integer] the height of the textarea, in rows of
     #   text.
-    def initialize(name, id: nil, value: nil, **options)
-      super(**options)
+    def initialize(name, id: nil, value: nil, **)
+      super(**)
 
       @id    = id
       @name  = name

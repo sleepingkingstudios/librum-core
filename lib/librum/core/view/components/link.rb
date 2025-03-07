@@ -20,8 +20,8 @@ module Librum::Core::View::Components
     #   light style. Defaults to false.
     # @option options outline [Boolean] if true, a button link is rendered in
     #   outline style. Defaults to false.
-    def initialize(url, label: nil, **options)
-      super(**options)
+    def initialize(url, label: nil, **)
+      super(**)
 
       @url   = url
       @label = label || url

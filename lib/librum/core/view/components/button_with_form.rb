@@ -10,8 +10,8 @@ module Librum::Core::View::Components
     # @param options [Hash] additional options for the button.
     #
     # @param http_method [String] the HTTP method for the form. Defaults to GET.
-    def initialize(label:, url:, **options)
-      super(**options)
+    def initialize(label:, url:, **)
+      super(**)
 
       @label = label
       @url   = url
@@ -39,11 +39,11 @@ module Librum::Core::View::Components
       render(build_button)
     end
 
-    def render_form(&block)
+    def render_form(&)
       form_with(
         method: http_method,
         url:    url,
-        &block
+        &
       )
     end
   end

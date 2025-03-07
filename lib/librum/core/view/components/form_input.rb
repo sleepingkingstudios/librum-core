@@ -18,8 +18,8 @@ module Librum::Core::View::Components
     #   apply.
     # @option options placeholder [String] the placeholder value to display in
     #   an empty input.
-    def initialize(name, id: nil, type: 'text', value: nil, **options)
-      super(**options)
+    def initialize(name, id: nil, type: 'text', value: nil, **)
+      super(**)
 
       @id    = id
       @name  = name

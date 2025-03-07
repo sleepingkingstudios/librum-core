@@ -13,8 +13,8 @@ module Librum::Core::View::Components
     # @option options class_name [String, Array<String>] additional CSS class
     #   names for the icon.
     # @option options color [String, nil] the color of the icon.
-    def initialize(contents:, icon:, **options)
-      super(**options)
+    def initialize(contents:, icon:, **)
+      super(**)
 
       @contents = contents
       @icon     = icon

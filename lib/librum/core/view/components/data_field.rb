@@ -30,9 +30,9 @@ module Librum::Core::View::Components
         key:,
         type:    :text,
         value:   nil,
-        **options
+        **
       )
-        super(**options)
+        super(**)
 
         @key   = key
         @type  = type

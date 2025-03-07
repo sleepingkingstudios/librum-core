@@ -19,8 +19,8 @@ module Librum::Core::View::Components
     # @option options fixed_width [Boolean] if true, renders the icon with a
     #   fixed width.
     # @option options size [String, nil] the size of the icon.
-    def initialize(icon:, **options)
-      super(**options)
+    def initialize(icon:, **)
+      super(**)
 
       @icon = icon
     end
