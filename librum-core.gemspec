@@ -43,7 +43,6 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'cuprum-rails'
   gem.add_dependency 'stannum', '~> 0.3'
 
-  gem.add_dependency 'annotaterb',      '~> 4.14'
   gem.add_dependency 'importmap-rails', '~> 2.1'
   gem.add_dependency 'pg',              '~> 1.5'
   gem.add_dependency 'rails',           '~> 8.0.1'
