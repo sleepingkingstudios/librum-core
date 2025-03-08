@@ -33,8 +33,6 @@ gem 'sleeping_king_studios-tools',
   git:    'https://github.com/sleepingkingstudios/sleeping_king_studios-tools'
 
 group :development, :test do
-  gem 'annotate', '~> 3.2'
-
   gem 'byebug'
 
   # See https://github.com/thoughtbot/factory_bot/blob/master/GETTING_STARTED.md
