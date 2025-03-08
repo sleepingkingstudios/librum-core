@@ -33,7 +33,7 @@ gem 'sleeping_king_studios-tools',
   git:    'https://github.com/sleepingkingstudios/sleeping_king_studios-tools'
 
 group :development, :test do
-  gem 'annotate'
+  gem 'annotate', '~> 3.2'
 
   gem 'byebug'
 
