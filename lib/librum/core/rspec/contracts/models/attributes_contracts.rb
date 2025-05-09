@@ -3,6 +3,8 @@
 require 'rspec/sleeping_king_studios/contract'
 
 module Librum::Core::RSpec::Contracts::Models
+  # :nocov:
+
   module AttributesContracts
     DEFAULT_VALUE = Object.new.freeze
     private_constant :DEFAULT_VALUE
@@ -90,4 +92,5 @@ module Librum::Core::RSpec::Contracts::Models
       end
     end
   end
+  # :nocov:
 end

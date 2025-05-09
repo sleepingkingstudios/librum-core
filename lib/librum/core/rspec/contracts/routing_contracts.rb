@@ -3,6 +3,8 @@
 require 'rspec/sleeping_king_studios/contract'
 
 module Librum::Core::RSpec::Contracts
+  # :nocov:
+
   module RoutingContracts
     # Contract asserting the application provides API routes for a resource.
     module ShouldRouteToApiResourceContract
@@ -582,4 +584,5 @@ module Librum::Core::RSpec::Contracts
       end
     end
   end
+  # :nocov:
 end

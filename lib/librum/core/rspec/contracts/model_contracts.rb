@@ -3,6 +3,8 @@
 require 'rspec/sleeping_king_studios/contract'
 
 module Librum::Core::RSpec::Contracts
+  # :nocov:
+
   # Contracts for asserting on model objects.
   module ModelContracts
     include Librum::Core::RSpec::Contracts::Models::AssociationsContracts
@@ -24,4 +26,5 @@ module Librum::Core::RSpec::Contracts
       end
     end
   end
+  # :nocov:
 end
