@@ -4,6 +4,8 @@ require 'cuprum/rails/rspec/contract_helpers'
 require 'rspec/sleeping_king_studios/contract'
 
 module Librum::Core::RSpec::Contracts::Models
+  # :nocov:
+
   module ValidationContracts
     # Contract asserting that the attribute format is validated.
     module ShouldValidateTheFormatOfContract
@@ -19,9 +21,7 @@ module Librum::Core::RSpec::Contracts::Models
             if value.is_a?(Array)
               value
             else
-              # :nocov:
               [value, value]
-              # :nocov:
             end
 
           context "when #{attr_name} is #{desc}" do
@@ -38,9 +38,7 @@ module Librum::Core::RSpec::Contracts::Models
             if value.is_a?(Array)
               value
             else
-              # :nocov:
               [value, value]
-              # :nocov:
             end
 
           context "when #{attr_name} is #{desc}" do
@@ -72,7 +70,6 @@ module Librum::Core::RSpec::Contracts::Models
             )
           end
 
-          # :nocov:
           if options[:allow_nil]
             it 'should not have an error' do
               expect(subject)
@@ -85,7 +82,6 @@ module Librum::Core::RSpec::Contracts::Models
               expect(subject).to have_errors.on(attr_name).with_message(message)
             end
           end
-          # :nocov:
         end
 
         context "when #{attr_name} is an invalid value" do
@@ -375,7 +371,6 @@ module Librum::Core::RSpec::Contracts::Models
       extend RSpec::SleepingKingStudios::Contract
 
       contract do |attr_name, attributes: nil, message: nil, type: nil|
-        # :nocov:
         def self.normalize_attribute_type(value)
           return nil if value.nil?
 
@@ -383,7 +378,6 @@ module Librum::Core::RSpec::Contracts::Models
 
           value.to_s
         end
-        # :nocov:
 
         attr_type = normalize_attribute_type(type)
         message ||= "can't be blank"
@@ -449,13 +443,11 @@ module Librum::Core::RSpec::Contracts::Models
 
             context "with #{attributes_list}" do
               let(:injected_attributes) do
-                # :nocov:
                 if attributes.is_a?(Proc)
                   instance_exec(&attributes)
                 else
                   attributes
                 end
-                # :nocov:
               end
 
               before(:example) do
@@ -532,4 +524,5 @@ module Librum::Core::RSpec::Contracts::Models
       end
     end
   end
+  # :nocov:
 end

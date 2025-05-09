@@ -1,11 +1,9 @@
-require:
-  - rubocop-rspec_rails
-
 plugins:
   - rubocop-factory_bot
   - rubocop-rake
   - rubocop-rails
   - rubocop-rspec
+  - rubocop-rspec_rails
 
 AllCops:
   NewCops: enable
@@ -85,6 +83,9 @@ RSpec/ExampleWording:
 
 RSpec/HookArgument:
   EnforcedStyle: example
+
+RSpec/IncludeExamples:
+  Enabled: false
 
 RSpec/MultipleMemoizedHelpers:
   Max: 10

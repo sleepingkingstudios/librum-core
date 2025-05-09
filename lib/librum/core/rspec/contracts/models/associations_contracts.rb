@@ -3,6 +3,8 @@
 require 'rspec/sleeping_king_studios/contract'
 
 module Librum::Core::RSpec::Contracts::Models
+  # :nocov:
+
   module AssociationsContracts
     # Contract asserting the model class has a :belongs_to association.
     module ShouldBelongToContract
@@ -33,7 +35,6 @@ module Librum::Core::RSpec::Contracts::Models
 
           context "when the #{model_name} has a #{display_name}" do
             let(:association) do
-              # :nocov:
               case options[:association]
               when Proc
                 instance_exec(&options[:association])
@@ -42,7 +43,6 @@ module Librum::Core::RSpec::Contracts::Models
               else
                 options[:association]
               end
-              # :nocov:
             end
             let(:attributes) do
               super().merge({ association_name => association })
@@ -79,7 +79,6 @@ module Librum::Core::RSpec::Contracts::Models
 
           context "when the #{model_name} has a #{display_name}" do
             let(:association) do
-              # :nocov:
               case options[:association]
               when Proc
                 instance_exec(&options[:association])
@@ -88,7 +87,6 @@ module Librum::Core::RSpec::Contracts::Models
               else
                 options[:association]
               end
-              # :nocov:
             end
             let(:attributes) do
               super().merge({ association_name => association })
@@ -128,7 +126,6 @@ module Librum::Core::RSpec::Contracts::Models
 
           context "when the #{model_name} has many #{display_name}" do
             let(:associations) do
-              # :nocov:
               case options[:association]
               when Proc
                 instance_exec(&options[:association])
@@ -139,7 +136,6 @@ module Librum::Core::RSpec::Contracts::Models
               else
                 options[:association]
               end
-              # :nocov:
             end
             let(:association_value) { subject.send(association_name) }
 
@@ -161,4 +157,5 @@ module Librum::Core::RSpec::Contracts::Models
       end
     end
   end
+  # :nocov:
 end
