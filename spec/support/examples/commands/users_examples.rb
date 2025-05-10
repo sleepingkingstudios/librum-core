@@ -41,7 +41,7 @@ module Spec::Support::Examples::Commands
       }.freeze
     ].freeze
 
-    deferred_context 'with parameters for a User command' do
+    deferred_context 'with parameters for a User command' do # rubocop:disable RSpec/MultipleMemoizedHelpers
       let(:repository) { Cuprum::Collections::Basic::Repository.new }
       let(:resource) do
         Cuprum::Rails::Resource.new(name: 'users', **resource_options)
@@ -64,6 +64,24 @@ module Spec::Support::Examples::Commands
         end
       end
       let(:fixtures_data) { USERS_FIXTURES }
+
+      ##########################################################################
+      ###                         Querying Parameters                        ###
+      ##########################################################################
+
+      let(:invalid_primary_key_value) do
+        SecureRandom.uuid
+      end
+      let(:resource_scope) do
+        Cuprum::Collections::Scope.new({ 'role' => 'user' })
+      end
+      let(:non_matching_scope) do
+        Cuprum::Collections::Scope.new({ 'role' => 'program' })
+      end
+      let(:unique_scope) do
+        Cuprum::Collections::Scope.new({ 'role' => 'admin' })
+      end
+      let(:order) { { 'name' => 'asc' } }
 
       ##########################################################################
       ###                         Resource Parameters                        ###
