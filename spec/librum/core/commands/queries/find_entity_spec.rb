@@ -27,6 +27,21 @@ RSpec.describe Librum::Core::Commands::Queries::FindEntity do
         .and_keywords(:value)
     end
 
+    describe 'with nil' do
+      let(:expected_error) do
+        Cuprum::Errors::InvalidParameters.new(
+          command_class: Cuprum::Rails::Records::Commands::FindOne,
+          failures:      ['primary_key is not an instance of String']
+        )
+      end
+
+      it 'should return a failing result' do
+        expect(query.call(value: nil))
+          .to be_a_failing_result
+          .with_error(expected_error)
+      end
+    end
+
     describe 'with an id that does not match an entity' do
       let(:value) { SecureRandom.uuid }
       let(:expected_error) do
