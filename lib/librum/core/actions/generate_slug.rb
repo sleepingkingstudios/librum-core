@@ -16,7 +16,7 @@ module Librum::Core::Actions
     def generate_slug(attributes)
       return success(attributes['slug']) if attributes['slug'].present?
 
-      Librum::Core::Models::Attributes::GenerateSlug
+      Librum::Core::Commands::Attributes::GenerateSlug
         .new(attribute_names: slug_attributes)
         .call(attributes: attributes)
     end

@@ -12,7 +12,7 @@ module Librum::Core::Actions
       return super if primary_key.match?(UUID_PATTERN)
 
       entity = step do
-        Librum::Core::Models::Queries::FindBySlug
+        Librum::Core::Commands::Queries::FindBySlug
           .new(collection: collection)
           .call(slug: primary_key)
       end
@@ -23,7 +23,7 @@ module Librum::Core::Actions
     def find_entity(primary_key:)
       return super if primary_key.match?(UUID_PATTERN)
 
-      Librum::Core::Models::Queries::FindBySlug
+      Librum::Core::Commands::Queries::FindBySlug
         .new(collection: collection)
         .call(slug: primary_key)
     end

@@ -21,7 +21,7 @@ module Librum::Core::Actions::Middleware::Associations
       return super if primary_key.match?(UUID_PATTERN)
 
       step do
-        Librum::Core::Models::Queries::FindBySlug
+        Librum::Core::Commands::Queries::FindBySlug
           .new(collection: association_collection)
           .call(slug: primary_key)
       end

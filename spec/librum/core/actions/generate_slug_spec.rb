@@ -35,10 +35,10 @@ RSpec.describe Librum::Core::Actions::GenerateSlug do
   end
 
   describe '#call' do
-    let(:command_class) { Librum::Core::Models::Attributes::GenerateSlug }
+    let(:command_class) { Librum::Core::Commands::Attributes::GenerateSlug }
     let(:command) do
       instance_double(
-        Librum::Core::Models::Attributes::GenerateSlug,
+        Librum::Core::Commands::Attributes::GenerateSlug,
         call: result
       )
     end

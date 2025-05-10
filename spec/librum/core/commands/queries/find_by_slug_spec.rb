@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Librum::Core::Models::Queries::FindBySlug do
+RSpec.describe Librum::Core::Commands::Queries::FindBySlug do
   subject(:query) { described_class.new(collection: collection) }
 
   let(:repository) { Cuprum::Rails::Records::Repository.new }

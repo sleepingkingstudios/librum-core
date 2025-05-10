@@ -4,7 +4,7 @@ require 'cuprum/collections/errors/not_found'
 require 'cuprum/collections/errors/not_unique'
 require 'cuprum/command'
 
-module Librum::Core::Models::Queries
+module Librum::Core::Commands::Queries
   # Query command to find an entity by its slug value.
   class FindBySlug < Cuprum::Command
     # @param collection [Object] The collection to query.
@@ -41,6 +41,7 @@ module Librum::Core::Models::Queries
 
     def process(slug:)
       matching = step { perform_query(slug: slug) }
+      matching = matching.to_a if matching.size.nil?
 
       case matching.size
       when 0
