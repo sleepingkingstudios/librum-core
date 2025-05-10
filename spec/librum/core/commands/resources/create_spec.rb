@@ -14,12 +14,12 @@ RSpec.describe Librum::Core::Commands::Resources::Create do
   subject(:command) { described_class.new(repository:, resource:) }
 
   let(:expected_slug) do
-    matched_attributes.fetch('slug') do
-      Librum::Core::Commands::Attributes::GenerateSlug
-        .new
-        .call(attributes: matched_attributes)
-        .value
-    end
+    next matched_attributes['slug'] if matched_attributes['slug'].present?
+
+    Librum::Core::Commands::Attributes::GenerateSlug
+      .new
+      .call(attributes: matched_attributes)
+      .value
   end
   let(:expected_attributes) do
     empty_attributes

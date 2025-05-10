@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'cuprum/rails/commands/resources/new'
-
 module Librum::Core::Commands::Resources
   # Builds an entity with generated uuid ID and slug.
   class New < Cuprum::Rails::Commands::Resources::New
@@ -24,7 +22,7 @@ module Librum::Core::Commands::Resources
     end
 
     def generate_slug(attributes)
-      return attributes['slug'] if attributes.key?('slug')
+      return attributes['slug'] if attributes['slug'].present?
 
       Librum::Core::Commands::Attributes::GenerateSlug
         .new(attribute_names: attribute_names_for_slug)

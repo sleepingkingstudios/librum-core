@@ -14,12 +14,12 @@ RSpec.describe Librum::Core::Commands::Resources::New do
   subject(:command) { described_class.new(repository:, resource:) }
 
   let(:expected_slug) do
-    matched_attributes.fetch('slug') do
-      Librum::Core::Commands::Attributes::GenerateSlug
-        .new
-        .call(attributes: matched_attributes)
-        .value
-    end
+    next matched_attributes['slug'] if matched_attributes['slug'].present?
+
+    Librum::Core::Commands::Attributes::GenerateSlug
+      .new
+      .call(attributes: matched_attributes)
+      .value
   end
   let(:expected_attributes) do
     empty_attributes
@@ -74,9 +74,6 @@ RSpec.describe Librum::Core::Commands::Resources::New do
       let(:matched_attributes) do
         configured_valid_attributes.merge('slug' => nil)
       end
-      let(:expected_attributes) do
-        super().merge('slug' => nil)
-      end
 
       include_deferred 'should build the entity'
     end
@@ -84,9 +81,6 @@ RSpec.describe Librum::Core::Commands::Resources::New do
     describe 'with slug: an empty String' do
       let(:matched_attributes) do
         configured_valid_attributes.merge('slug' => '')
-      end
-      let(:expected_attributes) do
-        super().merge('slug' => '')
       end
 
       include_deferred 'should build the entity'
