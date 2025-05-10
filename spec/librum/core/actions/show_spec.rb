@@ -5,7 +5,7 @@ require 'rails_helper'
 require 'cuprum/rails/repository'
 require 'cuprum/rails/rspec/contracts/actions/show_contracts'
 
-require 'support/user'
+require 'support/models/user'
 
 RSpec.describe Librum::Core::Actions::Show, type: :action do
   include Cuprum::Rails::RSpec::Contracts::Actions::ShowContracts
@@ -14,7 +14,7 @@ RSpec.describe Librum::Core::Actions::Show, type: :action do
 
   let(:repository) { Cuprum::Rails::Records::Repository.new }
   let(:resource) do
-    Cuprum::Rails::Resource.new(entity_class: Spec::Support::User)
+    Cuprum::Rails::Resource.new(entity_class: User)
   end
   let(:user) { FactoryBot.build(:user) }
 

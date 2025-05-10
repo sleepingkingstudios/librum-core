@@ -53,6 +53,7 @@
 :additional_file_patterns: []
 :model_dir:
 - app/models
+- spec/support/models
 :require: []
 :root_dir:
 - ''

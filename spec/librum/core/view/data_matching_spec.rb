@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-require 'support/rocket'
+require 'support/models/rocket'
 
 RSpec.describe Librum::Core::View::DataMatching do
   subject(:component) { described_class.new(name: name, data: data) }
@@ -34,7 +34,7 @@ RSpec.describe Librum::Core::View::DataMatching do
     end
 
     context 'with data: an non-matching Object' do
-      let(:data) { Spec::Support::Rocket.new(name: 'Imp IV') }
+      let(:data) { Rocket.new(name: 'Imp IV') }
 
       it { expect(component.matching_data).to be nil }
     end
@@ -70,7 +70,7 @@ RSpec.describe Librum::Core::View::DataMatching do
     end
 
     context 'with data: a matching Object' do
-      let(:data) { Spec::Support::Rocket.new(name: 'Imp IV', color: 'red') }
+      let(:data) { Rocket.new(name: 'Imp IV', color: 'red') }
 
       it { expect(component.matching_data).to be == 'red' }
     end
@@ -111,7 +111,7 @@ RSpec.describe Librum::Core::View::DataMatching do
       end
 
       context 'with partially-matching data' do
-        let(:data) { { 'rocket' => Spec::Support::Rocket.new(name: 'Imp IV') } }
+        let(:data) { { 'rocket' => Rocket.new(name: 'Imp IV') } }
 
         it { expect(component.matching_data).to be nil }
       end
@@ -119,7 +119,7 @@ RSpec.describe Librum::Core::View::DataMatching do
       context 'with matching data' do
         let(:data) do
           {
-            'rocket' => Spec::Support::Rocket.new(name: 'Imp IV', color: 'red')
+            'rocket' => Rocket.new(name: 'Imp IV', color: 'red')
           }
         end
 
@@ -139,7 +139,7 @@ RSpec.describe Librum::Core::View::DataMatching do
       end
 
       context 'with partially-matching data' do
-        let(:data) { { 'rocket' => Spec::Support::Rocket.new(name: 'Imp IV') } }
+        let(:data) { { 'rocket' => Rocket.new(name: 'Imp IV') } }
 
         it { expect(component.matching_data).to be nil }
       end
@@ -147,7 +147,7 @@ RSpec.describe Librum::Core::View::DataMatching do
       context 'with matching data' do
         let(:data) do
           {
-            'rocket' => Spec::Support::Rocket.new(name: 'Imp IV', color: 'red')
+            'rocket' => Rocket.new(name: 'Imp IV', color: 'red')
           }
         end
 

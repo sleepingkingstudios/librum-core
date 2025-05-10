@@ -5,7 +5,7 @@ require 'rails_helper'
 require 'cuprum/rails/rspec/contracts/responder_contracts'
 require 'stannum'
 
-require 'support/rocket'
+require 'support/models/rocket'
 
 RSpec.describe Librum::Core::Responders::JsonResponder do
   include Cuprum::Rails::RSpec::Contracts::ResponderContracts
@@ -61,7 +61,7 @@ RSpec.describe Librum::Core::Responders::JsonResponder do
     describe 'with a failing result with a FailedValidation error' do
       let(:error) do
         Cuprum::Collections::Errors::FailedValidation.new(
-          entity_class: Spec::Support::Rocket,
+          entity_class: Rocket,
           errors:       Stannum::Errors.new
         )
       end
