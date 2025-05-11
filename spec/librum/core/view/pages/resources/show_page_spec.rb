@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-require 'support/rocket'
+require 'support/models/rocket'
 
 RSpec.describe Librum::Core::View::Pages::Resources::ShowPage,
   type: :component \
@@ -10,7 +10,7 @@ do
   subject(:page) { described_class.new(result, resource: resource) }
 
   shared_context 'with data' do
-    let(:data)   { Spec::Support::Rocket.new(name: 'Imp IV', slug: 'imp-iv') }
+    let(:data)   { Rocket.new(name: 'Imp IV', slug: 'imp-iv') }
     let(:value)  { { resource.singular_name => data } }
     let(:result) { Cuprum::Result.new(value: value) }
   end

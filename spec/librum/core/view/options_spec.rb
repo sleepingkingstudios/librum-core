@@ -129,9 +129,9 @@ RSpec.describe Librum::Core::View::Options do
   include_contract 'should define options'
 
   context 'with a subclass with defined options' do
-    let(:described_class) { Spec::Rocket }
+    let(:described_class) { Spec::StagedRocket }
 
-    example_class 'Spec::Rocket', 'Spec::ExampleComponent' do |klass|
+    example_class 'Spec::StagedRocket', 'Spec::ExampleComponent' do |klass|
       klass.option :color
       klass.option :stages, default: 0
       klass.option :ssto?,  boolean: true, default: -> { stages == 1 }

@@ -2,14 +2,14 @@
 
 require 'rails_helper'
 
-require 'support/rocket'
+require 'support/models/rocket'
 
 RSpec.describe Librum::Core::View::Components::Resources::TableActions,
   type: :component \
 do
   subject(:component) { described_class.new(**constructor_options) }
 
-  let(:data)     { Spec::Support::Rocket.new(name: 'Imp IV', slug: 'imp-iv') }
+  let(:data)     { Rocket.new(name: 'Imp IV', slug: 'imp-iv') }
   let(:resource) { Cuprum::Rails::Resource.new(name: 'rockets') }
   let(:constructor_options) do
     {

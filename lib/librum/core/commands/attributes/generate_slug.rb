@@ -2,7 +2,7 @@
 
 require 'cuprum'
 
-module Librum::Core::Models::Attributes
+module Librum::Core::Commands::Attributes
   # Generates a URL-friendly slug using the configured attribute names.
   class GenerateSlug < Cuprum::Command
     EXCLUDED_CHARACTERS_PATTERN = /[^a-z0-9-]/

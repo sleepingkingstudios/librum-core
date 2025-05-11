@@ -5,7 +5,7 @@ require 'rails_helper'
 require 'cuprum/rails/repository'
 require 'cuprum/rails/rspec/contracts/actions/create_contracts'
 
-require 'support/user'
+require 'support/models/user'
 
 RSpec.describe Librum::Core::Actions::Create, type: :action do
   include Cuprum::Rails::RSpec::Contracts::Actions::CreateContracts
@@ -15,7 +15,7 @@ RSpec.describe Librum::Core::Actions::Create, type: :action do
   let(:repository) { Cuprum::Rails::Records::Repository.new }
   let(:resource) do
     Cuprum::Rails::Resource.new(
-      entity_class:         Spec::Support::User,
+      entity_class:         User,
       permitted_attributes: %i[
         name
         slug

@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-require 'support/user'
+require 'support/models/user'
 
 RSpec.describe Librum::Core::View::Components::DataField, type: :component do
   include Librum::Core::RSpec::Contracts::ComponentContracts
@@ -248,15 +248,11 @@ RSpec.describe Librum::Core::View::Components::DataField, type: :component do
 
     describe 'with field: { key: a predicate }' do
       let(:field) { { key: 'admin?' } }
-      let(:data)  { Spec::User.new('user') }
+      let(:data)  { User.new(role: 'user') }
       let(:snapshot) do
         <<~HTML
           false
         HTML
-      end
-
-      example_class 'Spec::User', Struct.new(:role) do |klass|
-        klass.define_method(:admin?) { role == 'admin' }
       end
 
       it { expect(rendered).to match_snapshot(snapshot) }
@@ -329,7 +325,7 @@ RSpec.describe Librum::Core::View::Components::DataField, type: :component do
 
     describe 'with field: { type: :actions }' do
       let(:data) do
-        Spec::Support::User.new(name: 'Alan Bradley', slug: 'alan-bradley')
+        User.new(name: 'Alan Bradley', slug: 'alan-bradley')
       end
       let(:resource) { Cuprum::Rails::Resource.new(name: 'users') }
       let(:options)  { super().merge(type: :actions, resource: resource) }

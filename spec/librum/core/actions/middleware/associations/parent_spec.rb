@@ -2,14 +2,14 @@
 
 require 'rails_helper'
 
-require 'support/project'
-require 'support/user'
+require 'support/models/project'
+require 'support/models/user'
 
 RSpec.describe Librum::Core::Actions::Middleware::Associations::Parent do
   subject(:middleware) { described_class.new(**constructor_options) }
 
   let(:association_params) do
-    { entity_class: Spec::Support::User, name: 'user' }
+    { entity_class: User, name: 'user' }
   end
   let(:constructor_options) { association_params }
 
@@ -53,14 +53,14 @@ RSpec.describe Librum::Core::Actions::Middleware::Associations::Parent do
 
   describe '#call' do
     shared_context 'with a valid user id' do # rubocop:disable RSpec/MultipleMemoizedHelpers
-      let(:user)    { Spec::Support::User.create!(name: 'Alan Bradley') }
+      let(:user)    { User.create!(name: 'Alan Bradley') }
       let(:user_id) { user.id }
       let(:params)  { super().merge('user_id' => user_id) }
     end
 
     shared_context 'with a valid user slug' do # rubocop:disable RSpec/MultipleMemoizedHelpers
       let(:user) do
-        Spec::Support::User.create!(name: 'Alan Bradley', slug: 'alan-bradley')
+        User.create!(name: 'Alan Bradley', slug: 'alan-bradley')
       end
       let(:user_id) { user.slug }
       let(:params)  { super().merge('user_id' => user_id) }
@@ -101,7 +101,7 @@ RSpec.describe Librum::Core::Actions::Middleware::Associations::Parent do
     let(:repository)   { Cuprum::Rails::Records::Repository.new }
     let(:resource) do
       Cuprum::Rails::Resource.new(
-        entity_class: Spec::Support::Project,
+        entity_class: Project,
         name:         'projects'
       )
     end
@@ -227,7 +227,7 @@ RSpec.describe Librum::Core::Actions::Middleware::Associations::Parent do
       context 'when the next command returns entities' do # rubocop:disable RSpec/MultipleMemoizedHelpers
         let(:projects) do
           Array.new(3) do |index|
-            Spec::Support::Project.create!(
+            Project.create!(
               'user_id' => user.id,
               'name'    => "Project #{index}"
             )
@@ -285,7 +285,7 @@ RSpec.describe Librum::Core::Actions::Middleware::Associations::Parent do
 
         context 'when the next command returns an entity' do # rubocop:disable RSpec/MultipleMemoizedHelpers
           let(:project) do
-            Spec::Support::Project.create!(
+            Project.create!(
               'user_id' => user.id,
               'name'    => 'Secret Project'
             )
@@ -347,7 +347,7 @@ RSpec.describe Librum::Core::Actions::Middleware::Associations::Parent do
       context 'when the next command returns entities' do # rubocop:disable RSpec/MultipleMemoizedHelpers
         let(:projects) do
           Array.new(3) do |index|
-            Spec::Support::Project.create!(
+            Project.create!(
               'user_id' => user.id,
               'name'    => "Project #{index}"
             )
@@ -405,7 +405,7 @@ RSpec.describe Librum::Core::Actions::Middleware::Associations::Parent do
 
         context 'when the next command returns an entity' do # rubocop:disable RSpec/MultipleMemoizedHelpers
           let(:project) do
-            Spec::Support::Project.create!(
+            Project.create!(
               'user_id' => user.id,
               'name'    => 'Secret Project'
             )

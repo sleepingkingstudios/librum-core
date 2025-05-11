@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Librum::Core::Models::Attributes::GenerateSlug do
+RSpec.describe Librum::Core::Commands::Attributes::GenerateSlug do
   subject(:command) { described_class.new(**constructor_options) }
 
   let(:constructor_options) { {} }

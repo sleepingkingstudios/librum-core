@@ -7,7 +7,7 @@ require 'stannum/errors'
 require 'cuprum/collections'
 require 'cuprum/rails/rspec/contracts/responder_contracts'
 
-require 'support/rocket'
+require 'support/models/rocket'
 
 RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
   include Cuprum::Rails::RSpec::Contracts::ResponderContracts
@@ -340,7 +340,7 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
         describe 'with a failing result with a FailedValidation error' do
           let(:error) do
             Cuprum::Collections::Errors::FailedValidation.new(
-              entity_class: Spec::Support::Rocket,
+              entity_class: Rocket,
               errors:       Stannum::Errors.new
             )
           end
@@ -360,7 +360,7 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
 
         describe 'with a passing result' do
           let(:rocket) do
-            Spec::Support::Rocket.new(
+            Rocket.new(
               name: 'Imp IV',
               slug: 'imp-iv'
             )
@@ -390,7 +390,7 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
           describe 'with a failing result with a FailedValidation error' do # rubocop:disable RSpec/NestedGroups
             let(:error) do
               Cuprum::Collections::Errors::FailedValidation.new(
-                entity_class: Spec::Support::Rocket,
+                entity_class: Rocket,
                 errors:       Stannum::Errors.new
               )
             end
@@ -410,7 +410,7 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
 
           describe 'with a passing result' do # rubocop:disable RSpec/NestedGroups
             let(:rocket) do
-              Spec::Support::Rocket.new(
+              Rocket.new(
                 name: 'Imp IV',
                 slug: 'imp-iv'
               )
@@ -519,7 +519,7 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
         describe 'with a failing result with a FailedValidation error' do
           let(:error) do
             Cuprum::Collections::Errors::FailedValidation.new(
-              entity_class: Spec::Support::Rocket,
+              entity_class: Rocket,
               errors:       Stannum::Errors.new
             )
           end
@@ -539,7 +539,7 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
 
         describe 'with a passing result' do
           let(:rocket) do
-            Spec::Support::Rocket.new(
+            Rocket.new(
               name: 'Imp IV',
               slug: 'imp-iv'
             )
@@ -569,7 +569,7 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
           describe 'with a failing result with a FailedValidation error' do # rubocop:disable RSpec/NestedGroups
             let(:error) do
               Cuprum::Collections::Errors::FailedValidation.new(
-                entity_class: Spec::Support::Rocket,
+                entity_class: Rocket,
                 errors:       Stannum::Errors.new
               )
             end
@@ -589,7 +589,7 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
 
           describe 'with a passing result' do # rubocop:disable RSpec/NestedGroups
             let(:rocket) do
-              Spec::Support::Rocket.new(
+              Rocket.new(
                 name: 'Imp IV',
                 slug: 'imp-iv'
               )
@@ -679,7 +679,7 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
         describe 'with a failing result with a FailedValidation error' do
           let(:error) do
             Cuprum::Collections::Errors::FailedValidation.new(
-              entity_class: Spec::Support::Rocket,
+              entity_class: Rocket,
               errors:       Stannum::Errors.new
             )
           end
@@ -699,7 +699,7 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
 
         describe 'with a passing result' do
           let(:rocket) do
-            Spec::Support::Rocket.new(
+            Rocket.new(
               name: 'Imp IV',
               slug: 'imp-iv'
             )
@@ -730,7 +730,7 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
           describe 'with a failing result with a FailedValidation error' do # rubocop:disable RSpec/NestedGroups
             let(:error) do
               Cuprum::Collections::Errors::FailedValidation.new(
-                entity_class: Spec::Support::Rocket,
+                entity_class: Rocket,
                 errors:       Stannum::Errors.new
               )
             end
@@ -750,7 +750,7 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
 
           describe 'with a passing result' do # rubocop:disable RSpec/NestedGroups
             let(:rocket) do
-              Spec::Support::Rocket.new(
+              Rocket.new(
                 name: 'Imp IV',
                 slug: 'imp-iv'
               )
@@ -861,7 +861,7 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
         describe 'with a failing result with a FailedValidation error' do
           let(:error) do
             Cuprum::Collections::Errors::FailedValidation.new(
-              entity_class: Spec::Support::Rocket,
+              entity_class: Rocket,
               errors:       Stannum::Errors.new
             )
           end
@@ -881,7 +881,7 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
 
         describe 'with a passing result' do
           let(:rocket) do
-            Spec::Support::Rocket.new(
+            Rocket.new(
               name: 'Imp IV',
               slug: 'imp-iv'
             )
@@ -912,7 +912,7 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
           describe 'with a failing result with a FailedValidation error' do # rubocop:disable RSpec/NestedGroups
             let(:error) do
               Cuprum::Collections::Errors::FailedValidation.new(
-                entity_class: Spec::Support::Rocket,
+                entity_class: Rocket,
                 errors:       Stannum::Errors.new
               )
             end
@@ -932,7 +932,7 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
 
           describe 'with a passing result' do # rubocop:disable RSpec/NestedGroups
             let(:rocket) do
-              Spec::Support::Rocket.new(
+              Rocket.new(
                 name: 'Imp IV',
                 slug: 'imp-iv'
               )

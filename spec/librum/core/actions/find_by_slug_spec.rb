@@ -24,7 +24,7 @@ RSpec.describe Librum::Core::Actions::FindBySlug do
     klass.attr_reader :collection
 
     klass.define_method(:destroy_entity) do |primary_key:|
-      if Spec::Support::User.exists?(id: primary_key)
+      if User.exists?(id: primary_key)
         success(:ok)
       else
         message = "User not found with id #{primary_key.inspect}"
@@ -34,8 +34,8 @@ RSpec.describe Librum::Core::Actions::FindBySlug do
     end
 
     klass.define_method(:find_entity) do |primary_key:|
-      if Spec::Support::User.exists?(id: primary_key)
-        success(Spec::Support::User.find(primary_key))
+      if User.exists?(id: primary_key)
+        success(User.find(primary_key))
       else
         message = "User not found with id #{primary_key.inspect}"
 
@@ -52,14 +52,14 @@ RSpec.describe Librum::Core::Actions::FindBySlug do
     end
 
     klass.define_method(:resource) do
-      Cuprum::Rails::Resource.new(entity_class: Spec::Support::User)
+      Cuprum::Rails::Resource.new(entity_class: User)
     end
   end
 
   describe '#call' do
-    let(:query_class) { Librum::Core::Models::Queries::FindBySlug }
+    let(:query_class) { Librum::Core::Commands::Queries::FindBySlug }
     let(:query) do
-      instance_double(Librum::Core::Models::Queries::FindBySlug, call: nil)
+      instance_double(Librum::Core::Commands::Queries::FindBySlug, call: nil)
     end
 
     before(:example) do

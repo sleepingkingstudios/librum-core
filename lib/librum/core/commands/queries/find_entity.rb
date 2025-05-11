@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 require 'cuprum/command'
+require 'cuprum/errors/invalid_parameters'
 
-module Librum::Core::Models::Queries
+module Librum::Core::Commands::Queries
   # Query command to find an entity by its id or slug value.
-  class FindOne < Cuprum::Command
+  class FindEntity < Cuprum::Command
     UUID_PATTERN = /\A\h{8}-\h{4}-\h{4}-\h{4}-\h{12}\z/
     private_constant :UUID_PATTERN
 
@@ -21,10 +22,10 @@ module Librum::Core::Models::Queries
     private
 
     def process(value:)
-      if value.match?(UUID_PATTERN)
+      if value.nil? || value.match?(UUID_PATTERN)
         collection.find_one.call(primary_key: value)
       else
-        Librum::Core::Models::Queries::FindBySlug
+        Librum::Core::Commands::Queries::FindBySlug
           .new(collection: collection)
           .call(slug: value)
       end
