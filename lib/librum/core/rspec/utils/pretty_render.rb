@@ -36,11 +36,11 @@ module Librum::Core::RSpec::Utils
         .join(' ')
     end
 
-    def has_children?(tag) # rubocop:disable Naming/PredicateName
+    def has_children?(tag) # rubocop:disable Naming/PredicatePrefix
       tag.children.any?(&:element?)
     end
 
-    def has_text?(tag) # rubocop:disable Naming/PredicateName
+    def has_text?(tag) # rubocop:disable Naming/PredicatePrefix
       tag.children.any?(&:text?)
     end
 

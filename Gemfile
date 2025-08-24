@@ -35,9 +35,9 @@ group :development, :test do
   gem 'rspec', '~> 3.13'
   gem 'rspec-rails', '~> 7.1'
   gem 'rspec-sleeping_king_studios', '~> 2.8', '>= 2.8.1'
-  gem 'rubocop', '~> 1.75'
+  gem 'rubocop', '~> 1.80'
   gem 'rubocop-factory_bot', '~> 2.27'
-  gem 'rubocop-rails', '~> 2.31' # https://docs.rubocop.org/rubocop-rails/
+  gem 'rubocop-rails', '~> 2.33' # https://docs.rubocop.org/rubocop-rails/
   gem 'rubocop-rake', '~> 0.7'
   gem 'rubocop-rspec', '~> 3.6' # https://docs.rubocop.org/rubocop-rspec/
   gem 'rubocop-rspec_rails', '~> 2.31'

@@ -36,7 +36,7 @@ module Librum::Core::RSpec::Contracts
               .find { |config| match_middleware(expected, config) }
           end
 
-          def match_middleware(expected, actual)
+          def match_middleware(expected, actual) # rubocop:disable Naming/PredicateMethod
             expected = instance_exec(&expected) if expected.is_a?(Proc)
 
             if expected.is_a?(Class)
