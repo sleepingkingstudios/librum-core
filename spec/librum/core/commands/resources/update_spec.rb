@@ -23,10 +23,6 @@ RSpec.describe Librum::Core::Commands::Resources::Update do
       )
   end
 
-  define_method :tools do
-    SleepingKingStudios::Tools::Toolbelt.instance
-  end
-
   include_deferred 'with parameters for a User command'
 
   include_deferred 'should implement the Update command' do
