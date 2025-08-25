@@ -2,10 +2,10 @@
 
 require 'rails_helper'
 
-require 'cuprum/rails/rspec/contracts/responder_contracts'
+require 'cuprum/rails/rspec/deferred/responder_examples'
 
 RSpec.describe Librum::Core::Responders::Html::ViewResponder do
-  include Cuprum::Rails::RSpec::Contracts::ResponderContracts
+  include Cuprum::Rails::RSpec::Deferred::ResponderExamples
   include Librum::Core::RSpec::Contracts::Responders::HtmlContracts
 
   subject(:responder) { described_class.new(**constructor_options) }
@@ -25,12 +25,6 @@ RSpec.describe Librum::Core::Responders::Html::ViewResponder do
     end
   end
 
-  let(:action_name) { 'implement' }
-  let(:controller)  { CustomController.new }
-  let(:request)     { Cuprum::Rails::Request.new }
-  let(:resource_options) do
-    { name: 'rockets' }
-  end
   let(:constructor_options) do
     {
       action_name: action_name,
@@ -39,16 +33,18 @@ RSpec.describe Librum::Core::Responders::Html::ViewResponder do
     }
   end
 
-  include_contract 'should implement the responder methods',
-    controller_name: 'CustomController'
+  include_deferred 'should implement the Responder methods'
 
   describe '#call' do
-    let(:controller_name) { 'CustomController' }
-    let(:result)          { Cuprum::Result.new }
-    let(:response)        { responder.call(result) }
+    let(:controller_name) { controller.class.name }
+    let(:controller) { CustomController.new }
+    let(:result)     { Cuprum::Result.new }
+    let(:response)   { responder.call(result) }
     let(:expected_page) do
       'View::Pages::Custom::ImplementPage'
     end
+
+    example_class 'CustomController', 'Spec::ExampleController'
 
     include_contract 'should render the missing page'
 
@@ -81,13 +77,15 @@ RSpec.describe Librum::Core::Responders::Html::ViewResponder do
     include_examples 'should define reader', :format, :html
   end
 
-  # rubocop:disable RSpec/MultipleMemoizedHelpers
   describe '#render_component' do
-    let(:controller_name) { 'CustomController' }
-    let(:result)          { Cuprum::Result.new }
-    let(:options)         { {} }
-    let(:response)        { responder.render_component(result, **options) }
-    let(:expected_page)   { 'View::Pages::Custom::ImplementPage' }
+    let(:controller_name) { controller.class.name }
+    let(:controller)    { CustomController.new }
+    let(:result)        { Cuprum::Result.new }
+    let(:options)       { {} }
+    let(:response)      { responder.render_component(result, **options) }
+    let(:expected_page) { 'View::Pages::Custom::ImplementPage' }
+
+    example_class 'CustomController', 'Spec::ExampleController'
 
     it 'should define the method' do
       expect(responder)
@@ -333,5 +331,4 @@ RSpec.describe Librum::Core::Responders::Html::ViewResponder do
       it { expect(response.status).to be :internal_server_error }
     end
   end
-  # rubocop:enable RSpec/MultipleMemoizedHelpers
 end

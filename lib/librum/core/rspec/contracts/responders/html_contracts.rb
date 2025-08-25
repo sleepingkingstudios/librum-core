@@ -6,56 +6,6 @@ module Librum::Core::RSpec::Contracts::Responders
   module HtmlContracts
     # :nocov:
 
-    # Contract asserting the action redirects to the previous path.
-    module ShouldRedirectBackContract
-      extend RSpec::SleepingKingStudios::Contract
-
-      contract do |fallback_location: '/', flash: {}, status: 302|
-        let(:response) { responder.call(result) }
-        let(:expected_flash) do
-          next flash unless flash.is_a?(Proc)
-
-          instance_exec(&flash)
-        end
-
-        it 'should redirect to the previous path' do
-          expect(response)
-            .to be_a Cuprum::Rails::Responses::Html::RedirectBackResponse
-        end
-
-        it { expect(response.fallback_location).to be == fallback_location }
-
-        it { expect(response.flash).to be == expected_flash }
-
-        it { expect(response.status).to be status }
-      end
-    end
-
-    # Contract asserting the action redirects to the specified path.
-    module ShouldRedirectToContract
-      extend RSpec::SleepingKingStudios::Contract
-
-      contract do |path, flash: {}, status: 302|
-        let(:response) { responder.call(result) }
-        let(:expected_flash) do
-          next flash unless flash.is_a?(Proc)
-
-          instance_exec(&flash)
-        end
-
-        it 'should redirect to the specified path' do
-          expect(response)
-            .to be_a Cuprum::Rails::Responses::Html::RedirectResponse
-        end
-
-        it { expect(response.flash).to be == expected_flash }
-
-        it { expect(response.path).to be == path }
-
-        it { expect(response.status).to be status }
-      end
-    end
-
     # Contract asserting the action responds with the not found page.
     module ShouldRenderTheMissingPageContract
       extend RSpec::SleepingKingStudios::Contract

@@ -5,12 +5,12 @@ require 'rails_helper'
 require 'stannum/errors'
 
 require 'cuprum/collections'
-require 'cuprum/rails/rspec/contracts/responder_contracts'
+require 'cuprum/rails/rspec/deferred/responder_examples'
 
 require 'support/models/rocket'
 
 RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
-  include Cuprum::Rails::RSpec::Contracts::ResponderContracts
+  include Cuprum::Rails::RSpec::Deferred::ResponderExamples
   include Librum::Core::RSpec::Contracts::Responders::HtmlContracts
 
   subject(:responder) { described_class.new(**constructor_options) }
@@ -80,13 +80,7 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
     end
   end
 
-  let(:action_name)   { 'implement' }
-  let(:controller)    { CustomController.new }
   let(:member_action) { false }
-  let(:request)       { Cuprum::Rails::Request.new }
-  let(:resource_options) do
-    { name: 'rockets' }
-  end
   let(:constructor_options) do
     {
       action_name:   action_name,
@@ -96,8 +90,7 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
     }
   end
 
-  include_contract 'should implement the responder methods',
-    controller_name: 'CustomController'
+  include_deferred 'should implement the Responder methods'
 
   # rubocop:disable RSpec/MultipleMemoizedHelpers
   describe '#call' do
@@ -271,12 +264,18 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
       end
     end
 
+    let(:resource_options) do
+      super().merge(name: 'rockets')
+    end
     let(:controller_name) { 'CustomController' }
-    let(:result)          { Cuprum::Result.new }
-    let(:response)        { responder.call(result) }
+    let(:controller) { CustomController.new }
+    let(:result)     { Cuprum::Result.new }
+    let(:response)   { responder.call(result) }
     let(:expected_page) do
       'View::Pages::Custom::ImplementPage'
     end
+
+    example_class 'CustomController', 'Spec::ExampleController'
 
     before(:example) { allow(responder).to receive(:require) } # rubocop:disable RSpec/SubjectStub
 
@@ -368,7 +367,7 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
           let(:value)  { { 'rocket' => rocket } }
           let(:result) { Cuprum::Result.new(value: value) }
 
-          include_contract 'should redirect to',
+          include_deferred 'should redirect to',
             '/rockets/imp-iv',
             flash: lambda {
               {
@@ -420,7 +419,7 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
 
             resource_url =
               '/space_programs/morningstar-technologies/missions/imp/rockets'
-            include_contract 'should redirect to',
+            include_deferred 'should redirect to',
               "#{resource_url}/imp-iv",
               flash: lambda {
                 {
@@ -442,7 +441,7 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
           let(:error)  { Cuprum::Error.new(message: 'Something went wrong') }
           let(:result) { Cuprum::Result.new(error: error) }
 
-          include_contract 'should redirect back',
+          include_deferred 'should redirect back',
             flash: lambda {
               {
                 warning: {
@@ -456,7 +455,7 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
         describe 'with a passing result' do
           let(:result) { Cuprum::Result.new }
 
-          include_contract 'should redirect to',
+          include_deferred 'should redirect to',
             '/rockets',
             flash: lambda {
               {
@@ -473,7 +472,7 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
             let(:error)  { Cuprum::Error.new(message: 'Something went wrong') }
             let(:result) { Cuprum::Result.new(error: error) }
 
-            include_contract 'should redirect back',
+            include_deferred 'should redirect back',
               flash: lambda {
                 {
                   warning: {
@@ -493,7 +492,7 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
 
             resource_url =
               '/space_programs/morningstar-technologies/missions/imp/rockets'
-            include_contract 'should redirect to',
+            include_deferred 'should redirect to',
               resource_url,
               flash: lambda {
                 {
@@ -547,7 +546,7 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
           let(:value)  { { 'rocket' => rocket } }
           let(:result) { Cuprum::Result.new(value: value) }
 
-          include_contract 'should redirect to',
+          include_deferred 'should redirect to',
             '/rockets/imp-iv',
             flash: lambda {
               {
@@ -599,7 +598,7 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
 
             resource_url =
               '/space_programs/morningstar-technologies/missions/imp/rockets'
-            include_contract 'should redirect to',
+            include_deferred 'should redirect to',
               "#{resource_url}/imp-iv",
               flash: lambda {
                 {
@@ -707,7 +706,7 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
           let(:value)  { { 'rocket' => rocket } }
           let(:result) { Cuprum::Result.new(value: value) }
 
-          include_contract 'should redirect to',
+          include_deferred 'should redirect to',
             '/rocket',
             flash: lambda {
               {
@@ -760,7 +759,7 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
 
             resource_url =
               '/space_programs/morningstar-technologies/missions/imp/rocket'
-            include_contract 'should redirect to',
+            include_deferred 'should redirect to',
               resource_url,
               flash: lambda {
                 {
@@ -782,7 +781,7 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
           let(:error)  { Cuprum::Error.new(message: 'Something went wrong') }
           let(:result) { Cuprum::Result.new(error: error) }
 
-          include_contract 'should redirect back',
+          include_deferred 'should redirect back',
             flash: lambda {
               {
                 warning: {
@@ -796,7 +795,7 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
         describe 'with a passing result' do
           let(:result) { Cuprum::Result.new }
 
-          include_contract 'should redirect to',
+          include_deferred 'should redirect to',
             '/rocket',
             flash: lambda {
               {
@@ -813,7 +812,7 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
             let(:error)  { Cuprum::Error.new(message: 'Something went wrong') }
             let(:result) { Cuprum::Result.new(error: error) }
 
-            include_contract 'should redirect back',
+            include_deferred 'should redirect back',
               flash: lambda {
                 {
                   warning: {
@@ -834,7 +833,7 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
 
             resource_url =
               '/space_programs/morningstar-technologies/missions/imp/rocket'
-            include_contract 'should redirect to',
+            include_deferred 'should redirect to',
               resource_url,
               flash: lambda {
                 {
@@ -889,7 +888,7 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
           let(:value)  { { 'rocket' => rocket } }
           let(:result) { Cuprum::Result.new(value: value) }
 
-          include_contract 'should redirect to',
+          include_deferred 'should redirect to',
             '/rocket',
             flash: lambda {
               {
@@ -942,7 +941,7 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
 
             resource_url =
               '/space_programs/morningstar-technologies/missions/imp/rocket'
-            include_contract 'should redirect to',
+            include_deferred 'should redirect to',
               resource_url,
               flash: lambda {
                 {
@@ -963,13 +962,17 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
     include_examples 'should define reader', :format, :html
   end
 
-  # rubocop:disable RSpec/MultipleMemoizedHelpers
   describe '#render_component' do
     let(:controller_name) { 'CustomController' }
-    let(:result)          { Cuprum::Result.new }
-    let(:options)         { {} }
-    let(:response)        { responder.render_component(result, **options) }
-    let(:expected_page)   { 'View::Pages::Custom::ImplementPage' }
+    let(:controller) { CustomController.new }
+    let(:result)     { Cuprum::Result.new }
+    let(:options)    { {} }
+    let(:response)   { responder.render_component(result, **options) }
+    let(:expected_page) do
+      'View::Pages::Custom::ImplementPage'
+    end
+
+    example_class 'CustomController', 'Spec::ExampleController'
 
     before(:example) { allow(responder).to receive(:require) } # rubocop:disable RSpec/SubjectStub
 
@@ -1006,6 +1009,5 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
       include_examples 'should respond with the page when defined',
         'Librum::Core::View::Pages::Resources::ExecutePage'
     end
-    # rubocop:enable RSpec/MultipleMemoizedHelpers
   end
 end
