@@ -29,6 +29,10 @@ RSpec.describe Librum::Core::View::Components::Page do
     end
   end
 
+  describe '#is_layout?' do
+    include_examples 'should define predicate', :is_layout?, true
+  end
+
   describe '#metadata' do
     include_examples 'should define reader', :metadata, nil
 
