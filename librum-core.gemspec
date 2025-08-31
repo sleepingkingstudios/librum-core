@@ -41,6 +41,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'cuprum', '~> 1.2'
   gem.add_dependency 'cuprum-collections'
   gem.add_dependency 'cuprum-rails'
+  gem.add_dependency 'librum-components'
   gem.add_dependency 'stannum', '~> 0.3'
 
   gem.add_dependency 'importmap-rails', '~> 2.1'
