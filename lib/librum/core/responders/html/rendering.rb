@@ -8,7 +8,7 @@ require 'plumbum'
 
 module Librum::Core::Responders::Html
   # Implements generating HTML response objects for view components.
-  module Rendering
+  module Rendering # rubocop:disable Metrics/ModuleLength
     extend SleepingKingStudios::Tools::Toolbox::Mixin
 
     include Plumbum::Consumer
@@ -28,6 +28,9 @@ module Librum::Core::Responders::Html
     # Exception raised when trying to render a component without a definition.
     class ComponentNotFoundError < StandardError; end
 
+    WHITESPACE_PATTERN = /\s+/
+    private_constant :WHITESPACE_PATTERN
+
     provider Librum::Components::Provider
 
     dependency :components, optional: true
@@ -43,7 +46,7 @@ module Librum::Core::Responders::Html
     def find_component_class(name, default: nil)
       return default unless components.is_a?(Module)
 
-      name = name.titleize.gsub('/', '::')
+      name = convert_to_class_name(name)
 
       find_scoped_component_class(name) || default
     end
@@ -115,6 +118,13 @@ module Librum::Core::Responders::Html
       return false unless component.respond_to?(:is_layout?)
 
       component.is_layout?
+    end
+
+    def convert_to_class_name(value)
+      value
+        .titleize
+        .gsub('/', '::')
+        .gsub(WHITESPACE_PATTERN, '')
     end
 
     def empty_layout

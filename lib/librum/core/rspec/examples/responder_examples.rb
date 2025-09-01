@@ -149,5 +149,36 @@ module Librum::Core::RSpec::Examples
           http_status: :created
       end
     end
+
+    deferred_examples 'should render the missing page' do |**page_options|
+      context 'when the missing page component is not defined' do
+        include_deferred 'should render component',
+          'Librum::Core::View::Pages::MissingPage',
+          **page_options,
+          http_status: :internal_server_error
+      end
+
+      context 'when the missing component is defined' do
+        include_deferred 'when the responder is provided components'
+        include_deferred 'when the shared component is defined',
+          'Missing'
+
+        include_deferred 'should render component',
+          'Spec::Components::Missing',
+          **page_options,
+          http_status: :internal_server_error
+      end
+
+      context 'when the missing page is defined' do
+        include_deferred 'when the responder is provided components'
+        include_deferred 'when the shared component is defined',
+          'Pages::MissingPage'
+
+        include_deferred 'should render component',
+          'Spec::Components::Pages::MissingPage',
+          **page_options,
+          http_status: :internal_server_error
+      end
+    end
   end
 end

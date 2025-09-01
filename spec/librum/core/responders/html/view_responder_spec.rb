@@ -6,22 +6,57 @@ require 'cuprum/rails/rspec/deferred/responder_examples'
 
 RSpec.describe Librum::Core::Responders::Html::ViewResponder do
   include Cuprum::Rails::RSpec::Deferred::ResponderExamples
-  include Librum::Core::RSpec::Contracts::Responders::HtmlContracts
+  include Librum::Core::RSpec::Examples::ResponderExamples
 
   subject(:responder) { described_class.new(**constructor_options) }
 
-  shared_context 'when the page is defined' do |component_name|
-    let(:component_class) { component_name.constantize }
+  deferred_examples 'should render the matching component' do |**page_options|
+    context 'when there is not a matching component' do
+      include_deferred 'should render the missing page', **page_options
+    end
 
-    example_class component_name, Librum::Core::View::Components::Page
-  end
+    context 'when there is a matching page component' do
+      let(:expected_action) do
+        next super() if defined?(super())
 
-  shared_examples 'should respond with the page when defined' \
-  do |component_name, **options|
-    wrap_context 'when the page is defined', component_name do
-      include_contract 'should render page',
-        component_name,
-        **options
+        responder.action_name
+      end
+
+      example_class 'Spec::ExampleComponent', ViewComponent::Base do |klass|
+        klass.define_method(:is_layout?) { true }
+      end
+
+      before(:example) do
+        allow(service)
+          .to receive(:call)
+          .with(action: expected_action, controller: controller.class.name)
+          .and_return(Spec::ExampleComponent)
+      end
+
+      include_deferred 'should render component',
+        'Spec::ExampleComponent',
+        **page_options
+    end
+
+    context 'when there is a matching view component' do
+      let(:expected_action) do
+        next super() if defined?(super())
+
+        responder.action_name
+      end
+
+      example_class 'Spec::ExampleComponent', ViewComponent::Base
+
+      before(:example) do
+        allow(service)
+          .to receive(:call)
+          .with(action: expected_action, controller: controller.class.name)
+          .and_return(Spec::ExampleComponent)
+      end
+
+      include_deferred 'should render component',
+        'Spec::ExampleComponent',
+        **page_options
     end
   end
 
@@ -35,30 +70,70 @@ RSpec.describe Librum::Core::Responders::Html::ViewResponder do
 
   include_deferred 'should implement the Responder methods'
 
+  describe '.find_view' do
+    let(:service) { described_class.find_view }
+
+    include_examples 'should define class reader', :find_view
+
+    it { expect(service).to be_a Librum::Core::Responders::Html::FindView }
+
+    it { expect(service.application).to be Rails.application }
+
+    it { expect(service.libraries).to be == [] }
+
+    context 'when the application engines define view paths' do
+      let(:engines) do
+        [
+          Object.new.freeze,
+          Spec::Engine.new('Example'),
+          Spec::Engine.new('WebhooksEngine'),
+          Spec::Engine.new('CustomRailtie')
+        ]
+      end
+      let(:expected_engines) do
+        engines.select { |engine| engine.respond_to?(:view_path) }
+      end
+
+      example_class 'Spec::Engine', Struct.new(:name) do |klass|
+        klass.define_method(:view_path) { '' }
+      end
+
+      before(:example) do
+        allow(Rails::Engine).to receive(:subclasses).and_return(engines)
+      end
+
+      around(:example) do |example|
+        described_class.remove_instance_variable(:@find_view)
+
+        example.call
+      ensure
+        described_class.remove_instance_variable(:@find_view)
+      end
+
+      it { expect(service.libraries).to be == expected_engines }
+    end
+  end
+
   describe '#call' do
-    let(:controller_name) { controller.class.name }
-    let(:controller) { CustomController.new }
-    let(:result)     { Cuprum::Result.new }
-    let(:response)   { responder.call(result) }
-    let(:expected_page) do
-      'View::Pages::Custom::ImplementPage'
+    let(:result)   { Cuprum::Result.new }
+    let(:response) { responder.call(result) }
+    let(:service) do
+      instance_double(Librum::Core::Responders::Html::FindView, call: nil)
     end
 
-    example_class 'CustomController', 'Spec::ExampleController'
+    before(:example) do
+      allow(described_class).to receive(:find_view).and_return(service)
+    end
 
-    include_contract 'should render the missing page'
+    it { expect(responder).to respond_to(:call).with(1).argument }
 
-    include_examples 'should respond with the page when defined',
-      'View::Pages::Custom::ImplementPage'
+    include_deferred 'should render the matching component'
 
     describe 'with a failing result' do
       let(:error)  { Cuprum::Error.new(message: 'Something went wrong') }
       let(:result) { Cuprum::Result.new(error: error) }
 
-      include_contract 'should render the missing page'
-
-      include_examples 'should respond with the page when defined',
-        'View::Pages::Custom::ImplementPage',
+      include_deferred 'should render the matching component',
         http_status: :internal_server_error
     end
 
@@ -66,10 +141,73 @@ RSpec.describe Librum::Core::Responders::Html::ViewResponder do
       let(:value)  { { ok: true } }
       let(:result) { Cuprum::Result.new(value: value) }
 
-      include_contract 'should render the missing page'
+      include_deferred 'should render the matching component'
+    end
+  end
 
-      include_examples 'should respond with the page when defined',
-        'View::Pages::Custom::ImplementPage'
+  describe '#find_component_class' do
+    deferred_context 'with default: value' do
+      let(:default) { Class.new(ViewComponent::Base) }
+      let(:options) { super().merge(default:) }
+    end
+
+    let(:name)      { 'custom' }
+    let(:options)   { {} }
+    let(:component) { responder.find_component_class(name, **options) }
+
+    it 'should define the method' do
+      expect(responder)
+        .to respond_to(:find_component_class)
+        .with(1).argument
+        .and_keywords(:default)
+    end
+
+    it { expect(component).to be nil }
+
+    wrap_deferred 'with default: value' do
+      it { expect(component).to be default }
+    end
+
+    wrap_deferred 'when the responder is provided components' do
+      it { expect(component).to be nil }
+
+      wrap_deferred 'with default: value' do
+        it { expect(component).to be default }
+      end
+
+      wrap_deferred 'when the shared component is defined', 'Custom' do
+        it { expect(component).to be components::Custom }
+
+        wrap_deferred 'with default: value' do
+          it { expect(component).to be components::Custom }
+        end
+      end
+    end
+
+    describe 'with name: a scoped Component name' do
+      let(:name) { 'Scoped::Custom' }
+
+      wrap_deferred 'with default: value' do
+        it { expect(component).to be default }
+      end
+
+      wrap_deferred 'when the responder is provided components' do
+        it { expect(component).to be nil }
+
+        wrap_deferred 'with default: value' do
+          it { expect(component).to be default }
+        end
+
+        wrap_deferred 'when the shared component is defined',
+          'Scoped::Custom' \
+        do
+          it { expect(component).to be components::Scoped::Custom }
+
+          wrap_deferred 'with default: value' do # rubocop:disable RSpec/NestedGroups
+            it { expect(component).to be components::Scoped::Custom }
+          end
+        end
+      end
     end
   end
 
@@ -78,257 +216,62 @@ RSpec.describe Librum::Core::Responders::Html::ViewResponder do
   end
 
   describe '#render_component' do
-    let(:controller_name) { controller.class.name }
-    let(:controller)    { CustomController.new }
-    let(:result)        { Cuprum::Result.new }
-    let(:options)       { {} }
-    let(:response)      { responder.render_component(result, **options) }
-    let(:expected_page) { 'View::Pages::Custom::ImplementPage' }
+    deferred_examples 'should render the matching component with options' do
+      include_deferred 'should render the matching component'
 
-    example_class 'CustomController', 'Spec::ExampleController'
+      describe 'with flash: value' do
+        let(:flash) do
+          {
+            alert:  'Reactor temperature critical',
+            notice: 'Initializing activation sequence'
+          }
+        end
+        let(:options) { super().merge(flash:) }
+
+        include_deferred 'should render the matching component',
+          flash: -> { flash }
+      end
+
+      describe 'with layout: value' do
+        let(:options) { super().merge(layout: :custom) }
+
+        include_deferred 'should render the matching component',
+          layout: :custom
+      end
+
+      describe 'with status: value' do
+        let(:options) { super().merge(status: :created) }
+
+        include_deferred 'should render the matching component',
+          http_status: :created
+      end
+    end
+
+    let(:result)   { Cuprum::Result.new }
+    let(:options)  { {} }
+    let(:response) { responder.render_component(result, **options) }
+    let(:service) do
+      instance_double(Librum::Core::Responders::Html::FindView, call: nil)
+    end
+
+    before(:example) do
+      allow(described_class).to receive(:find_view).and_return(service)
+    end
 
     it 'should define the method' do
       expect(responder)
         .to respond_to(:render_component)
         .with(1).argument
-        .and_keywords(:flash, :status)
+        .and_keywords(:flash, :layout, :status)
     end
 
-    include_contract 'should render the missing page'
-
-    include_examples 'should respond with the page when defined',
-      'View::Pages::Custom::ImplementPage'
-
-    context 'when the action has multiple words' do
-      let(:action_name)   { :go_fish }
-      let(:expected_page) { 'View::Pages::Custom::GoFishPage' }
-
-      include_contract 'should render the missing page'
-
-      include_examples 'should respond with the page when defined',
-        'View::Pages::Custom::GoFishPage'
-    end
-
-    context 'when the controller belongs to an engine' do
-      let(:controller_name) { 'Librum::Core::CustomController' }
-      let(:expected_page) do
-        'Librum::Core::View::Pages::Custom::ImplementPage'
-      end
-
-      before(:example) do
-        allow(CustomController).to receive(:name).and_return(controller_name)
-      end
-
-      include_contract 'should render the missing page'
-
-      include_examples 'should respond with the page when defined',
-        'Librum::Core::View::Pages::Custom::ImplementPage'
-
-      context 'when the controller has a namespace' do
-        let(:controller_name) { 'Librum::Core::Namespace::CustomController' }
-        let(:expected_page) do
-          'Librum::Core::View::Pages::Namespace::Custom::ImplementPage'
-        end
-
-        include_contract 'should render the missing page'
-
-        include_examples 'should respond with the page when defined',
-          'Librum::Core::View::Pages::Namespace::Custom::ImplementPage'
-      end
-    end
-
-    context 'when the controller has a namespace' do
-      let(:controller_name) { 'Namespace::CustomController' }
-      let(:expected_page)   { 'View::Pages::Namespace::Custom::ImplementPage' }
-
-      before(:example) do
-        allow(CustomController).to receive(:name).and_return(controller_name)
-      end
-
-      include_contract 'should render the missing page'
-
-      include_examples 'should respond with the page when defined',
-        'View::Pages::Namespace::Custom::ImplementPage'
-    end
-
-    context 'when the result metadata is nil' do
-      let(:result) { Cuprum::Rails::Result.new(metadata: nil) }
-
-      include_contract 'should render the missing page'
-
-      include_examples 'should respond with the page when defined',
-        'View::Pages::Custom::ImplementPage'
-    end
-
-    context 'when the result has metadata' do
-      let(:value) do
-        {
-          'book' => {
-            title:  'Gideon the Ninth',
-            author: 'Tammsyn Muir'
-          }
-        }
-      end
-      let(:metadata) do
-        {
-          page:    { title: 'The Locked Tomb Series' },
-          session: { token: '12345' }
-        }
-      end
-      let(:result) do
-        Cuprum::Rails::Result.new(value: value, metadata: metadata)
-      end
-      let(:assigns) do
-        {
-          'page'    => { title: 'The Locked Tomb Series' },
-          'result'  => result,
-          'session' => { token: '12345' }
-        }
-      end
-
-      include_contract 'should render the missing page',
-        assigns: -> { assigns }
-
-      include_examples 'should respond with the page when defined',
-        'View::Pages::Custom::ImplementPage',
-        assigns: -> { assigns }
-    end
-
-    context 'when the result value is a Hash with metadata' do
-      let(:value) do
-        {
-          'book'     => {
-            title:  'Gideon the Ninth',
-            author: 'Tammsyn Muir'
-          },
-          '_page'    => { title: 'The Locked Tomb Series' },
-          '_session' => { token: '12345' }
-        }
-      end
-      let(:result) { Cuprum::Result.new(value: value) }
-      let(:assigns) do
-        {
-          'page'    => { title: 'The Locked Tomb Series' },
-          'result'  => result,
-          'session' => { token: '12345' }
-        }
-      end
-
-      include_contract 'should render the missing page',
-        assigns: -> { assigns }
-
-      include_examples 'should respond with the page when defined',
-        'View::Pages::Custom::ImplementPage',
-        assigns: -> { assigns }
-    end
-
-    context 'when the result value is a ViewComponent' do
-      let(:component) { Spec::CustomComponent.new }
-      let(:result)    { Cuprum::Result.new(value: component) }
-
-      example_class 'Spec::CustomComponent', ViewComponent::Base
-
-      include_contract 'should render component',
-        'Spec::CustomComponent'
-
-      describe 'with flash: value' do
-        let(:flash) do
-          {
-            alert:  'Reactor temperature critical',
-            notice: 'Initializing activation sequence'
-          }
-        end
-        let(:options) { super().merge(flash: flash) }
-
-        it { expect(response.flash).to be == flash }
-      end
-
-      describe 'with layout: value' do
-        let(:layout)  { 'custom_layout' }
-        let(:options) { super().merge(layout: layout) }
-
-        it { expect(response.layout).to be == layout }
-      end
-
-      describe 'with status: value' do
-        let(:status)  { :created }
-        let(:options) { super().merge(status: status) }
-
-        it { expect(response.status).to be status }
-      end
-    end
-
-    describe 'with a ViewComponent' do
-      let(:component) { Spec::CustomComponent.new }
-      let(:response)  { responder.render_component(component, **options) }
-
-      example_class 'Spec::CustomComponent', ViewComponent::Base
-
-      include_contract 'should render component',
-        'Spec::CustomComponent',
-        assigns: {}
-
-      describe 'with flash: value' do
-        let(:flash) do
-          {
-            alert:  'Reactor temperature critical',
-            notice: 'Initializing activation sequence'
-          }
-        end
-        let(:options) { super().merge(flash: flash) }
-
-        it { expect(response.flash).to be == flash }
-      end
-
-      describe 'with layout: value' do
-        let(:layout)  { 'custom_layout' }
-        let(:options) { super().merge(layout: layout) }
-
-        it { expect(response.layout).to be == layout }
-      end
-
-      describe 'with status: value' do
-        let(:status)  { :created }
-        let(:options) { super().merge(status: status) }
-
-        it { expect(response.status).to be status }
-      end
-    end
+    include_deferred 'should render the matching component with options'
 
     describe 'with action: value' do
-      let(:action)  { 'execute' }
-      let(:options) { super().merge(action: action) }
+      let(:options)         { super().merge(action: 'revert') }
+      let(:expected_action) { 'revert' }
 
-      include_contract 'should render the missing page'
-
-      include_examples 'should respond with the page when defined',
-        'View::Pages::Custom::ExecutePage'
-    end
-
-    describe 'with flash: value' do
-      let(:flash) do
-        {
-          alert:  'Reactor temperature critical',
-          notice: 'Initializing activation sequence'
-        }
-      end
-      let(:options) { super().merge(flash: flash) }
-
-      it { expect(response.flash).to be == flash }
-    end
-
-    describe 'with layout: value' do
-      let(:layout)  { 'custom_layout' }
-      let(:options) { super().merge(layout: layout) }
-
-      it { expect(response.layout).to be == layout }
-    end
-
-    describe 'with status: value' do
-      let(:status)  { :created }
-      let(:options) { super().merge(status: status) }
-
-      it { expect(response.status).to be :internal_server_error }
+      include_deferred 'should render the matching component with options'
     end
   end
 end

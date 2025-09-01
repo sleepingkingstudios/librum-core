@@ -11,72 +11,78 @@ require 'support/models/rocket'
 
 RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
   include Cuprum::Rails::RSpec::Deferred::ResponderExamples
-  include Librum::Core::RSpec::Contracts::Responders::HtmlContracts
+  include Librum::Core::RSpec::Examples::ResponderExamples
 
   subject(:responder) { described_class.new(**constructor_options) }
 
-  shared_context 'when the page is defined' do |component_name|
-    let(:component_class) { component_name.constantize }
+  deferred_examples 'should render the matching component' do |**page_options|
+    context 'when there is not a matching component' do
+      include_deferred 'should render the missing page', **page_options
+    end
 
-    example_class component_name, Librum::Core::View::Components::Page
-  end
+    context 'when there is a matching page component' do
+      let(:expected_action) do
+        next super() if defined?(super())
 
-  shared_context 'when the resource has ancestors' do
-    let(:space_programs_resource) do
-      Cuprum::Rails::Resource.new(name: 'space_programs')
-    end
-    let(:missions_resource) do
-      Cuprum::Rails::Resource.new(
-        name:   'missions',
-        parent: space_programs_resource
-      )
-    end
-    let(:resource_options) { super().merge(parent: missions_resource) }
-    let(:path_params) do
-      {
-        'space_program_id' => 'morningstar-technologies',
-        'mission_id'       => 'imp',
-        'id'               => 'imp-iv'
-      }
-    end
-    let(:request) do
-      Cuprum::Rails::Request.new(
-        action_name: action_name,
-        path_params: path_params
-      )
-    end
-  end
-
-  shared_examples 'should respond with the page when defined' \
-  do |component_name, lazy_require: false, **options|
-    wrap_context 'when the page is defined', component_name do
-      let(:expected_path) do
-        component_name.split('::').map(&:underscore).join('/')
+        responder.action_name
       end
 
-      include_contract 'should render page',
-        component_name,
-        **options
-
-      if lazy_require
-        it 'should lazily require the resource page' do
-          responder.call(result)
-
-          expect(responder)
-            .to have_received(:require)
-            .with(expected_path)
-        end
-
-        context 'when the resource page cannot be required' do
-          before(:example) do
-            allow(responder).to receive(:require).and_raise(LoadError)
-          end
-
-          include_contract 'should render page',
-            component_name,
-            **options
-        end
+      example_class 'Spec::ExampleComponent', ViewComponent::Base do |klass|
+        klass.define_method(:is_layout?) { true }
       end
+
+      before(:example) do
+        allow(service)
+          .to receive(:call)
+          .with(action: expected_action, controller: controller.class.name)
+          .and_return(Spec::ExampleComponent)
+      end
+
+      include_deferred 'should render component',
+        'Spec::ExampleComponent',
+        **page_options
+    end
+
+    context 'when there is a matching view component' do
+      let(:expected_action) do
+        next super() if defined?(super())
+
+        responder.action_name
+      end
+
+      example_class 'Spec::ExampleComponent', ViewComponent::Base
+
+      before(:example) do
+        allow(service)
+          .to receive(:call)
+          .with(action: expected_action, controller: controller.class.name)
+          .and_return(Spec::ExampleComponent)
+      end
+
+      include_deferred 'should render component',
+        'Spec::ExampleComponent',
+        **page_options
+    end
+
+    context 'when there is a matching generic resource page' do
+      let(:expected_action) do
+        next super() if defined?(super())
+
+        responder.action_name
+      end
+
+      example_class 'Spec::ResourceComponent', ViewComponent::Base
+
+      before(:example) do
+        allow(service)
+          .to receive(:call)
+          .with(action: expected_action, controller: 'Resources')
+          .and_return(Spec::ResourceComponent)
+      end
+
+      include_deferred 'should render component',
+        'Spec::ResourceComponent',
+        **page_options
     end
   end
 
@@ -92,922 +98,507 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
 
   include_deferred 'should implement the Responder methods'
 
-  # rubocop:disable RSpec/MultipleMemoizedHelpers
+  describe '.find_view' do
+    let(:service) { described_class.find_view }
+
+    include_examples 'should define class reader', :find_view
+
+    it { expect(service).to be_a Librum::Core::Responders::Html::FindView }
+
+    it { expect(service.application).to be Rails.application }
+
+    it { expect(service.libraries).to be == [] }
+
+    context 'when the application engines define view paths' do
+      let(:engines) do
+        [
+          Object.new.freeze,
+          Spec::Engine.new('Example'),
+          Spec::Engine.new('WebhooksEngine'),
+          Spec::Engine.new('CustomRailtie')
+        ]
+      end
+      let(:expected_engines) do
+        engines.select { |engine| engine.respond_to?(:view_path) }
+      end
+
+      example_class 'Spec::Engine', Struct.new(:name) do |klass|
+        klass.define_method(:view_path) { '' }
+      end
+
+      before(:example) do
+        allow(Rails::Engine).to receive(:subclasses).and_return(engines)
+      end
+
+      around(:example) do |example|
+        described_class.remove_instance_variable(:@find_view)
+
+        example.call
+      ensure
+        described_class.remove_instance_variable(:@find_view)
+      end
+
+      it { expect(service.libraries).to be == expected_engines }
+    end
+  end
+
   describe '#call' do
-    shared_examples 'should handle a failing result' do |action|
+    deferred_context 'when initialized with a plural resource' do
+      let(:resource_options) { super().merge(name: 'books', singular: false) }
+    end
+
+    deferred_context 'when initialized with a singular resource' do
+      let(:resource_options) { super().merge(name: 'book', singular: true) }
+    end
+
+    let(:result)   { Cuprum::Result.new }
+    let(:response) { responder.call(result) }
+    let(:service) do
+      instance_double(Librum::Core::Responders::Html::FindView, call: nil)
+    end
+
+    before(:example) do
+      allow(described_class).to receive(:find_view).and_return(service)
+    end
+
+    it { expect(responder).to respond_to(:call).with(1).argument }
+
+    include_deferred 'should render the matching component'
+
+    describe 'with a failing result' do
+      let(:error)  { Cuprum::Error.new(message: 'Something went wrong') }
+      let(:result) { Cuprum::Result.new(error: error) }
+
+      include_deferred 'should render the matching component',
+        http_status: :internal_server_error
+    end
+
+    describe 'with a failing result with a NotFound error' do
+      let(:result) { Cuprum::Result.new(error: error) }
+
+      context 'when the error does not match a resource' do
+        let(:error) do
+          Cuprum::Collections::Errors::NotFound.new(
+            attribute_name:  'slug',
+            attribute_value: 'jack_of_hearts',
+            collection_name: 'playing_cards',
+            primary_key:     false
+          )
+        end
+
+        include_deferred 'should render the matching component',
+          flash:       {
+            warning: {
+              icon:    'exclamation-triangle',
+              message: 'Playing Card not found with key "jack_of_hearts"'
+            }
+          },
+          http_status: :not_found
+      end
+
+      context 'when the error matches the resource' do
+        let(:error) do
+          Cuprum::Collections::Errors::NotFound.new(
+            attribute_name:  'id',
+            attribute_value: 0,
+            collection_name: 'books'
+          )
+        end
+
+        wrap_deferred 'when initialized with a plural resource' do
+          include_deferred 'should redirect to',
+            -> { resource.routes.index_path },
+            flash: {
+              warning: {
+                icon:    'exclamation-triangle',
+                message: 'Book not found with key "0"'
+              }
+            }
+        end
+
+        wrap_deferred 'when initialized with a singular resource' do
+          include_deferred 'should redirect to',
+            -> { resource.routes.show_path },
+            flash: {
+              warning: {
+                icon:    'exclamation-triangle',
+                message: 'Book not found with key "0"'
+              }
+            }
+        end
+      end
+
+      context 'when the error matches the parent resource' do
+        let(:publishers_resource) do
+          Cuprum::Rails::Resource.new(name: 'publishers')
+        end
+        let(:authors_resource) do
+          Cuprum::Rails::Resource.new(
+            name:   'authors',
+            parent: publishers_resource
+          )
+        end
+        let(:resource_options) do
+          super().merge(parent: authors_resource)
+        end
+        let(:request) do
+          Cuprum::Rails::Request.new(
+            action_name:,
+            path_params: { publisher_id: 0 }
+          )
+        end
+        let(:error) do
+          Cuprum::Collections::Errors::NotFound.new(
+            attribute_name:  'id',
+            attribute_value: 0,
+            collection_name: 'authors'
+          )
+        end
+
+        include_deferred 'should redirect to',
+          lambda {
+            authors_resource.routes.with_wildcards(publisher_id: 0).index_path
+          },
+          flash: {
+            warning: {
+              icon:    'exclamation-triangle',
+              message: 'Author not found with key "0"'
+            }
+          }
+      end
+
+      context 'when the error matches the top-level resource' do
+        let(:publishers_resource) do
+          Cuprum::Rails::Resource.new(name: 'publishers')
+        end
+        let(:authors_resource) do
+          Cuprum::Rails::Resource.new(
+            name:   'authors',
+            parent: publishers_resource
+          )
+        end
+        let(:resource_options) do
+          super().merge(parent: authors_resource)
+        end
+        let(:error) do
+          Cuprum::Collections::Errors::NotFound.new(
+            attribute_name:  'id',
+            attribute_value: 0,
+            collection_name: 'publishers'
+          )
+        end
+
+        include_deferred 'should redirect to',
+          lambda {
+            publishers_resource.routes.index_path
+          },
+          flash: {
+            warning: {
+              icon:    'exclamation-triangle',
+              message: 'Publisher not found with key "0"'
+            }
+          }
+      end
+    end
+
+    describe 'with a passing result' do
+      let(:value)  { { ok: true } }
+      let(:result) { Cuprum::Result.new(value: value) }
+
+      include_deferred 'should render the matching component'
+    end
+
+    context 'with action_name: "create"' do
+      let(:action_name) { 'create' }
+
       describe 'with a failing result' do
         let(:error)  { Cuprum::Error.new(message: 'Something went wrong') }
         let(:result) { Cuprum::Result.new(error: error) }
 
-        include_contract 'should render the missing page'
-
-        include_examples 'should respond with the page when defined',
-          "View::Pages::Custom::#{action}Page",
+        include_deferred 'should render the matching component',
           http_status: :internal_server_error
+      end
 
-        include_examples 'should respond with the page when defined',
-          "View::Pages::Resources::#{action}Page",
-          http_status: :internal_server_error
+      describe 'with a failing result with a FailedValidation error' do
+        let(:error) do
+          Cuprum::Collections::Errors::FailedValidation.new(
+            entity_class: Hash,
+            errors:       Stannum::Errors.new
+          )
+        end
+        let(:result) { Cuprum::Result.new(error: error) }
+        let(:expected_action) do
+          'new'
+        end
 
-        include_examples 'should respond with the page when defined',
-          "Librum::Core::View::Pages::Resources::#{action}Page",
-          http_status:  :internal_server_error,
-          lazy_require: true
+        include_deferred 'should render the matching component',
+          flash: {
+            warning: {
+              icon:    'exclamation-triangle',
+              message: 'Unable to create Book'
+            }
+          }
+      end
+
+      describe 'with a passing result' do
+        let(:record) { Struct.new(:slug).new('gideon-the-ninth') }
+        let(:result) { Cuprum::Result.new(value: { 'book' => record }) }
+
+        wrap_deferred 'when initialized with a plural resource' do
+          include_deferred 'should redirect to',
+            -> { resource.routes.show_path(record.slug) },
+            flash: {
+              success: {
+                icon:    'circle-check',
+                message: 'Successfully created Book'
+              }
+            }
+        end
+
+        wrap_deferred 'when initialized with a singular resource' do
+          include_deferred 'should redirect to',
+            -> { resource.routes.show_path },
+            flash: {
+              success: {
+                icon:    'circle-check',
+                message: 'Successfully created Book'
+              }
+            }
+        end
       end
     end
 
-    shared_examples 'should handle a result with a NotFound error' \
-    do |component_name, with_ancestors: false, with_resource: true|
-      describe 'with a failing result with a NotFound error' do
+    context 'with action_name: "destroy"' do
+      let(:action_name) { 'destroy' }
+
+      describe 'with a failing result' do
+        let(:error)  { Cuprum::Error.new(message: 'Something went wrong') }
         let(:result) { Cuprum::Result.new(error: error) }
 
-        context 'when the error does not match a resource' do
-          let(:error) do
-            Cuprum::Collections::Errors::NotFound.new(
-              attribute_name:  'slug',
-              attribute_value: 'cythera',
-              collection_name: 'planets',
-              primary_key:     true
-            )
-          end
+        include_deferred 'should redirect back',
+          flash: {
+            warning: {
+              icon:    'exclamation-triangle',
+              message: 'Unable to destroy Book'
+            }
+          }
+      end
 
-          include_contract 'should render the missing page',
+      describe 'with a passing result' do
+        let(:result) { Cuprum::Result.new(value: {}) }
+
+        wrap_deferred 'when initialized with a plural resource' do
+          include_deferred 'should redirect to',
+            -> { resource.routes.index_path },
             flash: {
-              warning: {
-                icon:    'exclamation-triangle',
-                message: 'Planet not found with key "cythera"'
+              danger: {
+                icon:    'bomb',
+                message: 'Successfully destroyed Book'
               }
             }
-
-          include_examples 'should respond with the page when defined',
-            component_name,
-            flash:       {
-              warning: {
-                icon:    'exclamation-triangle',
-                message: 'Planet not found with key "cythera"'
-              }
-            },
-            http_status: :not_found
         end
 
-        if with_resource
-          context 'when the error matches the resource' do
-            let(:error) do
-              Cuprum::Collections::Errors::NotFound.new(
-                attribute_name:  'slug',
-                attribute_value: 'imp-iv',
-                collection_name: 'rockets'
-              )
-            end
-            let(:response_class) do
-              Cuprum::Rails::Responses::Html::RedirectResponse
-            end
-            let(:expected_flash) do
-              {
-                warning: {
-                  icon:    'exclamation-triangle',
-                  message: 'Rocket not found with key "imp-iv"'
-                }
+        wrap_deferred 'when initialized with a singular resource' do
+          include_deferred 'should redirect to',
+            -> { resource.routes.show_path },
+            flash: {
+              danger: {
+                icon:    'bomb',
+                message: 'Successfully destroyed Book'
               }
-            end
-            let(:expected_path) do
-              resource
-                .routes
-                .with_wildcards(request.path_params || {})
-                .index_path
-            end
-
-            it { expect(response).to be_a response_class }
-
-            it { expect(response.flash).to be == expected_flash }
-
-            it { expect(response.path).to be == expected_path }
-
-            it { expect(response.status).to be 302 } # rubocop:disable RSpecRails/HaveHttpStatus
-          end
-        end
-
-        if with_ancestors
-          context 'when the error matches the parent resource' do
-            let(:error) do
-              Cuprum::Collections::Errors::NotFound.new(
-                attribute_name:  'slug',
-                attribute_value: 'imp',
-                collection_name: 'mission'
-              )
-            end
-            let(:response_class) do
-              Cuprum::Rails::Responses::Html::RedirectResponse
-            end
-            let(:expected_flash) do
-              {
-                warning: {
-                  icon:    'exclamation-triangle',
-                  message: 'Mission not found with key "imp"'
-                }
-              }
-            end
-            let(:expected_path) do
-              missions_resource
-                .routes
-                .with_wildcards(request.path_params)
-                .index_path
-            end
-
-            it { expect(response).to be_a response_class }
-
-            it { expect(response.flash).to be == expected_flash }
-
-            it { expect(response.path).to be == expected_path }
-
-            it { expect(response.status).to be 302 } # rubocop:disable RSpecRails/HaveHttpStatus
-          end
-
-          context 'when the error matches the top-level resource' do
-            let(:error) do
-              Cuprum::Collections::Errors::NotFound.new(
-                attribute_name:  'slug',
-                attribute_value: 'morningstar-technologies',
-                collection_name: 'space_program'
-              )
-            end
-            let(:response_class) do
-              Cuprum::Rails::Responses::Html::RedirectResponse
-            end
-            let(:expected_flash) do
-              message =
-                'Space Program not found with key "morningstar-technologies"'
-
-              {
-                warning: {
-                  icon:    'exclamation-triangle',
-                  message: message
-                }
-              }
-            end
-            let(:expected_path) do
-              space_programs_resource
-                .routes
-                .with_wildcards(request.path_params)
-                .index_path
-            end
-
-            it { expect(response).to be_a response_class }
-
-            it { expect(response.flash).to be == expected_flash }
-
-            it { expect(response.path).to be == expected_path }
-
-            it { expect(response.status).to be 302 } # rubocop:disable RSpecRails/HaveHttpStatus
-          end
+            }
         end
       end
     end
 
-    let(:resource_options) do
-      super().merge(name: 'rockets')
-    end
-    let(:controller_name) { 'CustomController' }
-    let(:controller) { CustomController.new }
-    let(:result)     { Cuprum::Result.new }
-    let(:response)   { responder.call(result) }
-    let(:expected_page) do
-      'View::Pages::Custom::ImplementPage'
-    end
+    context 'with action_name: "update"' do
+      let(:action_name) { 'update' }
 
-    example_class 'CustomController', 'Spec::ExampleController'
+      describe 'with a failing result' do
+        let(:error)  { Cuprum::Error.new(message: 'Something went wrong') }
+        let(:result) { Cuprum::Result.new(error: error) }
 
-    before(:example) { allow(responder).to receive(:require) } # rubocop:disable RSpec/SubjectStub
+        include_deferred 'should render the matching component',
+          http_status: :internal_server_error
+      end
 
-    context 'when initialized with a plural resource' do
-      include_examples 'should handle a failing result', 'Implement'
+      describe 'with a failing result with a FailedValidation error' do
+        let(:error) do
+          Cuprum::Collections::Errors::FailedValidation.new(
+            entity_class: Hash,
+            errors:       Stannum::Errors.new
+          )
+        end
+        let(:result) { Cuprum::Result.new(error: error) }
+        let(:expected_action) do
+          'edit'
+        end
 
-      include_examples 'should handle a result with a NotFound error',
-        'View::Pages::Custom::ImplementPage'
+        include_deferred 'should render the matching component',
+          flash: {
+            warning: {
+              icon:    'exclamation-triangle',
+              message: 'Unable to update Book'
+            }
+          }
+      end
 
       describe 'with a passing result' do
-        let(:value)  { { ok: true } }
-        let(:result) { Cuprum::Result.new(value: value) }
+        let(:record) { Struct.new(:slug).new('gideon-the-ninth') }
+        let(:result) { Cuprum::Result.new(value: { 'book' => record }) }
 
-        include_contract 'should render the missing page'
-
-        include_examples 'should respond with the page when defined',
-          'View::Pages::Custom::ImplementPage'
-
-        include_examples 'should respond with the page when defined',
-          'View::Pages::Resources::ImplementPage'
-
-        include_examples 'should respond with the page when defined',
-          'Librum::Core::View::Pages::Resources::ImplementPage',
-          lazy_require: true
-      end
-
-      wrap_context 'when the resource has ancestors' do
-        include_examples 'should handle a failing result', 'Implement'
-
-        include_examples 'should handle a result with a NotFound error',
-          'View::Pages::Custom::ImplementPage',
-          with_ancestors: true
-
-        describe 'with a passing result' do
-          let(:value)  { { ok: true } }
-          let(:result) { Cuprum::Result.new(value: value) }
-
-          include_contract 'should render the missing page'
-
-          include_examples 'should respond with the page when defined',
-            'View::Pages::Custom::ImplementPage'
-
-          include_examples 'should respond with the page when defined',
-            'View::Pages::Resources::ImplementPage'
-
-          include_examples 'should respond with the page when defined',
-            'Librum::Core::View::Pages::Resources::ImplementPage',
-            lazy_require: true
-        end
-      end
-
-      context 'when initialized with action_name: "create"' do
-        let(:action_name)   { 'create' }
-        let(:expected_page) { 'View::Pages::Custom::CreatePage' }
-
-        include_examples 'should handle a failing result', 'Create'
-
-        include_examples 'should handle a result with a NotFound error',
-          'View::Pages::Custom::CreatePage'
-
-        describe 'with a failing result with a FailedValidation error' do
-          let(:error) do
-            Cuprum::Collections::Errors::FailedValidation.new(
-              entity_class: Rocket,
-              errors:       Stannum::Errors.new
-            )
-          end
-          let(:result) { Cuprum::Result.new(error: error) }
-
-          include_contract 'should render page',
-            'Librum::Core::View::Pages::Resources::NewPage',
-            flash: lambda {
-              {
-                warning: {
-                  icon:    'exclamation-triangle',
-                  message: 'Unable to create Rocket'
-                }
-              }
-            }
-        end
-
-        describe 'with a passing result' do
-          let(:rocket) do
-            Rocket.new(
-              name: 'Imp IV',
-              slug: 'imp-iv'
-            )
-          end
-          let(:value)  { { 'rocket' => rocket } }
-          let(:result) { Cuprum::Result.new(value: value) }
-
+        wrap_deferred 'when initialized with a plural resource' do
           include_deferred 'should redirect to',
-            '/rockets/imp-iv',
-            flash: lambda {
-              {
-                success: {
-                  icon:    'circle-check',
-                  message: 'Successfully created Rocket'
-                }
+            -> { resource.routes.show_path(record.slug) },
+            flash: {
+              success: {
+                icon:    'circle-check',
+                message: 'Successfully updated Book'
               }
             }
         end
 
-        wrap_context 'when the resource has ancestors' do
-          include_examples 'should handle a failing result', 'Create'
-
-          include_examples 'should handle a result with a NotFound error',
-            'View::Pages::Custom::CreatePage',
-            with_ancestors: true
-
-          describe 'with a failing result with a FailedValidation error' do # rubocop:disable RSpec/NestedGroups
-            let(:error) do
-              Cuprum::Collections::Errors::FailedValidation.new(
-                entity_class: Rocket,
-                errors:       Stannum::Errors.new
-              )
-            end
-            let(:result) { Cuprum::Result.new(error: error) }
-
-            include_contract 'should render page',
-              'Librum::Core::View::Pages::Resources::NewPage',
-              flash: lambda {
-                {
-                  warning: {
-                    icon:    'exclamation-triangle',
-                    message: 'Unable to create Rocket'
-                  }
-                }
+        wrap_deferred 'when initialized with a singular resource' do
+          include_deferred 'should redirect to',
+            -> { resource.routes.show_path },
+            flash: {
+              success: {
+                icon:    'circle-check',
+                message: 'Successfully updated Book'
               }
-          end
-
-          describe 'with a passing result' do # rubocop:disable RSpec/NestedGroups
-            let(:rocket) do
-              Rocket.new(
-                name: 'Imp IV',
-                slug: 'imp-iv'
-              )
-            end
-            let(:value)  { { 'rocket' => rocket } }
-            let(:result) { Cuprum::Result.new(value: value) }
-
-            resource_url =
-              '/space_programs/morningstar-technologies/missions/imp/rockets'
-            include_deferred 'should redirect to',
-              "#{resource_url}/imp-iv",
-              flash: lambda {
-                {
-                  success: {
-                    icon:    'circle-check',
-                    message: 'Successfully created Rocket'
-                  }
-                }
-              }
-          end
+            }
         end
       end
+    end
+  end
 
-      context 'when initialized with action_name: "destroy"' do
-        let(:action_name)   { 'destroy' }
-        let(:expected_page) { 'View::Pages::Custom::DestroyPage' }
+  describe '#find_component_class' do
+    deferred_context 'with default: value' do
+      let(:default) { Class.new(ViewComponent::Base) }
+      let(:options) { super().merge(default:) }
+    end
 
-        describe 'with a failing result' do
-          let(:error)  { Cuprum::Error.new(message: 'Something went wrong') }
-          let(:result) { Cuprum::Result.new(error: error) }
+    let(:name)      { 'custom' }
+    let(:options)   { {} }
+    let(:component) { responder.find_component_class(name, **options) }
 
-          include_deferred 'should redirect back',
-            flash: lambda {
-              {
-                warning: {
-                  icon:    'exclamation-triangle',
-                  message: 'Unable to destroy Rocket'
-                }
-              }
-            }
-        end
+    it 'should define the method' do
+      expect(responder)
+        .to respond_to(:find_component_class)
+        .with(1).argument
+        .and_keywords(:default)
+    end
 
-        describe 'with a passing result' do
-          let(:result) { Cuprum::Result.new }
+    it { expect(component).to be nil }
 
-          include_deferred 'should redirect to',
-            '/rockets',
-            flash: lambda {
-              {
-                danger: {
-                  icon:    'bomb',
-                  message: 'Successfully destroyed Rocket'
-                }
-              }
-            }
-        end
+    wrap_deferred 'with default: value' do
+      it { expect(component).to be default }
+    end
 
-        wrap_context 'when the resource has ancestors' do
-          describe 'with a failing result' do # rubocop:disable RSpec/NestedGroups
-            let(:error)  { Cuprum::Error.new(message: 'Something went wrong') }
-            let(:result) { Cuprum::Result.new(error: error) }
+    wrap_deferred 'when the responder is provided components' do
+      it { expect(component).to be nil }
 
-            include_deferred 'should redirect back',
-              flash: lambda {
-                {
-                  warning: {
-                    icon:    'exclamation-triangle',
-                    message: 'Unable to destroy Rocket'
-                  }
-                }
-              }
-          end
-
-          include_examples 'should handle a result with a NotFound error',
-            'View::Pages::Custom::DestroyPage',
-            with_ancestors: true
-
-          describe 'with a passing result' do # rubocop:disable RSpec/NestedGroups
-            let(:result) { Cuprum::Result.new }
-
-            resource_url =
-              '/space_programs/morningstar-technologies/missions/imp/rockets'
-            include_deferred 'should redirect to',
-              resource_url,
-              flash: lambda {
-                {
-                  danger: {
-                    icon:    'bomb',
-                    message: 'Successfully destroyed Rocket'
-                  }
-                }
-              }
-          end
-        end
+      wrap_deferred 'with default: value' do
+        it { expect(component).to be default }
       end
 
-      context 'when initialized with action_name: "update"' do
-        let(:action_name)   { 'update' }
-        let(:expected_page) { 'View::Pages::Custom::UpdatePage' }
+      wrap_deferred 'when the shared component is defined', 'Custom' do
+        it { expect(component).to be components::Custom }
 
-        include_examples 'should handle a failing result', 'Update'
-
-        include_examples 'should handle a result with a NotFound error',
-          'View::Pages::Custom::UpdatePage'
-
-        describe 'with a failing result with a FailedValidation error' do
-          let(:error) do
-            Cuprum::Collections::Errors::FailedValidation.new(
-              entity_class: Rocket,
-              errors:       Stannum::Errors.new
-            )
-          end
-          let(:result) { Cuprum::Result.new(error: error) }
-
-          include_contract 'should render page',
-            'Librum::Core::View::Pages::Resources::EditPage',
-            flash: lambda {
-              {
-                warning: {
-                  icon:    'exclamation-triangle',
-                  message: 'Unable to update Rocket'
-                }
-              }
-            }
-        end
-
-        describe 'with a passing result' do
-          let(:rocket) do
-            Rocket.new(
-              name: 'Imp IV',
-              slug: 'imp-iv'
-            )
-          end
-          let(:value)  { { 'rocket' => rocket } }
-          let(:result) { Cuprum::Result.new(value: value) }
-
-          include_deferred 'should redirect to',
-            '/rockets/imp-iv',
-            flash: lambda {
-              {
-                success: {
-                  icon:    'circle-check',
-                  message: 'Successfully updated Rocket'
-                }
-              }
-            }
-        end
-
-        wrap_context 'when the resource has ancestors' do
-          include_examples 'should handle a failing result', 'Update'
-
-          include_examples 'should handle a result with a NotFound error',
-            'View::Pages::Custom::UpdatePage',
-            with_ancestors: true
-
-          describe 'with a failing result with a FailedValidation error' do # rubocop:disable RSpec/NestedGroups
-            let(:error) do
-              Cuprum::Collections::Errors::FailedValidation.new(
-                entity_class: Rocket,
-                errors:       Stannum::Errors.new
-              )
-            end
-            let(:result) { Cuprum::Result.new(error: error) }
-
-            include_contract 'should render page',
-              'Librum::Core::View::Pages::Resources::EditPage',
-              flash: lambda {
-                {
-                  warning: {
-                    icon:    'exclamation-triangle',
-                    message: 'Unable to update Rocket'
-                  }
-                }
-              }
-          end
-
-          describe 'with a passing result' do # rubocop:disable RSpec/NestedGroups
-            let(:rocket) do
-              Rocket.new(
-                name: 'Imp IV',
-                slug: 'imp-iv'
-              )
-            end
-            let(:value)  { { 'rocket' => rocket } }
-            let(:result) { Cuprum::Result.new(value: value) }
-
-            resource_url =
-              '/space_programs/morningstar-technologies/missions/imp/rockets'
-            include_deferred 'should redirect to',
-              "#{resource_url}/imp-iv",
-              flash: lambda {
-                {
-                  success: {
-                    icon:    'circle-check',
-                    message: 'Successfully updated Rocket'
-                  }
-                }
-              }
-          end
+        wrap_deferred 'with default: value' do
+          it { expect(component).to be components::Custom }
         end
       end
     end
 
-    context 'when initialized with a singular resource' do
-      let(:resource_options) { super().merge(name: 'rocket', singular: true) }
+    describe 'with name: a scoped Component name' do
+      let(:name) { 'Scoped::Custom' }
 
-      include_examples 'should handle a failing result', 'Implement'
-
-      include_examples 'should handle a result with a NotFound error',
-        'View::Pages::Custom::ImplementPage',
-        with_resource: false
-
-      describe 'with a passing result' do
-        let(:value)  { { ok: true } }
-        let(:result) { Cuprum::Result.new(value: value) }
-
-        include_contract 'should render the missing page'
-
-        include_examples 'should respond with the page when defined',
-          'View::Pages::Custom::ImplementPage'
-
-        include_examples 'should respond with the page when defined',
-          'View::Pages::Resources::ImplementPage'
-
-        include_examples 'should respond with the page when defined',
-          'Librum::Core::View::Pages::Resources::ImplementPage',
-          lazy_require: true
+      wrap_deferred 'with default: value' do
+        it { expect(component).to be default }
       end
 
-      wrap_context 'when the resource has ancestors' do
-        include_examples 'should handle a failing result', 'Implement'
+      wrap_deferred 'when the responder is provided components' do
+        it { expect(component).to be nil }
 
-        include_examples 'should handle a result with a NotFound error',
-          'View::Pages::Custom::ImplementPage',
-          with_ancestors: true,
-          with_resource:  false
-
-        describe 'with a passing result' do
-          let(:value)  { { ok: true } }
-          let(:result) { Cuprum::Result.new(value: value) }
-
-          include_contract 'should render the missing page'
-
-          include_examples 'should respond with the page when defined',
-            'View::Pages::Custom::ImplementPage'
-
-          include_examples 'should respond with the page when defined',
-            'View::Pages::Resources::ImplementPage'
-
-          include_examples 'should respond with the page when defined',
-            'Librum::Core::View::Pages::Resources::ImplementPage',
-            lazy_require: true
-        end
-      end
-
-      context 'when initialized with action_name: "create"' do
-        let(:action_name)   { 'create' }
-        let(:expected_page) { 'View::Pages::Custom::CreatePage' }
-
-        include_examples 'should handle a failing result', 'Create'
-
-        include_examples 'should handle a result with a NotFound error',
-          'View::Pages::Custom::CreatePage',
-          with_resource: false
-
-        describe 'with a failing result with a FailedValidation error' do
-          let(:error) do
-            Cuprum::Collections::Errors::FailedValidation.new(
-              entity_class: Rocket,
-              errors:       Stannum::Errors.new
-            )
-          end
-          let(:result) { Cuprum::Result.new(error: error) }
-
-          include_contract 'should render page',
-            'Librum::Core::View::Pages::Resources::NewPage',
-            flash: lambda {
-              {
-                warning: {
-                  icon:    'exclamation-triangle',
-                  message: 'Unable to create Rocket'
-                }
-              }
-            }
+        wrap_deferred 'with default: value' do
+          it { expect(component).to be default }
         end
 
-        describe 'with a passing result' do
-          let(:rocket) do
-            Rocket.new(
-              name: 'Imp IV',
-              slug: 'imp-iv'
-            )
-          end
-          let(:value)  { { 'rocket' => rocket } }
-          let(:result) { Cuprum::Result.new(value: value) }
+        wrap_deferred 'when the shared component is defined',
+          'Scoped::Custom' \
+        do
+          it { expect(component).to be components::Scoped::Custom }
 
-          include_deferred 'should redirect to',
-            '/rocket',
-            flash: lambda {
-              {
-                success: {
-                  icon:    'circle-check',
-                  message: 'Successfully created Rocket'
-                }
-              }
-            }
-        end
-
-        wrap_context 'when the resource has ancestors' do
-          include_examples 'should handle a failing result', 'Create'
-
-          include_examples 'should handle a result with a NotFound error',
-            'View::Pages::Custom::CreatePage',
-            with_ancestors: true,
-            with_resource:  false
-
-          describe 'with a failing result with a FailedValidation error' do # rubocop:disable RSpec/NestedGroups
-            let(:error) do
-              Cuprum::Collections::Errors::FailedValidation.new(
-                entity_class: Rocket,
-                errors:       Stannum::Errors.new
-              )
-            end
-            let(:result) { Cuprum::Result.new(error: error) }
-
-            include_contract 'should render page',
-              'Librum::Core::View::Pages::Resources::NewPage',
-              flash: lambda {
-                {
-                  warning: {
-                    icon:    'exclamation-triangle',
-                    message: 'Unable to create Rocket'
-                  }
-                }
-              }
-          end
-
-          describe 'with a passing result' do # rubocop:disable RSpec/NestedGroups
-            let(:rocket) do
-              Rocket.new(
-                name: 'Imp IV',
-                slug: 'imp-iv'
-              )
-            end
-            let(:value)  { { 'rocket' => rocket } }
-            let(:result) { Cuprum::Result.new(value: value) }
-
-            resource_url =
-              '/space_programs/morningstar-technologies/missions/imp/rocket'
-            include_deferred 'should redirect to',
-              resource_url,
-              flash: lambda {
-                {
-                  success: {
-                    icon:    'circle-check',
-                    message: 'Successfully created Rocket'
-                  }
-                }
-              }
-          end
-        end
-      end
-
-      context 'when initialized with action_name: "destroy"' do
-        let(:action_name)   { 'destroy' }
-        let(:expected_page) { 'View::Pages::Custom::DestroyPage' }
-
-        describe 'with a failing result' do
-          let(:error)  { Cuprum::Error.new(message: 'Something went wrong') }
-          let(:result) { Cuprum::Result.new(error: error) }
-
-          include_deferred 'should redirect back',
-            flash: lambda {
-              {
-                warning: {
-                  icon:    'exclamation-triangle',
-                  message: 'Unable to destroy Rocket'
-                }
-              }
-            }
-        end
-
-        describe 'with a passing result' do
-          let(:result) { Cuprum::Result.new }
-
-          include_deferred 'should redirect to',
-            '/rocket',
-            flash: lambda {
-              {
-                danger: {
-                  icon:    'bomb',
-                  message: 'Successfully destroyed Rocket'
-                }
-              }
-            }
-        end
-
-        wrap_context 'when the resource has ancestors' do
-          describe 'with a failing result' do # rubocop:disable RSpec/NestedGroups
-            let(:error)  { Cuprum::Error.new(message: 'Something went wrong') }
-            let(:result) { Cuprum::Result.new(error: error) }
-
-            include_deferred 'should redirect back',
-              flash: lambda {
-                {
-                  warning: {
-                    icon:    'exclamation-triangle',
-                    message: 'Unable to destroy Rocket'
-                  }
-                }
-              }
-          end
-
-          include_examples 'should handle a result with a NotFound error',
-            'View::Pages::Custom::DestroyPage',
-            with_ancestors: true,
-            with_resource:  false
-
-          describe 'with a passing result' do # rubocop:disable RSpec/NestedGroups
-            let(:result) { Cuprum::Result.new }
-
-            resource_url =
-              '/space_programs/morningstar-technologies/missions/imp/rocket'
-            include_deferred 'should redirect to',
-              resource_url,
-              flash: lambda {
-                {
-                  danger: {
-                    icon:    'bomb',
-                    message: 'Successfully destroyed Rocket'
-                  }
-                }
-              }
-          end
-        end
-      end
-
-      context 'when initialized with action_name: "update"' do
-        let(:action_name)   { 'update' }
-        let(:expected_page) { 'View::Pages::Custom::UpdatePage' }
-
-        include_examples 'should handle a failing result', 'Update'
-
-        include_examples 'should handle a result with a NotFound error',
-          'View::Pages::Custom::UpdatePage',
-          with_resource: false
-
-        describe 'with a failing result with a FailedValidation error' do
-          let(:error) do
-            Cuprum::Collections::Errors::FailedValidation.new(
-              entity_class: Rocket,
-              errors:       Stannum::Errors.new
-            )
-          end
-          let(:result) { Cuprum::Result.new(error: error) }
-
-          include_contract 'should render page',
-            'Librum::Core::View::Pages::Resources::EditPage',
-            flash: lambda {
-              {
-                warning: {
-                  icon:    'exclamation-triangle',
-                  message: 'Unable to update Rocket'
-                }
-              }
-            }
-        end
-
-        describe 'with a passing result' do
-          let(:rocket) do
-            Rocket.new(
-              name: 'Imp IV',
-              slug: 'imp-iv'
-            )
-          end
-          let(:value)  { { 'rocket' => rocket } }
-          let(:result) { Cuprum::Result.new(value: value) }
-
-          include_deferred 'should redirect to',
-            '/rocket',
-            flash: lambda {
-              {
-                success: {
-                  icon:    'circle-check',
-                  message: 'Successfully updated Rocket'
-                }
-              }
-            }
-        end
-
-        wrap_context 'when the resource has ancestors' do
-          include_examples 'should handle a failing result', 'Update'
-
-          include_examples 'should handle a result with a NotFound error',
-            'View::Pages::Custom::UpdatePage',
-            with_ancestors: true,
-            with_resource:  false
-
-          describe 'with a failing result with a FailedValidation error' do # rubocop:disable RSpec/NestedGroups
-            let(:error) do
-              Cuprum::Collections::Errors::FailedValidation.new(
-                entity_class: Rocket,
-                errors:       Stannum::Errors.new
-              )
-            end
-            let(:result) { Cuprum::Result.new(error: error) }
-
-            include_contract 'should render page',
-              'Librum::Core::View::Pages::Resources::EditPage',
-              flash: lambda {
-                {
-                  warning: {
-                    icon:    'exclamation-triangle',
-                    message: 'Unable to update Rocket'
-                  }
-                }
-              }
-          end
-
-          describe 'with a passing result' do # rubocop:disable RSpec/NestedGroups
-            let(:rocket) do
-              Rocket.new(
-                name: 'Imp IV',
-                slug: 'imp-iv'
-              )
-            end
-            let(:value)  { { 'rocket' => rocket } }
-            let(:result) { Cuprum::Result.new(value: value) }
-
-            resource_url =
-              '/space_programs/morningstar-technologies/missions/imp/rocket'
-            include_deferred 'should redirect to',
-              resource_url,
-              flash: lambda {
-                {
-                  success: {
-                    icon:    'circle-check',
-                    message: 'Successfully updated Rocket'
-                  }
-                }
-              }
+          wrap_deferred 'with default: value' do # rubocop:disable RSpec/NestedGroups
+            it { expect(component).to be components::Scoped::Custom }
           end
         end
       end
     end
   end
-  # rubocop:enable RSpec/MultipleMemoizedHelpers
 
   describe '#format' do
     include_examples 'should define reader', :format, :html
   end
 
   describe '#render_component' do
-    let(:controller_name) { 'CustomController' }
-    let(:controller) { CustomController.new }
-    let(:result)     { Cuprum::Result.new }
-    let(:options)    { {} }
-    let(:response)   { responder.render_component(result, **options) }
-    let(:expected_page) do
-      'View::Pages::Custom::ImplementPage'
+    deferred_examples 'should render the matching component with options' do
+      include_deferred 'should render the matching component'
+
+      describe 'with flash: value' do
+        let(:flash) do
+          {
+            alert:  'Reactor temperature critical',
+            notice: 'Initializing activation sequence'
+          }
+        end
+        let(:options) { super().merge(flash:) }
+
+        include_deferred 'should render the matching component',
+          flash: -> { flash }
+      end
+
+      describe 'with layout: value' do
+        let(:options) { super().merge(layout: :custom) }
+
+        include_deferred 'should render the matching component',
+          layout: :custom
+      end
+
+      describe 'with status: value' do
+        let(:options) { super().merge(status: :created) }
+
+        include_deferred 'should render the matching component',
+          http_status: :created
+      end
     end
 
-    example_class 'CustomController', 'Spec::ExampleController'
+    let(:result)   { Cuprum::Result.new }
+    let(:options)  { {} }
+    let(:response) { responder.render_component(result, **options) }
+    let(:service) do
+      instance_double(Librum::Core::Responders::Html::FindView, call: nil)
+    end
 
-    before(:example) { allow(responder).to receive(:require) } # rubocop:disable RSpec/SubjectStub
+    before(:example) do
+      allow(described_class).to receive(:find_view).and_return(service)
+    end
 
     it 'should define the method' do
       expect(responder)
         .to respond_to(:render_component)
         .with(1).argument
-        .and_keywords(:flash, :status)
+        .and_keywords(:flash, :layout, :status)
     end
 
-    include_contract 'should render the missing page'
-
-    include_examples 'should respond with the page when defined',
-      'View::Pages::Custom::ImplementPage'
-
-    include_examples 'should respond with the page when defined',
-      'View::Pages::Resources::ImplementPage'
-
-    include_examples 'should respond with the page when defined',
-      'Librum::Core::View::Pages::Resources::ImplementPage'
+    include_deferred 'should render the matching component with options'
 
     describe 'with action: value' do
-      let(:action)  { 'execute' }
-      let(:options) { super().merge(action: action) }
+      let(:options)         { super().merge(action: 'revert') }
+      let(:expected_action) { 'revert' }
 
-      include_contract 'should render the missing page'
-
-      include_examples 'should respond with the page when defined',
-        'View::Pages::Custom::ExecutePage'
-
-      include_examples 'should respond with the page when defined',
-        'View::Pages::Resources::ExecutePage'
-
-      include_examples 'should respond with the page when defined',
-        'Librum::Core::View::Pages::Resources::ExecutePage'
+      include_deferred 'should render the matching component with options'
     end
   end
 end

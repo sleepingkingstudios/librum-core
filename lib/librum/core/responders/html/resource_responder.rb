@@ -61,10 +61,17 @@ module Librum::Core::Responders::Html
 
     private
 
-    def build_view_component(result:, action: nil)
-      return super if Object.const_defined?(view_component_name(action: action))
+    def build_component(action_name:, controller_name:, result:)
+      component = super
 
-      resource_component_class(action: action).new(result, resource: resource)
+      return component if component
+
+      component_class =
+        self.class.find_view.call(action: action_name, controller: 'Resources')
+
+      return component_class.new(result, resource:) if component_class
+
+      nil
     end
 
     def destroy_flash
@@ -99,16 +106,11 @@ module Librum::Core::Responders::Html
       )
     end
 
-    def lazy_require(page_name)
-      require page_name.split('::').map(&:underscore).join('/')
-    rescue LoadError
-      # Do nothing.
-    end
-
     def matching_ancestor_for(result)
+      name = result.error.collection_name
+
       resource.each_ancestor.find do |ancestor|
-        ancestor.name == result.error.collection_name ||
-          ancestor.singular_name == result.error.collection_name
+        ancestor.plural_name == name || ancestor.singular_name == name
       end
     end
 
@@ -130,23 +132,6 @@ module Librum::Core::Responders::Html
         flash:  not_found_flash(error: result.error),
         status: :not_found
       )
-    end
-
-    def resource_component_class(action: nil)
-      resource_component_name(action: action).constantize
-    end
-
-    def resource_component_name(action: nil)
-      action    = (action || action_name).to_s.camelize
-      page_name = "View::Pages::Resources::#{action}Page"
-
-      return page_name if Object.const_defined?(page_name)
-
-      page_name = "Librum::Core::#{page_name}"
-
-      lazy_require(page_name)
-
-      page_name
     end
 
     def success_flash(action)
