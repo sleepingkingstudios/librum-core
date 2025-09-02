@@ -79,7 +79,7 @@ module Librum::Core::RSpec::Examples
         next super() if defined?(super())
 
         unless component_options.key?(:layout)
-          next is_layout? ? :application : nil
+          next is_layout? ? 'application' : nil
         end
 
         layout = component_options[:layout]

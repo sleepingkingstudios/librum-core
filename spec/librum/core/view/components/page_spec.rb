@@ -30,7 +30,7 @@ RSpec.describe Librum::Core::View::Components::Page do
   end
 
   describe '#is_layout?' do
-    include_examples 'should define predicate', :is_layout?, true
+    include_examples 'should define predicate', :is_layout?, false
   end
 
   describe '#metadata' do

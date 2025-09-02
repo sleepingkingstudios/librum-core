@@ -14,9 +14,15 @@ RSpec.describe Librum::Core::Responders::Html::Rendering do
 
   deferred_examples 'should render the matching component' do |**page_options|
     context 'when there is not a matching component' do
+      let(:expected_action) do
+        next super() if defined?(super())
+
+        responder.action_name
+      end
       let(:error_message) do
         'unable to find matching component for action: ' \
-          "#{action_name.inspect} and controller: #{controller_name.inspect}"
+          "#{expected_action.inspect} and controller: " \
+          "#{controller_name.inspect}"
       end
 
       it 'should raise an exception' do
@@ -266,6 +272,20 @@ RSpec.describe Librum::Core::Responders::Html::Rendering do
     end
 
     include_deferred 'should render the matching component with options'
+
+    describe 'with action: a String' do
+      let(:options)         { super().merge(action: 'unpublish') }
+      let(:expected_action) { 'unpublish' }
+
+      include_deferred 'should render the matching component with options'
+    end
+
+    describe 'with action: a Symbol' do
+      let(:options)         { super().merge(action: :unpublish) }
+      let(:expected_action) { :unpublish }
+
+      include_deferred 'should render the matching component with options'
+    end
 
     describe 'with a result with metadata: nil' do
       let(:result) { Cuprum::Rails::Result.new(metadata: nil) }

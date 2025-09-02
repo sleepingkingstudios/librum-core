@@ -42,6 +42,6 @@ module Librum::Core::View::Components
 
     # @return [true, false] if true, indicates that the component represents a
     #   full-page layout. Defaults to true.
-    def is_layout? = true # rubocop:disable Naming/PredicatePrefix
+    def is_layout? = false # rubocop:disable Naming/PredicatePrefix
   end
 end

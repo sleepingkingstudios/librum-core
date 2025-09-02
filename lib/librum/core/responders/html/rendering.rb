@@ -122,13 +122,14 @@ module Librum::Core::Responders::Html
 
     def convert_to_class_name(value)
       value
+        .to_s
         .titleize
         .gsub('/', '::')
         .gsub(WHITESPACE_PATTERN, '')
     end
 
     def empty_layout
-      :application
+      'application'
     end
 
     def extract_assigns(result)

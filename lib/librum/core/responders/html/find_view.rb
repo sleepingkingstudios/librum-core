@@ -18,6 +18,9 @@ module Librum::Core::Responders::Html
     end
     private_constant :Library
 
+    WHITESPACE_PATTERN = /\s+/
+    private_constant :WHITESPACE_PATTERN
+
     # @param application [#view_path] the core application.
     # @param libraries [Array<#view_path>] the libraries used by the application
     #   that may provide views.
@@ -41,8 +44,8 @@ module Librum::Core::Responders::Html
     # @return [Class, nil] the matched class, or nil if no component class is
     #   found.
     def call(action:, controller:)
-      action     = modulize(action)
-      controller = modulize(controller)
+      action     = convert_to_class_name(action)
+      controller = convert_to_class_name(controller)
       cache_key  = "#{controller}::#{action}"
 
       return components[cache_key] if components.key?(cache_key)
@@ -68,6 +71,14 @@ module Librum::Core::Responders::Html
     private
 
     attr_reader :components
+
+    def convert_to_class_name(value)
+      value
+        .to_s
+        .titleize
+        .gsub('/', '::')
+        .gsub(WHITESPACE_PATTERN, '')
+    end
 
     def find_application_component(action:, cache_key:, controller:)
       return unless application.respond_to?(:view_path)
@@ -99,10 +110,6 @@ module Librum::Core::Responders::Html
       return Object.const_get(path) if Object.const_defined?(path)
 
       nil
-    end
-
-    def modulize(value)
-      value.titleize.gsub('/', '::')
     end
 
     def split_controller(controller)

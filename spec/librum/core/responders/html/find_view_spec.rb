@@ -98,6 +98,43 @@ RSpec.describe Librum::Core::Responders::Html::FindView do
       end
     end
 
+    describe 'with action: a Symbol' do
+      let(:action) { :publish }
+
+      it { expect(component).to be nil }
+
+      context 'when the legacy page is defined' do
+        example_class 'View::Pages::Books::PublishPage', ViewComponent::Base
+
+        it { expect(component).to be View::Pages::Books::PublishPage }
+      end
+
+      wrap_deferred 'when the application defines view paths' do
+        it { expect(component).to be nil }
+
+        context 'when the application defines the component' do
+          example_class 'View::Books::Publish', ViewComponent::Base
+
+          it { expect(component).to be View::Books::Publish }
+        end
+
+        context 'when the legacy page is defined' do
+          example_class 'View::Pages::Books::PublishPage', ViewComponent::Base
+
+          it { expect(component).to be View::Pages::Books::PublishPage }
+        end
+
+        context 'when multiple sources are defined' do
+          example_class 'View::Books::Publish', ViewComponent::Base
+          example_class 'View::Pages::Books::PublishPage', ViewComponent::Base
+
+          it 'returns the component defined by the application' do
+            expect(component).to be View::Books::Publish
+          end
+        end
+      end
+    end
+
     describe 'with controller: a scoped controller' do
       let(:controller) { 'scoped/books' }
 
