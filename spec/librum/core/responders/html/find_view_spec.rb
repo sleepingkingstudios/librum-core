@@ -21,6 +21,25 @@ RSpec.describe Librum::Core::Responders::Html::FindView do
     end
   end
 
+  deferred_context 'when the application namespace defines view paths' do
+    let(:application) { Spec::Namespace::Application.new }
+
+    example_constant 'Spec::Namespace' do
+      namespace = Module.new
+
+      namespace.define_singleton_method(:view_path) do |action:, controller:|
+        action     = action.titleize.gsub('/', '::')
+        controller = controller.titleize.gsub('/', '::')
+
+        "View::#{controller}::#{action}"
+      end
+
+      namespace
+    end
+
+    example_class 'Spec::Namespace::Application'
+  end
+
   deferred_context 'when the application includes libraries' do
     let(:libraries) do
       [
@@ -73,7 +92,32 @@ RSpec.describe Librum::Core::Responders::Html::FindView do
       it { expect(component).to be View::Pages::Books::PublishPage }
     end
 
-    wrap_deferred 'when the application defines view paths' do
+    wrap_deferred 'when the application defines view paths' do # rubocop:disable RSpec/RepeatedExampleGroupBody
+      it { expect(component).to be nil }
+
+      context 'when the application defines the component' do
+        example_class 'View::Books::Publish', ViewComponent::Base
+
+        it { expect(component).to be View::Books::Publish }
+      end
+
+      context 'when the legacy page is defined' do
+        example_class 'View::Pages::Books::PublishPage', ViewComponent::Base
+
+        it { expect(component).to be View::Pages::Books::PublishPage }
+      end
+
+      context 'when multiple sources are defined' do
+        example_class 'View::Books::Publish', ViewComponent::Base
+        example_class 'View::Pages::Books::PublishPage', ViewComponent::Base
+
+        it 'returns the component defined by the application' do
+          expect(component).to be View::Books::Publish
+        end
+      end
+    end
+
+    wrap_deferred 'when the application namespace defines view paths' do # rubocop:disable RSpec/RepeatedExampleGroupBody
       it { expect(component).to be nil }
 
       context 'when the application defines the component' do

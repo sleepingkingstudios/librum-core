@@ -18,6 +18,9 @@ module Librum::Core::Responders::Html
     end
     private_constant :Library
 
+    APPLICATION_PATTERN = /::Application\z/
+    private_constant :APPLICATION_PATTERN
+
     WHITESPACE_PATTERN = /\s+/
     private_constant :WHITESPACE_PATTERN
 
@@ -25,7 +28,7 @@ module Librum::Core::Responders::Html
     # @param libraries [Array<#view_path>] the libraries used by the application
     #   that may provide views.
     def initialize(application:, libraries: [])
-      @application = application
+      @application = resolve_application(application)
       @libraries   =
         libraries
         .select { |library| library.respond_to?(:view_path) }
@@ -107,9 +110,29 @@ module Librum::Core::Responders::Html
     end
 
     def find_component(path)
+      return nil if path.blank?
+
       return Object.const_get(path) if Object.const_defined?(path)
 
       nil
+    end
+
+    def resolve_application(application) # rubocop:disable Metrics/MethodLength
+      return application if application.respond_to?(:view_path)
+
+      namespace =
+        application
+        .class
+        .name
+        .sub(APPLICATION_PATTERN, '')
+
+      if namespace.present? && Object.const_defined?(namespace)
+        namespace = Object.const_get(namespace)
+
+        return namespace if namespace.respond_to?(:view_path)
+      end
+
+      application
     end
 
     def split_controller(controller)
