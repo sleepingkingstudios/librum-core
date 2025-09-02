@@ -4,15 +4,33 @@ require 'rails_helper'
 
 require 'cuprum/rails/rspec/deferred/responder_examples'
 
-RSpec.describe Librum::Core::Responders::Html::ViewResponder do
+RSpec.describe Librum::Core::Responders::Html::Rendering do
   include Cuprum::Rails::RSpec::Deferred::ResponderExamples
   include Librum::Core::RSpec::Examples::ResponderExamples
 
-  subject(:responder) { described_class.new(**constructor_options) }
+  subject(:responder) do
+    described_class.new(action_name:, controller_name:, resource:)
+  end
 
   deferred_examples 'should render the matching component' do |**page_options|
     context 'when there is not a matching component' do
-      include_deferred 'should render the missing page', **page_options
+      let(:expected_action) do
+        next super() if defined?(super())
+
+        responder.action_name
+      end
+      let(:error_message) do
+        'unable to find matching component for action: ' \
+          "#{expected_action.inspect} and controller: " \
+          "#{controller_name.inspect}"
+      end
+
+      it 'should raise an exception' do
+        expect { response }.to raise_error(
+          described_class::ComponentNotFoundError,
+          error_message
+        )
+      end
     end
 
     context 'when there is a matching page component' do
@@ -29,7 +47,7 @@ RSpec.describe Librum::Core::Responders::Html::ViewResponder do
       before(:example) do
         allow(service)
           .to receive(:call)
-          .with(action: expected_action, controller: controller.class.name)
+          .with(action: expected_action, controller: controller_name)
           .and_return(Spec::ExampleComponent)
       end
 
@@ -50,7 +68,7 @@ RSpec.describe Librum::Core::Responders::Html::ViewResponder do
       before(:example) do
         allow(service)
           .to receive(:call)
-          .with(action: expected_action, controller: controller.class.name)
+          .with(action: expected_action, controller: controller_name)
           .and_return(Spec::ExampleComponent)
       end
 
@@ -60,15 +78,22 @@ RSpec.describe Librum::Core::Responders::Html::ViewResponder do
     end
   end
 
-  let(:constructor_options) do
-    {
-      action_name: action_name,
-      controller:  controller,
-      request:     request
-    }
+  let(:described_class) { Spec::ExampleResponder }
+  let(:action_name)     { :publish }
+  let(:controller_name) { 'books' }
+  let(:resource)        { Cuprum::Rails::Resource.new(name: 'books') }
+
+  example_class 'Spec::ExampleResponder',
+    Struct.new(:action_name, :controller_name, :resource) \
+  do |klass|
+    klass.include Librum::Core::Responders::Html::Rendering # rubocop:disable RSpec/DescribedClass
   end
 
-  include_deferred 'should implement the Responder methods'
+  describe '::ComponentNotFoundError' do
+    include_examples 'should define constant',
+      :ComponentNotFoundError,
+      -> { be_a(Module).and be < StandardError }
+  end
 
   describe '.find_view' do
     let(:service) { described_class.find_view }
@@ -103,7 +128,11 @@ RSpec.describe Librum::Core::Responders::Html::ViewResponder do
       end
 
       around(:example) do |example|
-        described_class.remove_instance_variable(:@find_view)
+        # :nocov:
+        if described_class.instance_variable_defined?(:@find_view)
+          described_class.remove_instance_variable(:@find_view)
+        end
+        # :nocov:
 
         example.call
       ensure
@@ -114,34 +143,15 @@ RSpec.describe Librum::Core::Responders::Html::ViewResponder do
     end
   end
 
-  describe '#call' do
-    let(:result)   { Cuprum::Result.new }
-    let(:response) { responder.call(result) }
-    let(:service) do
-      instance_double(Librum::Core::Responders::Html::FindView, call: nil)
-    end
+  describe '#components' do
+    include_examples 'should define reader', :components, nil
 
-    before(:example) do
-      allow(described_class).to receive(:find_view).and_return(service)
-    end
+    wrap_deferred 'when the responder is provided components' do
+      let(:expected) do
+        Librum::Components::Provider.get(:components)
+      end
 
-    it { expect(responder).to respond_to(:call).with(1).argument }
-
-    include_deferred 'should render the matching component'
-
-    describe 'with a failing result' do
-      let(:error)  { Cuprum::Error.new(message: 'Something went wrong') }
-      let(:result) { Cuprum::Result.new(error: error) }
-
-      include_deferred 'should render the matching component',
-        http_status: :internal_server_error
-    end
-
-    describe 'with a passing result' do
-      let(:value)  { { ok: true } }
-      let(:result) { Cuprum::Result.new(value: value) }
-
-      include_deferred 'should render the matching component'
+      it { expect(responder.components).to be expected }
     end
   end
 
@@ -211,10 +221,6 @@ RSpec.describe Librum::Core::Responders::Html::ViewResponder do
     end
   end
 
-  describe '#format' do
-    include_examples 'should define reader', :format, :html
-  end
-
   describe '#render_component' do
     deferred_examples 'should render the matching component with options' do
       include_deferred 'should render the matching component'
@@ -267,11 +273,95 @@ RSpec.describe Librum::Core::Responders::Html::ViewResponder do
 
     include_deferred 'should render the matching component with options'
 
-    describe 'with action: value' do
-      let(:options)         { super().merge(action: 'revert') }
-      let(:expected_action) { 'revert' }
+    describe 'with action: a String' do
+      let(:options)         { super().merge(action: 'unpublish') }
+      let(:expected_action) { 'unpublish' }
 
       include_deferred 'should render the matching component with options'
+    end
+
+    describe 'with action: a Symbol' do
+      let(:options)         { super().merge(action: :unpublish) }
+      let(:expected_action) { :unpublish }
+
+      include_deferred 'should render the matching component with options'
+    end
+
+    describe 'with a result with metadata: nil' do
+      let(:result) { Cuprum::Rails::Result.new(metadata: nil) }
+
+      include_deferred 'should render the matching component with options'
+    end
+
+    describe 'with a result with metadata' do # rubocop:disable RSpec/MultipleMemoizedHelpers
+      let(:value) do
+        {
+          'book' => {
+            title:  'Gideon the Ninth',
+            author: 'Tammsyn Muir'
+          }
+        }
+      end
+      let(:metadata) do
+        {
+          page:    { title: 'The Locked Tomb Series' },
+          session: { token: '12345' }
+        }
+      end
+      let(:result) do
+        Cuprum::Rails::Result.new(value: value, metadata: metadata)
+      end
+      let(:expected_assigns) do
+        {
+          'page'    => { title: 'The Locked Tomb Series' },
+          'result'  => result,
+          'session' => { token: '12345' }
+        }
+      end
+
+      include_deferred 'should render the matching component with options'
+    end
+
+    describe 'with a result with value: a Hash with metadata' do
+      let(:value) do
+        {
+          'book'     => {
+            title:  'Gideon the Ninth',
+            author: 'Tammsyn Muir'
+          },
+          '_page'    => { title: 'The Locked Tomb Series' },
+          '_session' => { token: '12345' }
+        }
+      end
+      let(:result) { Cuprum::Result.new(value: value) }
+      let(:expected_assigns) do
+        {
+          'page'    => { title: 'The Locked Tomb Series' },
+          'result'  => result,
+          'session' => { token: '12345' }
+        }
+      end
+
+      include_deferred 'should render the matching component with options'
+    end
+
+    describe 'with result: a ViewComponent' do
+      let(:result) { Spec::CustomComponent.new }
+
+      example_class 'Spec::CustomComponent', ViewComponent::Base
+
+      include_deferred 'should render component with options',
+        'Spec::CustomComponent'
+    end
+
+    describe 'with a result with value: a ViewComponent' do
+      let(:component) { Spec::CustomComponent.new }
+      let(:result)    { Cuprum::Result.new(value: component) }
+
+      example_class 'Spec::CustomComponent', ViewComponent::Base
+
+      include_deferred 'should render component with options',
+        'Spec::CustomComponent'
     end
   end
 end

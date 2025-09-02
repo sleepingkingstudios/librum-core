@@ -9,6 +9,7 @@ end
 require 'byebug'
 require 'cuprum/rspec/be_a_result'
 require 'cuprum/rspec/be_callable'
+require 'plumbum/rspec/stub_provider'
 require 'rspec/sleeping_king_studios/all'
 
 # Isolated namespace for defining spec-only or transient objects.
@@ -23,6 +24,8 @@ RSpec.configure do |config|
   config.extend  RSpec::SleepingKingStudios::Concerns::WrapExamples
   config.include RSpec::SleepingKingStudios::Deferred::Consumer
   config.include RSpec::SleepingKingStudios::Examples::PropertyExamples
+
+  config.include Plumbum::RSpec::StubProvider
 
   config.disable_monkey_patching!
 
