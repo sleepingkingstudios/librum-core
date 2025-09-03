@@ -54,6 +54,38 @@ RSpec.describe Librum::Core::Responders::Html::Rendering do
       include_deferred 'should render component',
         'Spec::ExampleComponent',
         **page_options
+
+      context 'when the component accepts a result argument' do
+        before(:example) do
+          Spec::ExampleComponent.class_eval do
+            def initialize(result, *, **)
+              @result = result
+
+              super(*, **)
+            end
+
+            attr_reader :result
+          end
+        end
+
+        it { expect(response.component.result).to be result }
+      end
+
+      context 'when the component accepts a result keyword' do
+        before(:example) do
+          Spec::ExampleComponent.class_eval do
+            def initialize(*, result:, **)
+              @result = result
+
+              super(*, **)
+            end
+
+            attr_reader :result
+          end
+        end
+
+        it { expect(response.component.result).to be result }
+      end
     end
 
     context 'when there is a matching view component' do
@@ -75,6 +107,38 @@ RSpec.describe Librum::Core::Responders::Html::Rendering do
       include_deferred 'should render component',
         'Spec::ExampleComponent',
         **page_options
+
+      context 'when the component accepts a result argument' do
+        before(:example) do
+          Spec::ExampleComponent.class_eval do
+            def initialize(result, *, **)
+              @result = result
+
+              super(*, **)
+            end
+
+            attr_reader :result
+          end
+        end
+
+        it { expect(response.component.result).to be result }
+      end
+
+      context 'when the component accepts a result keyword' do
+        before(:example) do
+          Spec::ExampleComponent.class_eval do
+            def initialize(*, result:, **)
+              @result = result
+
+              super(*, **)
+            end
+
+            attr_reader :result
+          end
+        end
+
+        it { expect(response.component.result).to be result }
+      end
     end
   end
 
