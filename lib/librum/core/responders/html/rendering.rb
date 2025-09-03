@@ -70,7 +70,7 @@ module Librum::Core::Responders::Html
     )
       action  ||= action_name
       component =
-        build_component(action_name: action, controller_name:, result:)
+        find_component(action_name: action, controller_name:, result:)
 
       if component
         return build_response(component, flash:, layout:, result:, status:)
@@ -88,19 +88,14 @@ module Librum::Core::Responders::Html
 
     private
 
-    def build_component(action_name:, controller_name:, result:)
-      return result if result.is_a?(ViewComponent::Base)
+    def build_component(component_class, result)
+      parameters = component_class.instance_method(:initialize).parameters
 
-      return result.value if result.value.is_a?(ViewComponent::Base)
-
-      component_class = self.class.find_view.call(
-        action:     action_name,
-        controller: controller_name
-      )
-
-      return component_class.new(result, resource:) if component_class
-
-      nil
+      if parameters.select { |type, _| type == :req }.first == %i[req result] # rubocop:disable Style/HashSlice
+        component_class.new(result, resource:)
+      else
+        component_class.new(result:, resource:)
+      end
     end
 
     def build_response(component, layout:, result:, **)
@@ -154,6 +149,21 @@ module Librum::Core::Responders::Html
         .each
         .select { |key, _| key.to_s.start_with?('_') }
         .to_h { |(key, assign)| [key.to_s.sub(/\A_/, ''), assign] }
+    end
+
+    def find_component(action_name:, controller_name:, result:)
+      return result if result.is_a?(ViewComponent::Base)
+
+      return result.value if result.value.is_a?(ViewComponent::Base)
+
+      component_class = self.class.find_view.call(
+        action:     action_name,
+        controller: controller_name
+      )
+
+      return build_component(component_class, result) if component_class
+
+      nil
     end
 
     def find_scoped_component_class(name, scope: nil)

@@ -61,19 +61,6 @@ module Librum::Core::Responders::Html
 
     private
 
-    def build_component(action_name:, controller_name:, result:)
-      component = super
-
-      return component if component
-
-      component_class =
-        self.class.find_view.call(action: action_name, controller: 'Resources')
-
-      return component_class.new(result, resource:) if component_class
-
-      nil
-    end
-
     def destroy_flash
       message = Kernel.format(
         'Successfully destroyed %<resource>s',
@@ -91,6 +78,19 @@ module Librum::Core::Responders::Html
       )
 
       { warning: { icon: 'exclamation-triangle', message: message } }
+    end
+
+    def find_component(action_name:, controller_name:, result:)
+      component = super
+
+      return component if component
+
+      component_class =
+        self.class.find_view.call(action: action_name, controller: 'Resources')
+
+      return component_class.new(result, resource:) if component_class
+
+      nil
     end
 
     def handle_not_found_error(result)
