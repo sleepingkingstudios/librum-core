@@ -31,7 +31,7 @@ module Librum::Core::Responders::Html
     WHITESPACE_PATTERN = /\s+/
     private_constant :WHITESPACE_PATTERN
 
-    provider Librum::Components::Provider
+    provider Librum::Components.provider
 
     dependency :components, optional: true
 

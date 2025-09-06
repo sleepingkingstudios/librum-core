@@ -212,7 +212,7 @@ RSpec.describe Librum::Core::Responders::Html::Rendering do
 
     wrap_deferred 'when the responder is provided components' do
       let(:expected) do
-        Librum::Components::Provider.get(:components)
+        Librum::Components.provider.get(:components)
       end
 
       it { expect(responder.components).to be expected }

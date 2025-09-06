@@ -17,7 +17,7 @@ module Librum::Core::RSpec::Examples
 
       before(:example) do
         stub_provider(
-          Librum::Components::Provider,
+          Librum::Components.provider,
           :components,
           Spec::Components
         )
@@ -25,7 +25,7 @@ module Librum::Core::RSpec::Examples
     end
 
     deferred_context 'when the shared component is defined' do |component_name|
-      let(:components) { Librum::Components::Provider.get(:components) }
+      let(:components) { Librum::Components.provider.get(:components) }
       let(:component_class) do
         next super() if defined?(super())
 
