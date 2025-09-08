@@ -30,15 +30,21 @@ module Librum::Core::Responders::Html
 
     private
 
-    def build_missing_page(action_name:, controller_name:, result:)
-      component   = find_component_class('Missing')
-      component ||= find_component_class('Pages::MissingPage')
+    def build_missing_page(action_name:, controller_name:, result:) # rubocop:disable Metrics/MethodLength
+      component ||= find_component_class('Views::MissingView')
       component ||= Librum::Core::View::Pages::MissingPage
 
       expected_page =
         convert_to_class_name("#{controller_name}::#{action_name}")
 
-      component.new(result, action_name:, controller_name:, expected_page:)
+      build_component(
+        component,
+        result,
+        action_name:     controller_name.to_s,
+        controller_name: controller_name.to_s,
+        expected_page:,
+        view_paths:      view_paths_for(action_name:, controller_name:)
+      )
     end
 
     def handle_missing_component( # rubocop:disable Metrics/ParameterLists
@@ -53,6 +59,13 @@ module Librum::Core::Responders::Html
       status    = :internal_server_error
 
       build_response(component, flash:, layout:, result:, status:)
+    end
+
+    def view_paths_for(action_name:, controller_name:)
+      self.class.find_view.view_paths(
+        action:     action_name,
+        controller: controller_name
+      )
     end
   end
 end

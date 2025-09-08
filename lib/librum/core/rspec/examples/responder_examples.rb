@@ -158,24 +158,13 @@ module Librum::Core::RSpec::Examples
           http_status: :internal_server_error
       end
 
-      context 'when the missing component is defined' do
-        include_deferred 'when the responder is provided components'
-        include_deferred 'when the shared component is defined',
-          'Missing'
-
-        include_deferred 'should render component',
-          'Spec::Components::Missing',
-          **page_options,
-          http_status: :internal_server_error
-      end
-
       context 'when the missing page is defined' do
         include_deferred 'when the responder is provided components'
         include_deferred 'when the shared component is defined',
-          'Pages::MissingPage'
+          'Views::MissingView'
 
         include_deferred 'should render component',
-          'Spec::Components::Pages::MissingPage',
+          'Spec::Components::Views::MissingView',
           **page_options,
           http_status: :internal_server_error
       end

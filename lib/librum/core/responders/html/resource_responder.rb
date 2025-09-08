@@ -143,5 +143,12 @@ module Librum::Core::Responders::Html
 
       { success: { icon: 'circle-check', message: message } }
     end
+
+    def view_paths_for(action_name:, controller_name:)
+      super + self.class.find_view.view_paths(
+        action:     action_name,
+        controller: 'resources'
+      )
+    end
   end
 end

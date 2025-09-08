@@ -23,6 +23,7 @@ RSpec.describe Librum::Core::View::Pages::MissingPage, type: :component do
         .to be_constructible
         .with(1).argument
         .and_keywords(:action_name, :controller_name, :expected_page)
+        .and_any_keywords
     end
   end
 

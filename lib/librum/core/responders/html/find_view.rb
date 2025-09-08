@@ -1,8 +1,13 @@
 # frozen_string_literal: true
 
+require 'librum/components'
+require 'plumbum/consumer'
+
 module Librum::Core::Responders::Html
   # Helper class for finding view components for a controller view.
-  class FindView
+  class FindView # rubocop:disable Metrics/ClassLength
+    include Plumbum::Consumer
+
     Library = Data.define(:library, :name) do
       delegate :view_path, to: :library
 
@@ -24,6 +29,10 @@ module Librum::Core::Responders::Html
     WHITESPACE_PATTERN = /\s+/
     private_constant :WHITESPACE_PATTERN
 
+    provider Librum::Components.provider
+
+    dependency :components
+
     # @param application [#view_path] the core application.
     # @param libraries [Array<#view_path>] the libraries used by the application
     #   that may provide views.
@@ -33,7 +42,7 @@ module Librum::Core::Responders::Html
         libraries
         .select { |library| library.respond_to?(:view_path) }
         .map { |library| Library.new(library:) }
-      @components  = {}
+      @cache       = {}
     end
 
     # @return [#view_path] the core application.
@@ -51,18 +60,29 @@ module Librum::Core::Responders::Html
       controller = convert_to_class_name(controller)
       cache_key  = "#{controller}::#{action}"
 
-      return components[cache_key] if components.key?(cache_key)
+      return cache[cache_key] if cache.key?(cache_key)
 
-      library, scope = split_controller(controller)
+      view_paths(action:, controller:).find do |view_path|
+        component = cache_component(cache_key) { find_component(view_path) }
 
-      find_application_component(action:, cache_key:, controller:) ||
-        find_library_component(action:, cache_key:, library:, scope:) ||
-        find_legacy_component(action:, cache_key:, library:, scope:)
+        return component if component
+      end
+
+      nil
     end
 
     # Clears the components cache.
     def clear
-      @components = {}
+      @cache = {}
+    end
+
+    # @return [Module] the namespace for defined components.
+    def components
+      unless has_plumbum_dependency?(:components)
+        return Librum::Components::Empty
+      end
+
+      super
     end
 
     # @return [Array<#view_path>] the libraries used by the application that
@@ -71,9 +91,42 @@ module Librum::Core::Responders::Html
       @libraries.map(&:library)
     end
 
+    # Lists the possible view paths for the given action and controller.
+    #
+    # @param action [String, Symbol] the name of the called action.
+    # @param controller [String] the name of the called controller.
+    #
+    # @return [Array<String>] the possible view paths.
+    def view_paths(action:, controller:)
+      action         = convert_to_class_name(action)
+      controller     = convert_to_class_name(controller)
+      library, scope = split_controller(controller)
+
+      [
+        application_path(action:, controller:),
+        library_path(action:, library:, scope:),
+        shared_path(action:, controller:),
+        legacy_path(action:, library:, scope:)
+      ].compact
+    end
+
     private
 
-    attr_reader :components
+    attr_reader :cache
+
+    def application_path(action:, controller:)
+      return unless application.respond_to?(:view_path)
+
+      application.view_path(action:, controller:)
+    end
+
+    def cache_component(cache_key)
+      component = yield
+
+      cache[cache_key] = component if component
+
+      component
+    end
 
     def convert_to_class_name(value)
       value
@@ -83,38 +136,22 @@ module Librum::Core::Responders::Html
         .gsub(WHITESPACE_PATTERN, '')
     end
 
-    def find_application_component(action:, cache_key:, controller:)
-      return unless application.respond_to?(:view_path)
-
-      path      = application.view_path(action:, controller:)
-      component = find_component(path)
-
-      components[cache_key] = component if component
-    end
-
-    def find_legacy_component(action:, cache_key:, library:, scope:)
-      path      = "View::Pages::#{scope}::#{action}Page"
-      path      = "#{library.name}::#{path}" if library
-      component = find_component(path)
-
-      components[cache_key] = component if component
-    end
-
-    def find_library_component(action:, cache_key:, library:, scope:)
-      return unless library
-
-      path      = library.view_path(action:, controller: scope)
-      component = find_component(path)
-
-      components[cache_key] = component if component
-    end
-
     def find_component(path)
       return nil if path.blank?
 
       return Object.const_get(path) if Object.const_defined?(path)
 
       nil
+    end
+
+    def legacy_path(action:, library:, scope:)
+      path = "View::Pages::#{scope}::#{action}Page"
+      path = "#{library.name}::#{path}" if library
+      path
+    end
+
+    def library_path(action:, library:, scope:)
+      library&.view_path(action:, controller: scope)
     end
 
     def resolve_application(application) # rubocop:disable Metrics/MethodLength
@@ -133,6 +170,13 @@ module Librum::Core::Responders::Html
       end
 
       application
+    end
+
+    def shared_path(action:, controller:)
+      return nil unless components&.name
+      return nil if components == Librum::Components::Empty
+
+      "#{components.name}::Views::#{controller}::#{action}"
     end
 
     def split_controller(controller)
