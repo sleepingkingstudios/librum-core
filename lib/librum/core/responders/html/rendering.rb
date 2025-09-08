@@ -88,13 +88,13 @@ module Librum::Core::Responders::Html
 
     private
 
-    def build_component(component_class, result)
+    def build_component(component_class, result, **)
       parameters = component_class.instance_method(:initialize).parameters
 
       if parameters.select { |type, _| type == :req }.first == %i[req result] # rubocop:disable Style/HashSlice
-        component_class.new(result, resource:)
+        component_class.new(result, resource:, **)
       else
-        component_class.new(result:, resource:)
+        component_class.new(result:, resource:, **)
       end
     end
 

@@ -10,7 +10,7 @@ module Librum::Core::View::Pages
     # @param action_name [String] the name of the called action.
     # @param controller_name [String] the name of the called controller.
     # @param expected_page [String] the name of the expected page.
-    def initialize(result, action_name:, controller_name:, expected_page:)
+    def initialize(result, action_name:, controller_name:, expected_page:, **)
       super(result)
 
       @action_name     = action_name

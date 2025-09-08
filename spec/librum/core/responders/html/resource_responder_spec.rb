@@ -154,7 +154,11 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
     let(:result)   { Cuprum::Result.new }
     let(:response) { responder.call(result) }
     let(:service) do
-      instance_double(Librum::Core::Responders::Html::FindView, call: nil)
+      instance_double(
+        Librum::Core::Responders::Html::FindView,
+        call:       nil,
+        view_paths: []
+      )
     end
 
     before(:example) do
@@ -578,7 +582,11 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
     let(:options)  { {} }
     let(:response) { responder.render_component(result, **options) }
     let(:service) do
-      instance_double(Librum::Core::Responders::Html::FindView, call: nil)
+      instance_double(
+        Librum::Core::Responders::Html::FindView,
+        call:       nil,
+        view_paths: []
+      )
     end
 
     before(:example) do
