@@ -147,6 +147,40 @@ RSpec.describe Librum::Core::Responders::Html::ViewResponder do
 
       include_deferred 'should render the matching component'
     end
+
+    describe 'with a result with metadata' do
+      let(:metadata) { { 'key' => 'value' } }
+      let(:result)   { Cuprum::Rails::Result.new(metadata:) }
+
+      context 'when there is a matching view component' do
+        let(:expected) do
+          metadata.merge(
+            'action_name'     => action_name,
+            'controller_name' => controller.class.name,
+            'member_action'   => false
+          )
+        end
+
+        example_class 'Spec::ExampleComponent', ViewComponent::Base do |klass|
+          klass.define_method(:initialize) do |result:, **|
+            @result = result
+          end
+
+          klass.attr_reader :result
+        end
+
+        before(:example) do
+          allow(service)
+            .to receive(:call)
+            .with(action: action_name, controller: controller.class.name)
+            .and_return(Spec::ExampleComponent)
+        end
+
+        it 'should update the result metadata' do
+          expect(response.component.result.metadata).to be == expected
+        end
+      end
+    end
   end
 
   describe '#find_component_class' do

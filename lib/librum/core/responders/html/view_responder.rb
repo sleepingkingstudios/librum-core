@@ -22,6 +22,11 @@ module Librum::Core::Responders::Html
 
     # @!method call(result)
     #   (see Cuprum::Rails::Responders::Actions#call)
+    def call(result)
+      result = merge_metadata(result)
+
+      super
+    end
 
     # @return [Symbol] the format of the responder.
     def format
@@ -47,6 +52,14 @@ module Librum::Core::Responders::Html
       )
     end
 
+    def controller_metadata
+      {
+        'action_name'     => action_name,
+        'controller_name' => controller_name,
+        'member_action'   => member_action?
+      }
+    end
+
     def handle_missing_component( # rubocop:disable Metrics/ParameterLists
       action_name:,
       controller_name:,
@@ -59,6 +72,15 @@ module Librum::Core::Responders::Html
       status    = :internal_server_error
 
       build_response(component, flash:, layout:, result:, status:)
+    end
+
+    def merge_metadata(result)
+      return result unless result.is_a?(Cuprum::Rails::Result)
+
+      Cuprum::Rails::Result.new(
+        **result.properties,
+        metadata: controller_metadata.merge(result.metadata || {})
+      )
     end
 
     def view_paths_for(action_name:, controller_name:)
