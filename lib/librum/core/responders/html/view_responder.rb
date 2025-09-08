@@ -31,8 +31,7 @@ module Librum::Core::Responders::Html
     private
 
     def build_missing_page(action_name:, controller_name:, result:)
-      component   = find_component_class('Missing')
-      component ||= find_component_class('Pages::MissingPage')
+      component ||= find_component_class('Views::MissingView')
       component ||= Librum::Core::View::Pages::MissingPage
 
       expected_page =
