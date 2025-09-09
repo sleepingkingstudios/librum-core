@@ -40,13 +40,11 @@ module Librum::Core::Responders::Html
       component     = find_component_class('Views::MissingView')
       expected_page =
         convert_to_class_name("#{controller_name}::#{action_name}")
+      view_paths    = view_paths_for(action_name:, controller_name:)
 
-      build_component(
-        component,
-        result,
-        expected_page:,
-        view_paths:    view_paths_for(action_name:, controller_name:)
-      )
+      return unless component
+
+      build_view(component, expected_page:, result:, view_paths:)
     end
 
     def controller_metadata

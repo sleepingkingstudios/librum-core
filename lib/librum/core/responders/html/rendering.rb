@@ -35,6 +35,29 @@ module Librum::Core::Responders::Html
 
     dependency :components, optional: true
 
+    # Instantiates the given component class.
+    #
+    # @param component_class [Class] the component class to instantiate.
+    # @param resource [Cuprum::Rails::Resource] the controller resource.
+    # @param result [Cuprum::Rails::Result] the result of calling the controller
+    #   action.
+    #
+    # @return [ViewComponent::Base] the instantiated component.
+    def build_view(component_class, result:, resource: nil, **)
+      SleepingKingStudios::Tools::Toolbelt.instance.assertions.tap do |tools|
+        tools.validate_presence(component_class, as: 'component_class')
+        tools.validate_class(component_class, as: 'component_class')
+      end
+
+      parameters = component_class.instance_method(:initialize).parameters
+
+      if parameters.select { |type, _| type == :req }.first == %i[req result] # rubocop:disable Style/HashSlice
+        component_class.new(result, resource:, **)
+      else
+        component_class.new(result:, resource:, **)
+      end
+    end
+
     # Finds the requested shared component.
     #
     # @param name [String, Symbol] the name of the requested component.
@@ -87,18 +110,6 @@ module Librum::Core::Responders::Html
     end
 
     private
-
-    def build_component(component_class, result, **)
-      return nil if component_class.nil?
-
-      parameters = component_class.instance_method(:initialize).parameters
-
-      if parameters.select { |type, _| type == :req }.first == %i[req result] # rubocop:disable Style/HashSlice
-        component_class.new(result, resource:, **)
-      else
-        component_class.new(result:, resource:, **)
-      end
-    end
 
     def build_response(component, layout:, result:, **)
       layout = empty_layout if layout.nil? && component_is_layout?(component)
@@ -163,7 +174,7 @@ module Librum::Core::Responders::Html
         controller: controller_name
       )
 
-      return build_component(component_class, result) if component_class
+      return build_view(component_class, result:) if component_class
 
       nil
     end
