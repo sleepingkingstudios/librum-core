@@ -3,6 +3,7 @@
 require 'rails_helper'
 
 require 'cuprum/rails/rspec/deferred/responder_examples'
+require 'librum/components'
 
 RSpec.describe Librum::Core::Responders::Html::Rendering do
   include Cuprum::Rails::RSpec::Deferred::ResponderExamples
@@ -204,6 +205,111 @@ RSpec.describe Librum::Core::Responders::Html::Rendering do
       end
 
       it { expect(service.libraries).to be == expected_engines }
+    end
+  end
+
+  describe '#build_view' do
+    let(:resource) { Cuprum::Rails::Resource.new(name: 'books') }
+    let(:result)   { Cuprum::Rails::Result.new }
+    let(:options)  { {} }
+    let(:component) do
+      responder.build_view(component_class, resource:, result:, **options)
+    end
+
+    it 'should define the method' do
+      expect(responder)
+        .to respond_to(:build_view)
+        .with(1).argument
+        .and_keywords(:result, :resource)
+        .and_any_keywords
+    end
+
+    define_method :tools do
+      SleepingKingStudios::Tools::Toolbelt.instance
+    end
+
+    describe 'with nil' do
+      let(:component_class) { nil }
+      let(:error_message) do
+        tools.assertions.error_message_for(
+          'sleeping_king_studios.tools.assertions.presence',
+          as: 'component_class'
+        )
+      end
+
+      it 'should raise an exception' do
+        expect { responder.build_view(component_class, resource:, result:) }
+          .to raise_error ArgumentError, error_message
+      end
+    end
+
+    describe 'with an Object' do
+      let(:component_class) { Object.new.freeze }
+      let(:error_message) do
+        tools.assertions.error_message_for(
+          'sleeping_king_studios.tools.assertions.class',
+          as: 'component_class'
+        )
+      end
+
+      it 'should raise an exception' do
+        expect { responder.build_view(component_class, resource:, result:) }
+          .to raise_error ArgumentError, error_message
+      end
+    end
+
+    describe 'with a legacy page component' do
+      let(:component_class) { Spec::LegacyPage }
+
+      example_class 'Spec::LegacyPage', ViewComponent::Base do |klass|
+        klass.define_method(:initialize) do |result, resource:, **options|
+          @result   = result
+          @resource = resource
+          @options  = options
+        end
+
+        klass.attr_reader :options
+
+        klass.attr_reader :resource
+
+        klass.attr_reader :result
+      end
+
+      it { expect(component).to be_a component_class }
+
+      it { expect(component.resource).to be resource }
+
+      it { expect(component.result).to be result }
+
+      it { expect(component.options).to be == {} }
+
+      describe 'with options' do
+        let(:options) { super().merge(key: 'value') }
+
+        it { expect(component.options).to be == options }
+      end
+    end
+
+    describe 'with a view' do
+      let(:component_class) { Spec::ExampleView }
+
+      example_class 'Spec::ExampleView', Librum::Components::View do |klass| # rubocop:disable Style/SymbolProc
+        klass.allow_extra_options
+      end
+
+      it { expect(component).to be_a component_class }
+
+      it { expect(component.resource).to be resource }
+
+      it { expect(component.result).to be result }
+
+      it { expect(component.options).to be == {} }
+
+      describe 'with options' do
+        let(:options) { super().merge(key: 'value') }
+
+        it { expect(component.options).to be == options }
+      end
     end
   end
 

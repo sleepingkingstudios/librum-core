@@ -4,6 +4,7 @@ require 'cuprum/rails/responses/html/redirect_response'
 require 'cuprum/rails/responders/actions'
 require 'cuprum/rails/responders/base_responder'
 require 'cuprum/rails/responders/matching'
+require 'cuprum/rails/responses/html_response'
 
 module Librum::Core::Responders::Html
   # Provides a DSL for defining responses to HTML requests.
@@ -35,21 +36,15 @@ module Librum::Core::Responders::Html
 
     private
 
-    def build_missing_page(action_name:, controller_name:, result:) # rubocop:disable Metrics/MethodLength
-      component ||= find_component_class('Views::MissingView')
-      component ||= Librum::Core::View::Pages::MissingPage
-
+    def build_missing_page(action_name:, controller_name:, result:)
+      component     = find_component_class('Views::MissingView')
       expected_page =
         convert_to_class_name("#{controller_name}::#{action_name}")
+      view_paths    = view_paths_for(action_name:, controller_name:)
 
-      build_component(
-        component,
-        result,
-        action_name:     controller_name.to_s,
-        controller_name: controller_name.to_s,
-        expected_page:,
-        view_paths:      view_paths_for(action_name:, controller_name:)
-      )
+      return unless component
+
+      build_view(component, expected_page:, result:, view_paths:)
     end
 
     def controller_metadata
@@ -71,7 +66,13 @@ module Librum::Core::Responders::Html
       component = build_missing_page(action_name:, controller_name:, result:)
       status    = :internal_server_error
 
-      build_response(component, flash:, layout:, result:, status:)
+      if component
+        build_response(component, flash:, layout:, result:, status:)
+      else
+        html = tag_helper.tag.h1('View Not Found')
+
+        Cuprum::Rails::Responses::HtmlResponse.new(html:, status:)
+      end
     end
 
     def merge_metadata(result)
@@ -81,6 +82,10 @@ module Librum::Core::Responders::Html
         **result.properties,
         metadata: controller_metadata.merge(result.metadata || {})
       )
+    end
+
+    def tag_helper
+      Object.new.extend(ActionView::Helpers::TagHelper)
     end
 
     def view_paths_for(action_name:, controller_name:)

@@ -88,9 +88,7 @@ module Librum::Core::Responders::Html
       component_class =
         self.class.find_view.call(action: action_name, controller: 'Resources')
 
-      if component_class
-        return build_component(component_class, result, resource:)
-      end
+      return build_view(component_class, resource:, result:) if component_class
 
       nil
     end

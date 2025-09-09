@@ -152,10 +152,15 @@ module Librum::Core::RSpec::Examples
 
     deferred_examples 'should render the missing page' do |**page_options|
       context 'when the missing page component is not defined' do
-        include_deferred 'should render component',
-          'Librum::Core::View::Pages::MissingPage',
-          **page_options,
-          http_status: :internal_server_error
+        let(:expected_html) { '<h1>View Not Found</h1>' }
+
+        it { expect(response).to be_a Cuprum::Rails::Responses::HtmlResponse }
+
+        it { expect(response.html).to be == expected_html }
+
+        it { expect(response.layout).to be true }
+
+        it { expect(response.status).to be :internal_server_error }
       end
 
       context 'when the missing page is defined' do
