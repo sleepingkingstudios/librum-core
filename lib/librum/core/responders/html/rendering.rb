@@ -89,6 +89,8 @@ module Librum::Core::Responders::Html
     private
 
     def build_component(component_class, result, **)
+      return nil if component_class.nil?
+
       parameters = component_class.instance_method(:initialize).parameters
 
       if parameters.select { |type, _| type == :req }.first == %i[req result] # rubocop:disable Style/HashSlice
