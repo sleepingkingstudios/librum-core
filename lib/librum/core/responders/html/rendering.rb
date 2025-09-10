@@ -38,12 +38,14 @@ module Librum::Core::Responders::Html
     # Instantiates the given component class.
     #
     # @param component_class [Class] the component class to instantiate.
+    # @param request [Cuprum::Rails::Request] the request handled by the
+    #   controller.
     # @param resource [Cuprum::Rails::Resource] the controller resource.
     # @param result [Cuprum::Rails::Result] the result of calling the controller
     #   action.
     #
     # @return [ViewComponent::Base] the instantiated component.
-    def build_view(component_class, result:, resource: nil, **)
+    def build_view(component_class, result:, request: nil, resource: nil, **)
       SleepingKingStudios::Tools::Toolbelt.instance.assertions.tap do |tools|
         tools.validate_presence(component_class, as: 'component_class')
         tools.validate_class(component_class, as: 'component_class')
@@ -52,9 +54,9 @@ module Librum::Core::Responders::Html
       parameters = component_class.instance_method(:initialize).parameters
 
       if parameters.select { |type, _| type == :req }.first == %i[req result] # rubocop:disable Style/HashSlice
-        component_class.new(result, resource:, **)
+        component_class.new(result, request:, resource:, **)
       else
-        component_class.new(result:, resource:, **)
+        component_class.new(result:, request:, resource:, **)
       end
     end
 
@@ -174,7 +176,9 @@ module Librum::Core::Responders::Html
         controller: controller_name
       )
 
-      return build_view(component_class, result:) if component_class
+      if component_class
+        return build_view(component_class, request:, resource:, result:)
+      end
 
       nil
     end
