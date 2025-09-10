@@ -10,7 +10,7 @@ RSpec.describe Librum::Core::Responders::Html::Rendering do
   include Librum::Core::RSpec::Examples::ResponderExamples
 
   subject(:responder) do
-    described_class.new(action_name:, controller_name:, resource:)
+    described_class.new(action_name:, controller_name:, request:, resource:)
   end
 
   deferred_examples 'should render the matching component' do |**page_options|
@@ -146,10 +146,11 @@ RSpec.describe Librum::Core::Responders::Html::Rendering do
   let(:described_class) { Spec::ExampleResponder }
   let(:action_name)     { :publish }
   let(:controller_name) { 'books' }
+  let(:request)         { Cuprum::Rails::Request.new(http_method: 'patch') }
   let(:resource)        { Cuprum::Rails::Resource.new(name: 'books') }
 
   example_class 'Spec::ExampleResponder',
-    Struct.new(:action_name, :controller_name, :resource) \
+    Struct.new(:action_name, :controller_name, :request, :resource) \
   do |klass|
     klass.include Librum::Core::Responders::Html::Rendering # rubocop:disable RSpec/DescribedClass
   end
@@ -209,18 +210,20 @@ RSpec.describe Librum::Core::Responders::Html::Rendering do
   end
 
   describe '#build_view' do
+    let(:request)  { Cuprum::Rails::Request.new(http_method: 'patch') }
     let(:resource) { Cuprum::Rails::Resource.new(name: 'books') }
     let(:result)   { Cuprum::Rails::Result.new }
     let(:options)  { {} }
     let(:component) do
-      responder.build_view(component_class, resource:, result:, **options)
+      responder
+        .build_view(component_class, request:, resource:, result:, **options)
     end
 
     it 'should define the method' do
       expect(responder)
         .to respond_to(:build_view)
         .with(1).argument
-        .and_keywords(:result, :resource)
+        .and_keywords(:request, :result, :resource)
         .and_any_keywords
     end
 
@@ -262,7 +265,9 @@ RSpec.describe Librum::Core::Responders::Html::Rendering do
       let(:component_class) { Spec::LegacyPage }
 
       example_class 'Spec::LegacyPage', ViewComponent::Base do |klass|
-        klass.define_method(:initialize) do |result, resource:, **options|
+        klass.define_method(:initialize) \
+        do |result, request:, resource:, **options|
+          @request  = request
           @result   = result
           @resource = resource
           @options  = options
@@ -270,12 +275,18 @@ RSpec.describe Librum::Core::Responders::Html::Rendering do
 
         klass.attr_reader :options
 
+        klass.attr_reader :request
+
+        klass.attr_reader :request
+
         klass.attr_reader :resource
 
         klass.attr_reader :result
       end
 
       it { expect(component).to be_a component_class }
+
+      it { expect(component.request).to be request }
 
       it { expect(component.resource).to be resource }
 
@@ -298,6 +309,8 @@ RSpec.describe Librum::Core::Responders::Html::Rendering do
       end
 
       it { expect(component).to be_a component_class }
+
+      it { expect(component.request).to be request }
 
       it { expect(component.resource).to be resource }
 
@@ -492,7 +505,7 @@ RSpec.describe Librum::Core::Responders::Html::Rendering do
       include_deferred 'should render the matching component with options'
     end
 
-    describe 'with a result with value: a Hash with metadata' do
+    describe 'with a result with value: a Hash with metadata' do # rubocop:disable RSpec/MultipleMemoizedHelpers
       let(:value) do
         {
           'book'     => {
