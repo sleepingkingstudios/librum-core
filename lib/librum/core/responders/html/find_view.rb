@@ -99,7 +99,7 @@ module Librum::Core::Responders::Html
     # @return [Array<String>] the possible view paths.
     def view_paths(action:, controller:)
       action         = convert_to_class_name(action)
-      controller     = convert_to_class_name(controller)
+      controller     = convert_to_class_name(controller).sub(/Controller\z/, '')
       library, scope = split_controller(controller)
 
       [

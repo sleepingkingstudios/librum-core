@@ -228,6 +228,99 @@ RSpec.describe Librum::Core::Responders::Html::FindView do
       end
     end
 
+    describe 'with controller: a class name' do
+      let(:controller) { 'BooksController' }
+
+      context 'when the legacy page is defined' do
+        example_class 'View::Pages::Books::PublishPage', ViewComponent::Base
+
+        it { expect(component).to be View::Pages::Books::PublishPage }
+      end
+
+      wrap_deferred 'when the application defines view paths' do # rubocop:disable RSpec/RepeatedExampleGroupBody
+        it { expect(component).to be nil }
+
+        context 'when the application defines the component' do
+          example_class 'View::Books::Publish', ViewComponent::Base
+
+          it { expect(component).to be View::Books::Publish }
+        end
+
+        context 'when the legacy page is defined' do
+          example_class 'View::Pages::Books::PublishPage', ViewComponent::Base
+
+          it { expect(component).to be View::Pages::Books::PublishPage }
+        end
+
+        context 'when multiple sources are defined' do
+          example_class 'View::Books::Publish', ViewComponent::Base
+          example_class 'View::Pages::Books::PublishPage', ViewComponent::Base
+
+          it 'returns the component defined by the application' do
+            expect(component).to be View::Books::Publish
+          end
+
+          wrap_deferred 'when the provider defines components' do # rubocop:disable RSpec/NestedGroups
+            context 'when the provider defines the matching component' do # rubocop:disable RSpec/NestedGroups
+              example_class 'Spec::Components::Views::Books::Publish',
+                ViewComponent::Base
+
+              it 'returns the component defined by the application' do
+                expect(component).to be View::Books::Publish
+              end
+            end
+          end
+        end
+      end
+
+      wrap_deferred 'when the application namespace defines view paths' do # rubocop:disable RSpec/RepeatedExampleGroupBody
+        it { expect(component).to be nil }
+
+        context 'when the application defines the component' do
+          example_class 'View::Books::Publish', ViewComponent::Base
+
+          it { expect(component).to be View::Books::Publish }
+        end
+
+        context 'when the legacy page is defined' do
+          example_class 'View::Pages::Books::PublishPage', ViewComponent::Base
+
+          it { expect(component).to be View::Pages::Books::PublishPage }
+        end
+
+        context 'when multiple sources are defined' do
+          example_class 'View::Books::Publish', ViewComponent::Base
+          example_class 'View::Pages::Books::PublishPage', ViewComponent::Base
+
+          it 'returns the component defined by the application' do
+            expect(component).to be View::Books::Publish
+          end
+
+          wrap_deferred 'when the provider defines components' do # rubocop:disable RSpec/NestedGroups
+            context 'when the provider defines the matching component' do # rubocop:disable RSpec/NestedGroups
+              example_class 'Spec::Components::Views::Books::Publish',
+                ViewComponent::Base
+
+              it 'returns the component defined by the application' do
+                expect(component).to be View::Books::Publish
+              end
+            end
+          end
+        end
+      end
+
+      wrap_deferred 'when the provider defines components' do
+        it { expect(component).to be nil }
+
+        context 'when the provider defines the matching component' do
+          example_class 'Spec::Components::Views::Books::Publish',
+            ViewComponent::Base
+
+          it { expect(component).to be Spec::Components::Views::Books::Publish }
+        end
+      end
+    end
+
     describe 'with controller: a scoped controller' do
       let(:controller) { 'scoped/books' }
 
@@ -502,6 +595,75 @@ RSpec.describe Librum::Core::Responders::Html::FindView do
       include_deferred 'when the provider defines components'
 
       it { expect(view_paths).to be == expected }
+    end
+
+    describe 'with controller: a class name' do
+      let(:controller) { 'BooksController' }
+
+      # rubocop:disable RSpec/RepeatedExampleGroupBody
+      wrap_deferred 'when the application defines view paths' do
+        let(:application_path) do
+          'View::Books::Publish'
+        end
+        let(:expected) do
+          [
+            application_path,
+            legacy_path
+          ]
+        end
+
+        it { expect(view_paths).to be == expected }
+      end
+
+      wrap_deferred 'when the application namespace defines view paths' do
+        let(:application_path) do
+          'View::Books::Publish'
+        end
+        let(:expected) do
+          [
+            application_path,
+            legacy_path
+          ]
+        end
+
+        it { expect(view_paths).to be == expected }
+      end
+      # rubocop:enable RSpec/RepeatedExampleGroupBody
+
+      wrap_deferred 'when the provider defines components' do
+        let(:shared_path) do
+          'Spec::Components::Views::Books::Publish'
+        end
+        let(:expected) do
+          [
+            shared_path,
+            legacy_path
+          ]
+        end
+
+        it { expect(view_paths).to be == expected }
+      end
+
+      context 'when multiple sources are defined' do
+        let(:application_path) do
+          'View::Books::Publish'
+        end
+        let(:shared_path) do
+          'Spec::Components::Views::Books::Publish'
+        end
+        let(:expected) do
+          [
+            application_path,
+            shared_path,
+            legacy_path
+          ]
+        end
+
+        include_deferred 'when the application defines view paths'
+        include_deferred 'when the provider defines components'
+
+        it { expect(view_paths).to be == expected }
+      end
     end
 
     describe 'with controller: a scoped controller' do
