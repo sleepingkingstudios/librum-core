@@ -6,11 +6,13 @@ require 'stannum/errors'
 
 require 'cuprum/collections'
 require 'cuprum/rails/rspec/deferred/responder_examples'
+require 'cuprum/rails/rspec/deferred/responses/html_response_examples'
 
 require 'support/models/rocket'
 
 RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
   include Cuprum::Rails::RSpec::Deferred::ResponderExamples
+  include Cuprum::Rails::RSpec::Deferred::Responses::HtmlResponseExamples
   include Librum::Core::RSpec::Examples::ResponderExamples
 
   subject(:responder) { described_class.new(**constructor_options) }
