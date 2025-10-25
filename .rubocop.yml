@@ -75,6 +75,14 @@ RSpec/NamedSubject:
 RSpec/NestedGroups:
   Max: 5
 
+RSpec/SpecFilePathFormat:
+  Exclude:
+    - spec/integration/**/*
+
+RSpec/SpecFilePathSuffix:
+  Exclude:
+    - '**/*spec.fixture.rb'
+
 RSpecRails/InferredSpecType:
   Enabled: false
 
