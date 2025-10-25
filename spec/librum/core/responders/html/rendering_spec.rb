@@ -4,13 +4,50 @@ require 'rails_helper'
 
 require 'cuprum/rails/rspec/deferred/responder_examples'
 require 'librum/components'
+require 'librum/core/rspec/deferred/responder_examples'
+require 'librum/core/rspec/deferred/responses/html_response_examples'
 
 RSpec.describe Librum::Core::Responders::Html::Rendering do
   include Cuprum::Rails::RSpec::Deferred::ResponderExamples
-  include Librum::Core::RSpec::Examples::ResponderExamples
+  include Librum::Core::RSpec::Deferred::ResponderExamples
+  include Librum::Core::RSpec::Deferred::Responses::HtmlResponseExamples
 
   subject(:responder) do
     described_class.new(action_name:, controller_name:, request:, resource:)
+  end
+
+  deferred_examples 'should render component with options' do |component_name|
+    wrap_deferred 'should render component', component_name
+
+    describe 'with flash: value' do
+      let(:flash) do
+        {
+          alert:  'Reactor temperature critical',
+          notice: 'Initializing activation sequence'
+        }
+      end
+      let(:options) { super().merge(flash:) }
+
+      include_deferred 'should render component',
+        component_name,
+        flash: -> { flash }
+    end
+
+    describe 'with layout: value' do
+      let(:options) { super().merge(layout: :custom) }
+
+      include_deferred 'should render component',
+        component_name,
+        layout: :custom
+    end
+
+    describe 'with status: value' do
+      let(:options) { super().merge(status: :created) }
+
+      include_deferred 'should render component',
+        component_name,
+        http_status: :created
+    end
   end
 
   deferred_examples 'should render the matching component' do |**page_options|
@@ -109,6 +146,24 @@ RSpec.describe Librum::Core::Responders::Html::Rendering do
         'Spec::ExampleComponent',
         **page_options
 
+      context 'when the component accepts a resource keyword' do
+        before(:example) do
+          Spec::ExampleComponent.class_eval do
+            def initialize(*, resource:, **)
+              @resource = resource
+
+              super(*, **)
+            end
+
+            attr_reader :resource
+          end
+        end
+
+        include_deferred 'should render component',
+          'Spec::ExampleComponent',
+          **page_options
+      end
+
       context 'when the component accepts a result argument' do
         before(:example) do
           Spec::ExampleComponent.class_eval do
@@ -138,7 +193,9 @@ RSpec.describe Librum::Core::Responders::Html::Rendering do
           end
         end
 
-        it { expect(response.component.result).to be result }
+        include_deferred 'should render component',
+          'Spec::ExampleComponent',
+          **page_options
       end
     end
   end
