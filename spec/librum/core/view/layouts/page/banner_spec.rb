@@ -90,7 +90,7 @@ RSpec.describe Librum::Core::View::Layouts::Page::Banner, type: :component do
       it { expect(rendered).to match_snapshot(snapshot) }
 
       describe 'with subtitle: value' do
-        let(:subtitle) { 'Tabletop Campaign Companion' }
+        let(:subtitle) { 'Example Application' }
         let(:options)  { super().merge(subtitle: subtitle) }
         let(:snapshot) do
           <<~HTML
@@ -101,7 +101,7 @@ RSpec.describe Librum::Core::View::Layouts::Page::Banner, type: :component do
                     <p class="title">
                       Librum
 
-                      <span class="subtitle is-block is-inline-tablet mt-3">Tabletop Campaign Companion</span>
+                      <span class="subtitle is-block is-inline-tablet mt-3">Example Application</span>
                     </p>
                   </div>
 
