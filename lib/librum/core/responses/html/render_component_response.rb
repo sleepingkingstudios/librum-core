@@ -4,7 +4,7 @@ module Librum::Core::Responses::Html
   # Encapsulates an HTML response that renders a ViewComponent.
   class RenderComponentResponse
     # @param assigns [Hash] variables to assign when rendering the template.
-    # @param component [ViewComponent] the component to render.
+    # @param component [ViewComponent::Base] the component to render.
     # @param flash [Hash] the flash messages to set.
     # @param layout [String] the layout to render.
     # @param status [Symbol, Integer] the HTTP status of the response.

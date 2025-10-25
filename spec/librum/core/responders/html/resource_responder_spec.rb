@@ -2,24 +2,48 @@
 
 require 'rails_helper'
 
-require 'stannum/errors'
-
 require 'cuprum/collections'
 require 'cuprum/rails/rspec/deferred/responder_examples'
 require 'cuprum/rails/rspec/deferred/responses/html_response_examples'
+require 'stannum/errors'
+
+require 'librum/core/rspec/deferred/responder_examples'
+require 'librum/core/rspec/deferred/responses/html_response_examples'
 
 require 'support/models/rocket'
 
 RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
   include Cuprum::Rails::RSpec::Deferred::ResponderExamples
   include Cuprum::Rails::RSpec::Deferred::Responses::HtmlResponseExamples
-  include Librum::Core::RSpec::Examples::ResponderExamples
+  include Librum::Core::RSpec::Deferred::ResponderExamples
+  include Librum::Core::RSpec::Deferred::Responses::HtmlResponseExamples
 
   subject(:responder) { described_class.new(**constructor_options) }
 
   deferred_examples 'should render the matching component' do |**page_options|
     context 'when there is not a matching component' do
-      include_deferred 'should render the missing page', **page_options
+      context 'when the missing page component is not defined' do
+        let(:expected_html) { '<h1>View Not Found</h1>' }
+
+        it { expect(response).to be_a Cuprum::Rails::Responses::HtmlResponse }
+
+        it { expect(response.html).to be == expected_html }
+
+        it { expect(response.layout).to be true }
+
+        it { expect(response.status).to be :internal_server_error }
+      end
+
+      context 'when the missing page is defined' do
+        include_deferred 'when the responder is provided components'
+        include_deferred 'when the shared component is defined',
+          'Views::MissingView'
+
+        include_deferred 'should render component',
+          'Spec::Components::Views::MissingView',
+          **page_options,
+          http_status: :internal_server_error
+      end
     end
 
     context 'when there is a matching page component' do
