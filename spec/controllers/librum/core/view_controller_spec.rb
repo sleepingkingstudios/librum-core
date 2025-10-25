@@ -2,26 +2,20 @@
 
 require 'rails_helper'
 
+require 'cuprum/rails/rspec/deferred/controller_examples'
+
 RSpec.describe Librum::Core::ViewController do
-  include Librum::Core::RSpec::Contracts::ControllerContracts
+  include Cuprum::Rails::RSpec::Deferred::ControllerExamples
 
   describe '.default_format' do
     it { expect(described_class.default_format).to be :html }
   end
 
-  describe '.repository' do
-    it 'should define the class reader' do
-      expect(described_class)
-        .to define_reader(:repository)
-        .with_value(an_instance_of(Cuprum::Rails::Records::Repository))
-    end
-  end
-
   describe '.responders' do
-    include_contract 'should respond to format',
+    include_deferred 'should respond to format',
       :html,
       using: Librum::Core::Responders::Html::ViewResponder
 
-    include_contract 'should not respond to format', :json
+    include_deferred 'should not respond to format', :json
   end
 end
