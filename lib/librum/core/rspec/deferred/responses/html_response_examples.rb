@@ -43,13 +43,12 @@ module Librum::Core::RSpec::Deferred::Responses
         be_a(component)
       end
       let(:configured_assigns) do
-        assigns = component_options.fetch(:assigns, {})
-        assigns = instance_exec(&assigns) if assigns.is_a?(Proc)
+        assigns = component_options.fetch(:assigns) do
+          next {} unless defined?(result)
 
-        if defined?(result) && result.is_a?(Cuprum::Result)
-          assigns = assigns.merge('result' => result)
+          result.is_a?(Cuprum::Result) ? { 'result' => result } : {}
         end
-
+        assigns = instance_exec(&assigns) if assigns.is_a?(Proc)
         assigns
       end
       let(:configured_flash) do
