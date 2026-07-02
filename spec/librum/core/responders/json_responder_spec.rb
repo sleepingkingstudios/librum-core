@@ -70,8 +70,8 @@ RSpec.describe Librum::Core::Responders::JsonResponder do
     describe 'with a failing result with a NotFound error' do
       let(:error) do
         Cuprum::Collections::Errors::NotFound.new(
-          attributes:      { 'name' => 'SLS' },
-          collection_name: 'rockets'
+          attributes: { 'name' => 'SLS' },
+          name:       'rockets'
         )
       end
       let(:result) { Cuprum::Result.new(error: error) }
@@ -84,8 +84,8 @@ RSpec.describe Librum::Core::Responders::JsonResponder do
     describe 'with a failing result with a NotUnique error' do
       let(:error) do
         Cuprum::Collections::Errors::NotUnique.new(
-          attributes:      { 'name' => 'Falcon' },
-          collection_name: 'rockets'
+          attributes: { 'name' => 'Falcon' },
+          name:       'rockets'
         )
       end
       let(:result) { Cuprum::Result.new(error: error) }

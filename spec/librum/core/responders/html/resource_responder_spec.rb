@@ -211,7 +211,7 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
           Cuprum::Collections::Errors::NotFound.new(
             attribute_name:  'slug',
             attribute_value: 'jack_of_hearts',
-            collection_name: 'playing_cards',
+            name:            'playing_cards',
             primary_key:     false
           )
         end
@@ -231,7 +231,7 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
           Cuprum::Collections::Errors::NotFound.new(
             attribute_name:  'id',
             attribute_value: 0,
-            collection_name: 'books'
+            name:            'books'
           )
         end
 
@@ -281,7 +281,7 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
           Cuprum::Collections::Errors::NotFound.new(
             attribute_name:  'id',
             attribute_value: 0,
-            collection_name: 'authors'
+            name:            'authors'
           )
         end
 
@@ -314,7 +314,7 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
           Cuprum::Collections::Errors::NotFound.new(
             attribute_name:  'id',
             attribute_value: 0,
-            collection_name: 'publishers'
+            name:            'publishers'
           )
         end
 

@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe Librum::Core::Models::DataProperties do
   include Librum::Core::RSpec::Contracts::Models::DataPropertiesContracts
 
-  anonymous_base_class = Struct.new(:data) do
+  anonymous_base_class = Struct.new(:data) do # rubocop:disable RSpec/LeakyLocalVariable
     extend Librum::Core::Models::DataProperties
   end
 

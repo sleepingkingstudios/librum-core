@@ -55,7 +55,7 @@ module Librum::Core::RSpec::Utils
       tag
         .children
         .select(&:text?)
-        .map(&:to_s)
+        .map(&:to_s) # rubocop:disable Style/MapJoin
         .join
     end
 

@@ -11,10 +11,7 @@ module Librum::Core::Actions::Middleware::Associations
     private
 
     def association_collection
-      repository.find_or_create(
-        name:           association.name,
-        qualified_name: association.qualified_name
-      )
+      repository.find(qualified_name: association.qualified_name)
     end
 
     def require_parent(primary_key:)

@@ -5,9 +5,13 @@ require 'rails_helper'
 RSpec.describe Librum::Core::Commands::Queries::FindEntity do
   subject(:query) { described_class.new(collection: collection) }
 
-  let(:repository) { Cuprum::Rails::Records::Repository.new }
+  let(:repository) do
+    Cuprum::Rails::Records::Repository.new.tap do |repository|
+      repository.create(entity_class: User)
+    end
+  end
   let(:collection) do
-    repository.find_or_create(entity_class: User)
+    repository.find(entity_class: User)
   end
 
   describe '.new' do
@@ -29,9 +33,15 @@ RSpec.describe Librum::Core::Commands::Queries::FindEntity do
 
     describe 'with nil' do
       let(:expected_error) do
+        failure =
+          SleepingKingStudios::Tools::Toolbelt
+          .instance
+          .assertions
+          .error_message_for(:instance_of, as: 'primary_key', expected: String)
+
         Cuprum::Errors::InvalidParameters.new(
           command_class: Cuprum::Rails::Records::Commands::FindOne,
-          failures:      ['primary_key is not an instance of String']
+          failures:      [failure]
         )
       end
 
@@ -48,7 +58,7 @@ RSpec.describe Librum::Core::Commands::Queries::FindEntity do
         Cuprum::Collections::Errors::NotFound.new(
           attribute_name:  'id',
           attribute_value: value,
-          collection_name: collection.name,
+          name:            collection.name,
           primary_key:     true
         )
       end
@@ -76,7 +86,7 @@ RSpec.describe Librum::Core::Commands::Queries::FindEntity do
         Cuprum::Collections::Errors::NotFound.new(
           attribute_name:  'slug',
           attribute_value: value,
-          collection_name: collection.name
+          name:            collection.name
         )
       end
 
@@ -106,7 +116,7 @@ RSpec.describe Librum::Core::Commands::Queries::FindEntity do
         Cuprum::Collections::Errors::NotUnique.new(
           attribute_name:  'slug',
           attribute_value: 'example-user',
-          collection_name: collection.name
+          name:            collection.name
         )
       end
 

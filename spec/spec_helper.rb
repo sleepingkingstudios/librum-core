@@ -15,6 +15,8 @@ require 'rspec/sleeping_king_studios/all'
 # Isolated namespace for defining spec-only or transient objects.
 module Spec; end
 
+SleepingKingStudios::Tools.initializer.call
+
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
   config.include Cuprum::RSpec::Matchers

@@ -23,7 +23,7 @@ module Librum::Core::Commands::Queries
       Cuprum::Collections::Errors::NotFound.new(
         attribute_name:  'slug',
         attribute_value: slug,
-        collection_name: collection.name
+        name:            collection.name
       )
     end
 
@@ -31,7 +31,7 @@ module Librum::Core::Commands::Queries
       Cuprum::Collections::Errors::NotUnique.new(
         attribute_name:  'slug',
         attribute_value: slug,
-        collection_name: collection.name
+        name:            collection.name
       )
     end
 

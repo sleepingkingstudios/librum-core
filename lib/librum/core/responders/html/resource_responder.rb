@@ -109,7 +109,7 @@ module Librum::Core::Responders::Html
     end
 
     def matching_ancestor_for(result)
-      name = result.error.collection_name
+      name = result.error.collection.fetch('name')
 
       resource.each_ancestor.find do |ancestor|
         ancestor.plural_name == name || ancestor.singular_name == name
@@ -118,7 +118,7 @@ module Librum::Core::Responders::Html
 
     def not_found_flash(error:, matching: nil)
       resource_name =
-        matching&.singular_name || error.collection_name.singularize
+        matching&.singular_name || error.collection.fetch('name').singularize
       message       = Kernel.format(
         '%<resource>s not found with key "%<value>s"',
         resource: resource_name.titleize,

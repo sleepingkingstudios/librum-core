@@ -61,8 +61,8 @@ RSpec.describe Librum::Core::Commands::Queries::RequireEntity do
       context 'when there are no values matching the resource scope' do
         let(:expected_error) do
           Cuprum::Collections::Errors::NotFound.new(
-            collection_name: collection.name,
-            query:           collection.query
+            name:  collection.name,
+            query: collection.query
           )
         end
 
@@ -93,8 +93,8 @@ RSpec.describe Librum::Core::Commands::Queries::RequireEntity do
         let(:entities) { fixtures_data }
         let(:expected_error) do
           Cuprum::Collections::Errors::NotUnique.new(
-            collection_name: collection.name,
-            query:           collection.query
+            name:  collection.name,
+            query: collection.query
           )
         end
 
@@ -168,7 +168,7 @@ RSpec.describe Librum::Core::Commands::Queries::RequireEntity do
           Cuprum::Collections::Errors::NotFound.new(
             attribute_name:  'slug',
             attribute_value: primary_key,
-            collection_name: collection.name
+            name:            collection.name
           )
         end
 
