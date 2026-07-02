@@ -12,7 +12,11 @@ RSpec.describe Librum::Core::Actions::Destroy, type: :action do
 
   subject(:action) { described_class.new }
 
-  let(:repository) { Cuprum::Rails::Records::Repository.new }
+  let(:repository) do
+    Cuprum::Rails::Records::Repository.new.tap do |repository|
+      repository.create(entity_class: User)
+    end
+  end
   let(:resource) do
     Cuprum::Rails::Resource.new(entity_class: User)
   end

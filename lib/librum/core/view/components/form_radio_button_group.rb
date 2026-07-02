@@ -31,10 +31,10 @@ module Librum::Core::View::Components
 
     option :label, default: lambda {
       name
-        .gsub(']', '')
-        .split(/[.\[]/)
-        .last
-        .titleize
+      .gsub(']', '')
+      .split(/[.\[]/)
+      .last
+      .titleize
     }
 
     # @return [#[]] the data for the form.

@@ -5,9 +5,13 @@ require 'rails_helper'
 RSpec.describe Librum::Core::Commands::Queries::FindBySlug do
   subject(:query) { described_class.new(collection: collection) }
 
-  let(:repository) { Cuprum::Rails::Records::Repository.new }
+  let(:repository) do
+    Cuprum::Rails::Records::Repository.new.tap do |repository|
+      repository.create(entity_class: User)
+    end
+  end
   let(:collection) do
-    repository.find_or_create(entity_class: User)
+    repository.find(entity_class: User)
   end
 
   describe '.new' do
@@ -33,7 +37,7 @@ RSpec.describe Librum::Core::Commands::Queries::FindBySlug do
         Cuprum::Collections::Errors::NotFound.new(
           attribute_name:  'slug',
           attribute_value: slug,
-          collection_name: collection.name
+          name:            collection.name
         )
       end
 
@@ -63,7 +67,7 @@ RSpec.describe Librum::Core::Commands::Queries::FindBySlug do
         Cuprum::Collections::Errors::NotUnique.new(
           attribute_name:  'slug',
           attribute_value: 'example-user',
-          collection_name: collection.name
+          name:            collection.name
         )
       end
 

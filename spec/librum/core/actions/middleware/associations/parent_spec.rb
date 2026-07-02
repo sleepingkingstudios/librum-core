@@ -98,7 +98,11 @@ RSpec.describe Librum::Core::Actions::Middleware::Associations::Parent do
     let(:next_command) { instance_double(Cuprum::Command, call: next_result) }
     let(:params)       { {} }
     let(:request)      { Cuprum::Rails::Request.new(params: params) }
-    let(:repository)   { Cuprum::Rails::Records::Repository.new }
+    let(:repository) do
+      Cuprum::Rails::Records::Repository.new.tap do |repository|
+        repository.create(entity_class: User)
+      end
+    end
     let(:resource) do
       Cuprum::Rails::Resource.new(
         entity_class: Project,
@@ -154,7 +158,7 @@ RSpec.describe Librum::Core::Actions::Middleware::Associations::Parent do
         Cuprum::Collections::Errors::NotFound.new(
           attribute_name:  'id',
           attribute_value: user_id,
-          collection_name: 'user',
+          name:            'user',
           primary_key:     true
         )
       end
@@ -179,7 +183,7 @@ RSpec.describe Librum::Core::Actions::Middleware::Associations::Parent do
         Cuprum::Collections::Errors::NotFound.new(
           attribute_name:  'slug',
           attribute_value: user_id,
-          collection_name: 'user'
+          name:            'user'
         )
       end
 

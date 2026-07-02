@@ -458,8 +458,6 @@ module Librum::Core::RSpec::Contracts::Models
                 )
               end
 
-              # rubocop:disable RSpec/ExampleLength
-              # rubocop:disable RSpec/MultipleExpectations
               it 'should check the scope' do
                 scopes_match =
                   scope_attributes
@@ -476,8 +474,6 @@ module Librum::Core::RSpec::Contracts::Models
                   expect(subject).not_to have_errors.on(attr_name)
                 end
               end
-              # rubocop:enable RSpec/ExampleLength
-              # rubocop:enable RSpec/MultipleExpectations
             end
           end
         end
