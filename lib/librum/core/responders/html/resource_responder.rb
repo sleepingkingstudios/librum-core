@@ -11,7 +11,7 @@ module Librum::Core::Responders::Html
         path   =
           resource.singular? ? routes.show_path : routes.show_path(record.slug)
 
-        redirect_to(path, flash: success_flash('created'))
+        redirect_to(path, flash: success_flash('created'), status: 303) # rubocop:disable Rails/HttpStatus
       end
 
       match :failure, error: Cuprum::Collections::Errors::FailedValidation \
@@ -28,11 +28,11 @@ module Librum::Core::Responders::Html
       match :success do
         path = resource.singular? ? routes.show_path : routes.index_path
 
-        redirect_to(path, flash: destroy_flash)
+        redirect_to(path, flash: destroy_flash, status: 303) # rubocop:disable Rails/HttpStatus
       end
 
       match :failure do
-        redirect_back(flash: failure_flash('destroy'))
+        redirect_back(flash: failure_flash('destroy'), status: 303)
       end
     end
 
@@ -42,7 +42,7 @@ module Librum::Core::Responders::Html
         path   =
           resource.singular? ? routes.show_path : routes.show_path(record.slug)
 
-        redirect_to(path, flash: success_flash('updated'))
+        redirect_to(path, flash: success_flash('updated'), status: 303) # rubocop:disable Rails/HttpStatus
       end
 
       match :failure, error: Cuprum::Collections::Errors::FailedValidation \
@@ -104,7 +104,8 @@ module Librum::Core::Responders::Html
 
       redirect_to(
         matching.singular? ? routes.show_path : routes.index_path,
-        flash: not_found_flash(error: result.error, matching: matching)
+        flash:  not_found_flash(error: result.error, matching: matching),
+        status: 303 # rubocop:disable Rails/HttpStatus
       )
     end
 
