@@ -238,23 +238,25 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
         wrap_deferred 'when initialized with a plural resource' do
           include_deferred 'should redirect to',
             -> { resource.routes.index_path },
-            flash: {
+            flash:  {
               warning: {
                 icon:    'exclamation-triangle',
                 message: 'Book not found with key "0"'
               }
-            }
+            },
+            status: 303
         end
 
         wrap_deferred 'when initialized with a singular resource' do
           include_deferred 'should redirect to',
             -> { resource.routes.show_path },
-            flash: {
+            flash:  {
               warning: {
                 icon:    'exclamation-triangle',
                 message: 'Book not found with key "0"'
               }
-            }
+            },
+            status: 303
         end
       end
 
@@ -289,12 +291,13 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
           lambda {
             authors_resource.routes.with_wildcards(publisher_id: 0).index_path
           },
-          flash: {
+          flash:  {
             warning: {
               icon:    'exclamation-triangle',
               message: 'Author not found with key "0"'
             }
-          }
+          },
+          status: 303
       end
 
       context 'when the error matches the top-level resource' do
@@ -322,12 +325,13 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
           lambda {
             publishers_resource.routes.index_path
           },
-          flash: {
+          flash:  {
             warning: {
               icon:    'exclamation-triangle',
               message: 'Publisher not found with key "0"'
             }
-          }
+          },
+          status: 303
       end
     end
 
@@ -377,23 +381,25 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
         wrap_deferred 'when initialized with a plural resource' do
           include_deferred 'should redirect to',
             -> { resource.routes.show_path(record.slug) },
-            flash: {
+            flash:  {
               success: {
                 icon:    'circle-check',
                 message: 'Successfully created Book'
               }
-            }
+            },
+            status: 303
         end
 
         wrap_deferred 'when initialized with a singular resource' do
           include_deferred 'should redirect to',
             -> { resource.routes.show_path },
-            flash: {
+            flash:  {
               success: {
                 icon:    'circle-check',
                 message: 'Successfully created Book'
               }
-            }
+            },
+            status: 303
         end
       end
     end
@@ -406,12 +412,13 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
         let(:result) { Cuprum::Result.new(error: error) }
 
         include_deferred 'should redirect back',
-          flash: {
+          flash:  {
             warning: {
               icon:    'exclamation-triangle',
               message: 'Unable to destroy Book'
             }
-          }
+          },
+          status: 303
       end
 
       describe 'with a passing result' do
@@ -420,23 +427,25 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
         wrap_deferred 'when initialized with a plural resource' do
           include_deferred 'should redirect to',
             -> { resource.routes.index_path },
-            flash: {
+            flash:  {
               danger: {
                 icon:    'bomb',
                 message: 'Successfully destroyed Book'
               }
-            }
+            },
+            status: 303
         end
 
         wrap_deferred 'when initialized with a singular resource' do
           include_deferred 'should redirect to',
             -> { resource.routes.show_path },
-            flash: {
+            flash:  {
               danger: {
                 icon:    'bomb',
                 message: 'Successfully destroyed Book'
               }
-            }
+            },
+            status: 303
         end
       end
     end
@@ -480,23 +489,25 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
         wrap_deferred 'when initialized with a plural resource' do
           include_deferred 'should redirect to',
             -> { resource.routes.show_path(record.slug) },
-            flash: {
+            flash:  {
               success: {
                 icon:    'circle-check',
                 message: 'Successfully updated Book'
               }
-            }
+            },
+            status: 303
         end
 
         wrap_deferred 'when initialized with a singular resource' do
           include_deferred 'should redirect to',
             -> { resource.routes.show_path },
-            flash: {
+            flash:  {
               success: {
                 icon:    'circle-check',
                 message: 'Successfully updated Book'
               }
-            }
+            },
+            status: 303
         end
       end
     end
