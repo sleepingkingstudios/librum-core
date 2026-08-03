@@ -12,7 +12,7 @@ module Librum::Core::Responders::Html
       delegate :view_path, to: :library
 
       def initialize(library:)
-        name = library.name.sub(/(Engine|Railtie)\z/, '')
+        name = library.name.sub(/(::)?(Engine|Railtie)\z/, '')
 
         super(library:, name:)
       end
