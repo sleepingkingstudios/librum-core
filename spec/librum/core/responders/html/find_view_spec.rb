@@ -45,7 +45,7 @@ RSpec.describe Librum::Core::Responders::Html::FindView do
       [
         Spec::Engine.new('Example'),
         Spec::Engine.new('WebhooksEngine'),
-        Spec::Engine.new('CustomRailtie')
+        Spec::Engine.new('Custom::Railtie')
       ]
     end
 
@@ -54,7 +54,7 @@ RSpec.describe Librum::Core::Responders::Html::FindView do
         action     = action.titleize.gsub('/', '::')
         controller = controller.titleize.gsub('/', '::')
 
-        "#{name}::View::#{controller}::#{action}"
+        "#{name.sub('::Railtie', '')}::View::#{controller}::#{action}"
       end
     end
   end
@@ -365,7 +365,7 @@ RSpec.describe Librum::Core::Responders::Html::FindView do
       end
     end
 
-    describe 'with controller: a controller belonging to a library' do
+    describe 'with controller: a controller belonging to an engine' do
       let(:action)     { 'send' }
       let(:controller) { 'webhooks/outbound' }
 
@@ -448,6 +448,94 @@ RSpec.describe Librum::Core::Responders::Html::FindView do
           it 'should return the shared component' do
             expect(component)
               .to be Spec::Components::Views::Webhooks::Outbound::Send
+          end
+        end
+      end
+    end
+
+    describe 'with controller: a controller belonging to a library' do
+      let(:action)     { 'send' }
+      let(:controller) { 'custom/examples' }
+
+      include_deferred 'when the application includes libraries'
+
+      it { expect(component).to be nil }
+
+      context 'when the legacy page is defined' do
+        example_class 'Custom::View::Pages::Examples::SendPage',
+          ViewComponent::Base
+
+        it 'should return the legacy page component' do
+          expect(component).to be Custom::View::Pages::Examples::SendPage
+        end
+      end
+
+      context 'when the library defines the component' do
+        example_class 'Custom::View::Examples::Send',
+          ViewComponent::Base
+
+        it { expect(component).to be Custom::View::Examples::Send }
+      end
+
+      context 'when multiple sources are defined' do
+        example_class 'Custom::View::Pages::Examples::SendPage',
+          ViewComponent::Base
+        example_class 'Custom::View::Examples::Send',
+          ViewComponent::Base
+
+        it 'returns the component defined by the library' do
+          expect(component).to be Custom::View::Examples::Send
+        end
+      end
+
+      wrap_deferred 'when the application defines view paths' do
+        it { expect(component).to be nil }
+
+        context 'when the application defines the component' do
+          example_class 'View::Custom::Examples::Send', ViewComponent::Base
+
+          it { expect(component).to be View::Custom::Examples::Send }
+        end
+
+        context 'when the library defines the component' do
+          example_class 'Custom::View::Examples::Send',
+            ViewComponent::Base
+
+          it { expect(component).to be Custom::View::Examples::Send }
+        end
+
+        context 'when the legacy page is defined' do
+          example_class 'Custom::View::Pages::Examples::SendPage',
+            ViewComponent::Base
+
+          it 'should return the legacy page component' do
+            expect(component).to be Custom::View::Pages::Examples::SendPage
+          end
+        end
+
+        context 'when multiple sources are defined' do
+          example_class 'View::Custom::Examples::Send', ViewComponent::Base
+          example_class 'Custom::View::Pages::Examples::SendPage',
+            ViewComponent::Base
+          example_class 'Custom::View::Examples::Send',
+            ViewComponent::Base
+
+          it 'returns the component defined by the application' do
+            expect(component).to be View::Custom::Examples::Send
+          end
+        end
+      end
+
+      wrap_deferred 'when the provider defines components' do
+        it { expect(component).to be nil }
+
+        context 'when the provider defines the matching component' do
+          example_class 'Spec::Components::Views::Custom::Examples::Send',
+            ViewComponent::Base
+
+          it 'should return the shared component' do
+            expect(component)
+              .to be Spec::Components::Views::Custom::Examples::Send
           end
         end
       end
