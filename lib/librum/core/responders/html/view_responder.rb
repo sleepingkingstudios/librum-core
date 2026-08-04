@@ -44,7 +44,7 @@ module Librum::Core::Responders::Html
 
       return unless component
 
-      build_view(component, expected_page:, result:, view_paths:)
+      build_view(component, expected_page:, resource:, result:, view_paths:)
     end
 
     def controller_metadata

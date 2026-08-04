@@ -37,7 +37,9 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
       context 'when the missing page is defined' do
         include_deferred 'when the responder is provided components'
         include_deferred 'when the shared component is defined',
-          'Views::MissingView'
+          'Views::MissingView',
+          any_options: true,
+          view:        true
 
         include_deferred 'should render component',
           'Spec::Components::Views::MissingView',
@@ -53,7 +55,8 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
         responder.action_name
       end
 
-      example_class 'Spec::ExampleComponent', ViewComponent::Base do |klass|
+      example_class 'Spec::ExampleComponent', Librum::Components::View \
+      do |klass|
         klass.define_method(:is_layout?) { true }
       end
 
@@ -76,7 +79,7 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
         responder.action_name
       end
 
-      example_class 'Spec::ExampleComponent', ViewComponent::Base
+      example_class 'Spec::ExampleComponent', Librum::Components::View
 
       before(:example) do
         allow(service)
@@ -97,7 +100,7 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
         responder.action_name
       end
 
-      example_class 'Spec::ResourceComponent', ViewComponent::Base
+      example_class 'Spec::ResourceComponent', Librum::Components::View
 
       before(:example) do
         allow(service)
@@ -515,7 +518,7 @@ RSpec.describe Librum::Core::Responders::Html::ResourceResponder do
 
   describe '#find_component_class' do
     deferred_context 'with default: value' do
-      let(:default) { Class.new(ViewComponent::Base) }
+      let(:default) { Class.new(Librum::Components::Base) }
       let(:options) { super().merge(default:) }
     end
 

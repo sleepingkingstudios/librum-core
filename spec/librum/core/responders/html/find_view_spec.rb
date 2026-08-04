@@ -99,7 +99,7 @@ RSpec.describe Librum::Core::Responders::Html::FindView do
     it { expect(component).to be nil }
 
     context 'when the legacy page is defined' do
-      example_class 'View::Pages::Books::PublishPage', ViewComponent::Base
+      example_class 'View::Pages::Books::PublishPage', Librum::Components::Base
 
       it { expect(component).to be View::Pages::Books::PublishPage }
     end
@@ -108,20 +108,22 @@ RSpec.describe Librum::Core::Responders::Html::FindView do
       it { expect(component).to be nil }
 
       context 'when the application defines the component' do
-        example_class 'View::Books::Publish', ViewComponent::Base
+        example_class 'View::Books::Publish', Librum::Components::Base
 
         it { expect(component).to be View::Books::Publish }
       end
 
       context 'when the legacy page is defined' do
-        example_class 'View::Pages::Books::PublishPage', ViewComponent::Base
+        example_class 'View::Pages::Books::PublishPage',
+          Librum::Components::Base
 
         it { expect(component).to be View::Pages::Books::PublishPage }
       end
 
       context 'when multiple sources are defined' do
-        example_class 'View::Books::Publish', ViewComponent::Base
-        example_class 'View::Pages::Books::PublishPage', ViewComponent::Base
+        example_class 'View::Books::Publish', Librum::Components::Base
+        example_class 'View::Pages::Books::PublishPage',
+          Librum::Components::Base
 
         it 'returns the component defined by the application' do
           expect(component).to be View::Books::Publish
@@ -130,7 +132,7 @@ RSpec.describe Librum::Core::Responders::Html::FindView do
         wrap_deferred 'when the provider defines components' do
           context 'when the provider defines the matching component' do # rubocop:disable RSpec/NestedGroups
             example_class 'Spec::Components::Views::Books::Publish',
-              ViewComponent::Base
+              Librum::Components::Base
 
             it 'returns the component defined by the application' do
               expect(component).to be View::Books::Publish
@@ -144,20 +146,20 @@ RSpec.describe Librum::Core::Responders::Html::FindView do
       it { expect(component).to be nil }
 
       context 'when the application defines the component' do
-        example_class 'View::Books::Publish', ViewComponent::Base
+        example_class 'View::Books::Publish', Librum::Components::Base
 
         it { expect(component).to be View::Books::Publish }
       end
 
       context 'when the legacy page is defined' do
-        example_class 'View::Pages::Books::PublishPage', ViewComponent::Base
+        example_class 'View::Pages::Books::PublishPage', Librum::Components::Base
 
         it { expect(component).to be View::Pages::Books::PublishPage }
       end
 
       context 'when multiple sources are defined' do
-        example_class 'View::Books::Publish', ViewComponent::Base
-        example_class 'View::Pages::Books::PublishPage', ViewComponent::Base
+        example_class 'View::Books::Publish', Librum::Components::Base
+        example_class 'View::Pages::Books::PublishPage', Librum::Components::Base
 
         it 'returns the component defined by the application' do
           expect(component).to be View::Books::Publish
@@ -166,7 +168,7 @@ RSpec.describe Librum::Core::Responders::Html::FindView do
         wrap_deferred 'when the provider defines components' do
           context 'when the provider defines the matching component' do # rubocop:disable RSpec/NestedGroups
             example_class 'Spec::Components::Views::Books::Publish',
-              ViewComponent::Base
+              Librum::Components::Base
 
             it 'returns the component defined by the application' do
               expect(component).to be View::Books::Publish
@@ -181,7 +183,7 @@ RSpec.describe Librum::Core::Responders::Html::FindView do
 
       context 'when the provider defines the matching component' do
         example_class 'Spec::Components::Views::Books::Publish',
-          ViewComponent::Base
+          Librum::Components::Base
 
         it { expect(component).to be Spec::Components::Views::Books::Publish }
       end
@@ -193,7 +195,7 @@ RSpec.describe Librum::Core::Responders::Html::FindView do
       it { expect(component).to be nil }
 
       context 'when the legacy page is defined' do
-        example_class 'View::Pages::Books::PublishPage', ViewComponent::Base
+        example_class 'View::Pages::Books::PublishPage', Librum::Components::Base
 
         it { expect(component).to be View::Pages::Books::PublishPage }
       end
@@ -202,13 +204,13 @@ RSpec.describe Librum::Core::Responders::Html::FindView do
         it { expect(component).to be nil }
 
         context 'when the application defines the component' do
-          example_class 'View::Books::Publish', ViewComponent::Base
+          example_class 'View::Books::Publish', Librum::Components::Base
 
           it { expect(component).to be View::Books::Publish }
         end
 
         context 'when the legacy page is defined' do
-          example_class 'View::Pages::Books::PublishPage', ViewComponent::Base
+          example_class 'View::Pages::Books::PublishPage', Librum::Components::Base
 
           it { expect(component).to be View::Pages::Books::PublishPage }
         end
@@ -218,7 +220,7 @@ RSpec.describe Librum::Core::Responders::Html::FindView do
 
           context 'when the provider defines the matching component' do # rubocop:disable RSpec/NestedGroups
             example_class 'Spec::Components::Views::Books::Publish',
-              ViewComponent::Base
+              Librum::Components::Base
 
             it 'should return the shared component' do
               expect(component).to be Spec::Components::Views::Books::Publish
@@ -232,7 +234,7 @@ RSpec.describe Librum::Core::Responders::Html::FindView do
       let(:controller) { 'BooksController' }
 
       context 'when the legacy page is defined' do
-        example_class 'View::Pages::Books::PublishPage', ViewComponent::Base
+        example_class 'View::Pages::Books::PublishPage', Librum::Components::Base
 
         it { expect(component).to be View::Pages::Books::PublishPage }
       end
@@ -241,20 +243,20 @@ RSpec.describe Librum::Core::Responders::Html::FindView do
         it { expect(component).to be nil }
 
         context 'when the application defines the component' do
-          example_class 'View::Books::Publish', ViewComponent::Base
+          example_class 'View::Books::Publish', Librum::Components::Base
 
           it { expect(component).to be View::Books::Publish }
         end
 
         context 'when the legacy page is defined' do
-          example_class 'View::Pages::Books::PublishPage', ViewComponent::Base
+          example_class 'View::Pages::Books::PublishPage', Librum::Components::Base
 
           it { expect(component).to be View::Pages::Books::PublishPage }
         end
 
         context 'when multiple sources are defined' do
-          example_class 'View::Books::Publish', ViewComponent::Base
-          example_class 'View::Pages::Books::PublishPage', ViewComponent::Base
+          example_class 'View::Books::Publish', Librum::Components::Base
+          example_class 'View::Pages::Books::PublishPage', Librum::Components::Base
 
           it 'returns the component defined by the application' do
             expect(component).to be View::Books::Publish
@@ -263,7 +265,7 @@ RSpec.describe Librum::Core::Responders::Html::FindView do
           wrap_deferred 'when the provider defines components' do # rubocop:disable RSpec/NestedGroups
             context 'when the provider defines the matching component' do # rubocop:disable RSpec/NestedGroups
               example_class 'Spec::Components::Views::Books::Publish',
-                ViewComponent::Base
+                Librum::Components::Base
 
               it 'returns the component defined by the application' do
                 expect(component).to be View::Books::Publish
@@ -277,20 +279,20 @@ RSpec.describe Librum::Core::Responders::Html::FindView do
         it { expect(component).to be nil }
 
         context 'when the application defines the component' do
-          example_class 'View::Books::Publish', ViewComponent::Base
+          example_class 'View::Books::Publish', Librum::Components::Base
 
           it { expect(component).to be View::Books::Publish }
         end
 
         context 'when the legacy page is defined' do
-          example_class 'View::Pages::Books::PublishPage', ViewComponent::Base
+          example_class 'View::Pages::Books::PublishPage', Librum::Components::Base
 
           it { expect(component).to be View::Pages::Books::PublishPage }
         end
 
         context 'when multiple sources are defined' do
-          example_class 'View::Books::Publish', ViewComponent::Base
-          example_class 'View::Pages::Books::PublishPage', ViewComponent::Base
+          example_class 'View::Books::Publish', Librum::Components::Base
+          example_class 'View::Pages::Books::PublishPage', Librum::Components::Base
 
           it 'returns the component defined by the application' do
             expect(component).to be View::Books::Publish
@@ -299,7 +301,7 @@ RSpec.describe Librum::Core::Responders::Html::FindView do
           wrap_deferred 'when the provider defines components' do # rubocop:disable RSpec/NestedGroups
             context 'when the provider defines the matching component' do # rubocop:disable RSpec/NestedGroups
               example_class 'Spec::Components::Views::Books::Publish',
-                ViewComponent::Base
+                Librum::Components::Base
 
               it 'returns the component defined by the application' do
                 expect(component).to be View::Books::Publish
@@ -314,7 +316,7 @@ RSpec.describe Librum::Core::Responders::Html::FindView do
 
         context 'when the provider defines the matching component' do
           example_class 'Spec::Components::Views::Books::Publish',
-            ViewComponent::Base
+            Librum::Components::Base
 
           it { expect(component).to be Spec::Components::Views::Books::Publish }
         end
@@ -328,7 +330,7 @@ RSpec.describe Librum::Core::Responders::Html::FindView do
 
       context 'when the legacy page is defined' do
         example_class 'View::Pages::Scoped::Books::PublishPage',
-          ViewComponent::Base
+          Librum::Components::Base
 
         it { expect(component).to be View::Pages::Scoped::Books::PublishPage }
       end
@@ -337,14 +339,14 @@ RSpec.describe Librum::Core::Responders::Html::FindView do
         it { expect(component).to be nil }
 
         context 'when the application defines the component' do
-          example_class 'View::Scoped::Books::Publish', ViewComponent::Base
+          example_class 'View::Scoped::Books::Publish', Librum::Components::Base
 
           it { expect(component).to be View::Scoped::Books::Publish }
         end
 
         context 'when the legacy page is defined' do
           example_class 'View::Pages::Scoped::Books::PublishPage',
-            ViewComponent::Base
+            Librum::Components::Base
 
           it { expect(component).to be View::Pages::Scoped::Books::PublishPage }
         end
@@ -355,7 +357,7 @@ RSpec.describe Librum::Core::Responders::Html::FindView do
 
         context 'when the provider defines the matching component' do
           example_class 'Spec::Components::Views::Scoped::Books::Publish',
-            ViewComponent::Base
+            Librum::Components::Base
 
           it 'should return the shared component' do
             expect(component)
@@ -375,7 +377,7 @@ RSpec.describe Librum::Core::Responders::Html::FindView do
 
       context 'when the legacy page is defined' do
         example_class 'Webhooks::View::Pages::Outbound::SendPage',
-          ViewComponent::Base
+          Librum::Components::Base
 
         it 'should return the legacy page component' do
           expect(component).to be Webhooks::View::Pages::Outbound::SendPage
@@ -384,16 +386,16 @@ RSpec.describe Librum::Core::Responders::Html::FindView do
 
       context 'when the library defines the component' do
         example_class 'WebhooksEngine::View::Outbound::Send',
-          ViewComponent::Base
+          Librum::Components::Base
 
         it { expect(component).to be WebhooksEngine::View::Outbound::Send }
       end
 
       context 'when multiple sources are defined' do
         example_class 'Webhooks::View::Pages::Outbound::SendPage',
-          ViewComponent::Base
+          Librum::Components::Base
         example_class 'WebhooksEngine::View::Outbound::Send',
-          ViewComponent::Base
+          Librum::Components::Base
 
         it 'returns the component defined by the library' do
           expect(component).to be WebhooksEngine::View::Outbound::Send
@@ -404,21 +406,21 @@ RSpec.describe Librum::Core::Responders::Html::FindView do
         it { expect(component).to be nil }
 
         context 'when the application defines the component' do
-          example_class 'View::Webhooks::Outbound::Send', ViewComponent::Base
+          example_class 'View::Webhooks::Outbound::Send', Librum::Components::Base
 
           it { expect(component).to be View::Webhooks::Outbound::Send }
         end
 
         context 'when the library defines the component' do
           example_class 'WebhooksEngine::View::Outbound::Send',
-            ViewComponent::Base
+            Librum::Components::Base
 
           it { expect(component).to be WebhooksEngine::View::Outbound::Send }
         end
 
         context 'when the legacy page is defined' do
           example_class 'Webhooks::View::Pages::Outbound::SendPage',
-            ViewComponent::Base
+            Librum::Components::Base
 
           it 'should return the legacy page component' do
             expect(component).to be Webhooks::View::Pages::Outbound::SendPage
@@ -426,11 +428,11 @@ RSpec.describe Librum::Core::Responders::Html::FindView do
         end
 
         context 'when multiple sources are defined' do
-          example_class 'View::Webhooks::Outbound::Send', ViewComponent::Base
+          example_class 'View::Webhooks::Outbound::Send', Librum::Components::Base
           example_class 'Webhooks::View::Pages::Outbound::SendPage',
-            ViewComponent::Base
+            Librum::Components::Base
           example_class 'WebhooksEngine::View::Outbound::Send',
-            ViewComponent::Base
+            Librum::Components::Base
 
           it 'returns the component defined by the application' do
             expect(component).to be View::Webhooks::Outbound::Send
@@ -443,7 +445,7 @@ RSpec.describe Librum::Core::Responders::Html::FindView do
 
         context 'when the provider defines the matching component' do
           example_class 'Spec::Components::Views::Webhooks::Outbound::Send',
-            ViewComponent::Base
+            Librum::Components::Base
 
           it 'should return the shared component' do
             expect(component)
@@ -463,7 +465,7 @@ RSpec.describe Librum::Core::Responders::Html::FindView do
 
       context 'when the legacy page is defined' do
         example_class 'Custom::View::Pages::Examples::SendPage',
-          ViewComponent::Base
+          Librum::Components::Base
 
         it 'should return the legacy page component' do
           expect(component).to be Custom::View::Pages::Examples::SendPage
@@ -472,16 +474,16 @@ RSpec.describe Librum::Core::Responders::Html::FindView do
 
       context 'when the library defines the component' do
         example_class 'Custom::View::Examples::Send',
-          ViewComponent::Base
+          Librum::Components::Base
 
         it { expect(component).to be Custom::View::Examples::Send }
       end
 
       context 'when multiple sources are defined' do
         example_class 'Custom::View::Pages::Examples::SendPage',
-          ViewComponent::Base
+          Librum::Components::Base
         example_class 'Custom::View::Examples::Send',
-          ViewComponent::Base
+          Librum::Components::Base
 
         it 'returns the component defined by the library' do
           expect(component).to be Custom::View::Examples::Send
@@ -492,21 +494,21 @@ RSpec.describe Librum::Core::Responders::Html::FindView do
         it { expect(component).to be nil }
 
         context 'when the application defines the component' do
-          example_class 'View::Custom::Examples::Send', ViewComponent::Base
+          example_class 'View::Custom::Examples::Send', Librum::Components::Base
 
           it { expect(component).to be View::Custom::Examples::Send }
         end
 
         context 'when the library defines the component' do
           example_class 'Custom::View::Examples::Send',
-            ViewComponent::Base
+            Librum::Components::Base
 
           it { expect(component).to be Custom::View::Examples::Send }
         end
 
         context 'when the legacy page is defined' do
           example_class 'Custom::View::Pages::Examples::SendPage',
-            ViewComponent::Base
+            Librum::Components::Base
 
           it 'should return the legacy page component' do
             expect(component).to be Custom::View::Pages::Examples::SendPage
@@ -514,11 +516,11 @@ RSpec.describe Librum::Core::Responders::Html::FindView do
         end
 
         context 'when multiple sources are defined' do
-          example_class 'View::Custom::Examples::Send', ViewComponent::Base
+          example_class 'View::Custom::Examples::Send', Librum::Components::Base
           example_class 'Custom::View::Pages::Examples::SendPage',
-            ViewComponent::Base
+            Librum::Components::Base
           example_class 'Custom::View::Examples::Send',
-            ViewComponent::Base
+            Librum::Components::Base
 
           it 'returns the component defined by the application' do
             expect(component).to be View::Custom::Examples::Send
@@ -531,7 +533,7 @@ RSpec.describe Librum::Core::Responders::Html::FindView do
 
         context 'when the provider defines the matching component' do
           example_class 'Spec::Components::Views::Custom::Examples::Send',
-            ViewComponent::Base
+            Librum::Components::Base
 
           it 'should return the shared component' do
             expect(component)
@@ -542,8 +544,8 @@ RSpec.describe Librum::Core::Responders::Html::FindView do
     end
 
     context 'when a component class is cached' do
-      example_class 'View::Books::Publish',         ViewComponent::Base
-      example_class 'View::Custom::Books::Publish', ViewComponent::Base
+      example_class 'View::Books::Publish',         Librum::Components::Base
+      example_class 'View::Custom::Books::Publish', Librum::Components::Base
 
       before(:example) do
         service.call(action:, controller:)
