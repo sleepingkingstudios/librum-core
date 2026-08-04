@@ -17,8 +17,4 @@ class User < Librum::Core::ApplicationRecord
 
   ### Validations
   validates :name, presence: true
-
-  def admin?
-    role == 'admin'
-  end
 end
