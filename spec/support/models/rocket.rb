@@ -7,12 +7,4 @@ class Rocket
     :name,
     :slug,
     :color
-
-  def [](key)
-    send(key)
-  end
-
-  def inspect
-    %(#<Rocket name="#{name}">)
-  end
 end
