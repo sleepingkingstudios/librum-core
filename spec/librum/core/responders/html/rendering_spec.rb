@@ -78,7 +78,8 @@ RSpec.describe Librum::Core::Responders::Html::Rendering do
         responder.action_name
       end
 
-      example_class 'Spec::ExampleComponent', ViewComponent::Base do |klass|
+      example_class 'Spec::ExampleComponent', Librum::Components::View \
+      do |klass|
         klass.define_method(:is_layout?) { true }
       end
 
@@ -92,38 +93,6 @@ RSpec.describe Librum::Core::Responders::Html::Rendering do
       include_deferred 'should render component',
         'Spec::ExampleComponent',
         **page_options
-
-      context 'when the component accepts a result argument' do
-        before(:example) do
-          Spec::ExampleComponent.class_eval do
-            def initialize(result, *, **)
-              @result = result
-
-              super(*, **)
-            end
-
-            attr_reader :result
-          end
-        end
-
-        it { expect(response.component.result).to be result }
-      end
-
-      context 'when the component accepts a result keyword' do
-        before(:example) do
-          Spec::ExampleComponent.class_eval do
-            def initialize(*, result:, **)
-              @result = result
-
-              super(*, **)
-            end
-
-            attr_reader :result
-          end
-        end
-
-        it { expect(response.component.result).to be result }
-      end
     end
 
     context 'when there is a matching view component' do
@@ -133,7 +102,7 @@ RSpec.describe Librum::Core::Responders::Html::Rendering do
         responder.action_name
       end
 
-      example_class 'Spec::ExampleComponent', ViewComponent::Base
+      example_class 'Spec::ExampleComponent', Librum::Components::View
 
       before(:example) do
         allow(service)
@@ -145,58 +114,6 @@ RSpec.describe Librum::Core::Responders::Html::Rendering do
       include_deferred 'should render component',
         'Spec::ExampleComponent',
         **page_options
-
-      context 'when the component accepts a resource keyword' do
-        before(:example) do
-          Spec::ExampleComponent.class_eval do
-            def initialize(*, resource:, **)
-              @resource = resource
-
-              super(*, **)
-            end
-
-            attr_reader :resource
-          end
-        end
-
-        include_deferred 'should render component',
-          'Spec::ExampleComponent',
-          **page_options
-      end
-
-      context 'when the component accepts a result argument' do
-        before(:example) do
-          Spec::ExampleComponent.class_eval do
-            def initialize(result, *, **)
-              @result = result
-
-              super(*, **)
-            end
-
-            attr_reader :result
-          end
-        end
-
-        it { expect(response.component.result).to be result }
-      end
-
-      context 'when the component accepts a result keyword' do
-        before(:example) do
-          Spec::ExampleComponent.class_eval do
-            def initialize(*, result:, **)
-              @result = result
-
-              super(*, **)
-            end
-
-            attr_reader :result
-          end
-        end
-
-        include_deferred 'should render component',
-          'Spec::ExampleComponent',
-          **page_options
-      end
     end
   end
 
@@ -318,46 +235,6 @@ RSpec.describe Librum::Core::Responders::Html::Rendering do
       end
     end
 
-    describe 'with a legacy page component' do
-      let(:component_class) { Spec::LegacyPage }
-
-      example_class 'Spec::LegacyPage', ViewComponent::Base do |klass|
-        klass.define_method(:initialize) \
-        do |result, request:, resource:, **options|
-          @request  = request
-          @result   = result
-          @resource = resource
-          @options  = options
-        end
-
-        klass.attr_reader :options
-
-        klass.attr_reader :request
-
-        klass.attr_reader :request
-
-        klass.attr_reader :resource
-
-        klass.attr_reader :result
-      end
-
-      it { expect(component).to be_a component_class }
-
-      it { expect(component.request).to be request }
-
-      it { expect(component.resource).to be resource }
-
-      it { expect(component.result).to be result }
-
-      it { expect(component.options).to be == {} }
-
-      describe 'with options' do
-        let(:options) { super().merge(key: 'value') }
-
-        it { expect(component.options).to be == options }
-      end
-    end
-
     describe 'with a view' do
       let(:component_class) { Spec::ExampleView }
 
@@ -397,7 +274,7 @@ RSpec.describe Librum::Core::Responders::Html::Rendering do
 
   describe '#find_component_class' do
     deferred_context 'with default: value' do
-      let(:default) { Class.new(ViewComponent::Base) }
+      let(:default) { Class.new(Librum::Components::Base) }
       let(:options) { super().merge(default:) }
     end
 
@@ -588,7 +465,7 @@ RSpec.describe Librum::Core::Responders::Html::Rendering do
     describe 'with result: a ViewComponent' do
       let(:result) { Spec::CustomComponent.new }
 
-      example_class 'Spec::CustomComponent', ViewComponent::Base
+      example_class 'Spec::CustomComponent', Librum::Components::Base
 
       include_deferred 'should render component with options',
         'Spec::CustomComponent'
@@ -598,7 +475,7 @@ RSpec.describe Librum::Core::Responders::Html::Rendering do
       let(:component) { Spec::CustomComponent.new }
       let(:result)    { Cuprum::Result.new(value: component) }
 
-      example_class 'Spec::CustomComponent', ViewComponent::Base
+      example_class 'Spec::CustomComponent', Librum::Components::Base
 
       include_deferred 'should render component with options',
         'Spec::CustomComponent'

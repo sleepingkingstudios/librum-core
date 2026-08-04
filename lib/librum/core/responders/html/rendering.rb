@@ -44,30 +44,24 @@ module Librum::Core::Responders::Html
     # @param result [Cuprum::Rails::Result] the result of calling the controller
     #   action.
     #
-    # @return [ViewComponent::Base] the instantiated component.
+    # @return [Librum::Components::Base] the instantiated component.
     def build_view(component_class, result:, request: nil, resource: nil, **)
       SleepingKingStudios::Tools::Toolbelt.instance.assertions.tap do |tools|
         tools.validate_presence(component_class, as: 'component_class')
         tools.validate_class(component_class, as: 'component_class')
       end
 
-      parameters = component_class.instance_method(:initialize).parameters
-
-      if parameters.select { |type, _| type == :req }.first == %i[req result] # rubocop:disable Style/HashSlice
-        component_class.new(result, request:, resource:, **)
-      else
-        component_class.new(result:, request:, resource:, **)
-      end
+      component_class.new(result:, request:, resource:, **)
     end
 
     # Finds the requested shared component.
     #
     # @param name [String, Symbol] the name of the requested component.
-    # @param default [ViewComponent::Base] if no matching component is found,
-    #   returns this value. Defaults to nil.
+    # @param default [Librum::Components::Base] if no matching component is
+    #   found, returns this value. Defaults to nil.
     #
-    # @return [ViewComponent::Base, nil] the matching component, or the default
-    #   value or nil if no matching component is found.
+    # @return [Librum::Components::Base, nil] the matching component, or the
+    #   default value or nil if no matching component is found.
     def find_component_class(name, default: nil)
       return default unless components.is_a?(Module)
 
@@ -167,9 +161,9 @@ module Librum::Core::Responders::Html
     end
 
     def find_component(action_name:, controller_name:, result:)
-      return result if result.is_a?(ViewComponent::Base)
+      return result if result.is_a?(Librum::Components::Base)
 
-      return result.value if result.value.is_a?(ViewComponent::Base)
+      return result.value if result.value.is_a?(Librum::Components::Base)
 
       component_class = self.class.find_view.call(
         action:     action_name,

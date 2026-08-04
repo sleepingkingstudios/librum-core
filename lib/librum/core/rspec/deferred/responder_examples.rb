@@ -26,12 +26,15 @@ module Librum::Core::RSpec::Deferred
       end
     end
 
-    deferred_context 'when the shared component is defined' do |component_name|
+    deferred_context 'when the shared component is defined' \
+    do |component_name, any_options: false, view: false|
       let(:components) { Librum::Components.provider.get(:components) }
       let(:component_class) do
         next super() if defined?(super())
 
-        Class.new(ViewComponent::Base)
+        Class
+          .new(view ? Librum::Components::View : Librum::Components::Base)
+          .tap { |klass| klass.allow_extra_options if any_options }
       end
 
       before(:example) do
