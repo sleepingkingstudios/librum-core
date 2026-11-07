@@ -5,6 +5,8 @@ source 'https://rubygems.org'
 # Specify your gem's dependencies in librum-core.gemspec.
 gemspec
 
+gem 'rails', '~> 8.1'
+
 ### Assets
 gem 'importmap-rails' # Use JavaScript with ESM import maps
 gem 'sprockets-rails' # The original asset pipeline for Rails
