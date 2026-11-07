@@ -17,11 +17,11 @@ jobs:
 
     steps:
     # Downloads a copy of the code in your repository before running CI tests
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v7
 
     # Sets up the Node environment.
     - name: Setup Node.js environment
-      uses: actions/setup-node@v4.0.0
+      uses: actions/setup-node@v7
       with:
         node-version: '18'
         cache: yarn
@@ -62,7 +62,7 @@ jobs:
 
     steps:
     # Downloads a copy of the code in your repository before running CI tests
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v7
 
     # Sets up the Ruby environment and runs `bundle install'.
     - name: Set up Ruby
@@ -89,7 +89,7 @@ jobs:
 
     steps:
     # Downloads a copy of the code in your repository before running CI tests
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v7
 
     # Sets up the Ruby environment and runs `bundle install'.
     - name: Set up Ruby
