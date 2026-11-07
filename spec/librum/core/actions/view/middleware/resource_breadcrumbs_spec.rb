@@ -178,7 +178,7 @@ RSpec.describe Librum::Core::Actions::View::Middleware::ResourceBreadcrumbs do
     include_examples 'should define reader', :breadcrumbs, -> { breadcrumbs }
   end
 
-  # rubocop:disable RSpec/MultipleMemoizedHelpers, RSpec/NestedGroups
+  # rubocop:disable-next RSpec/MultipleMemoizedHelpers, RSpec/NestedGroups
   describe '#call' do
     shared_examples 'should merge the metadata' do
       it 'should return the result with merged metadata' do
@@ -850,7 +850,6 @@ RSpec.describe Librum::Core::Actions::View::Middleware::ResourceBreadcrumbs do
       end
     end
   end
-  # rubocop:enable RSpec/MultipleMemoizedHelpers, RSpec/NestedGroups
 
   describe '#resource' do
     include_examples 'should define reader', :resource, -> { resource }

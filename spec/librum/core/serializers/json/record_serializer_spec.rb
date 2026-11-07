@@ -47,7 +47,7 @@ RSpec.describe Librum::Core::Serializers::Json::RecordSerializer do
   context 'with a serializer subclass' do
     let(:described_class) { Spec::ExampleSerializer }
 
-    # rubocop:disable RSpec/DescribedClass
+    # rubocop:disable-next RSpec/DescribedClass
     example_class 'Spec::ExampleSerializer',
       Librum::Core::Serializers::Json::RecordSerializer \
     do |klass|
@@ -55,7 +55,6 @@ RSpec.describe Librum::Core::Serializers::Json::RecordSerializer do
         :name,
         :type
     end
-    # rubocop:enable RSpec/DescribedClass
 
     include_contract 'should serialize attributes',
       -> { record },
